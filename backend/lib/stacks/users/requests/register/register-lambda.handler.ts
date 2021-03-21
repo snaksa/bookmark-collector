@@ -4,7 +4,7 @@ import User from '../../../../shared/models/user';
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
-import { QueryBuilder } from '../../../../shared/query-builder';
+import { QueryBuilder } from '../../../../shared/services/query-builder';
 
 interface RegisterEventData {
     email: string;

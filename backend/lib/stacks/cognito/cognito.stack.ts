@@ -45,5 +45,6 @@ export class CognitoStack extends Stack {
         });
 
         SsmHelper.setParameter(this, AwsResources.COGNITO_CLIENT_ID, userPoolClient.userPoolClientId, 'The ID of the Cognito Client');
+        SsmHelper.setParameter(this, AwsResources.COGNITO_CLIENT_ARN, userPool.userPoolArn, 'The ARN of the Cognito User Pool');
     }
 }

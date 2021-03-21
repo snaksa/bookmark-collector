@@ -60,6 +60,13 @@ export class QueryBuilder<T extends BaseModel> {
         return this;
     }
 
+    beginsWith: string;
+    skBeginsWith(str: string): QueryBuilder<T> {
+        this.beginsWith = str;
+
+        return this;
+    }
+
     async one(): Promise<T | null> {
         if (!this.tableName) Error('Table name not specified');
         if (!this.conditions) Error('Conditions not specified');
@@ -83,7 +90,7 @@ export class QueryBuilder<T extends BaseModel> {
             return null;
         }
 
-        return result.$response.data as T;
+        return result.$response.data.Item as T;
     }
 
     async all(): Promise<T[]> {
@@ -102,10 +109,15 @@ export class QueryBuilder<T extends BaseModel> {
             conditionExpressionAttributes = { [`:${key}`]: value, ...conditionExpressionAttributes };
         };
 
+        if(this.beginsWith) {
+            conditionExpression.push(`begins_with(sk, :sk)`);
+            conditionExpressionAttributes = { [`:sk`]: this.beginsWith, ...conditionExpressionAttributes };
+        }
+
         const params = {
             TableName: this.tableName,
-            IndexName: this.indexName,
-            KeyConditionExpression: conditionExpression.join(', '),
+            IndexName: this.indexName ? this.indexName : undefined,
+            KeyConditionExpression: conditionExpression.join(' and '),
             ExpressionAttributeValues: conditionExpressionAttributes,
         };
 
@@ -126,7 +138,7 @@ export class QueryBuilder<T extends BaseModel> {
 
         const params = {
             TableName: this.tableName,
-            Item: item.toObject()
+            Item: item.toDynamoDbObject()
         };
 
         const result = await this.db.putItem(params);
@@ -142,7 +154,7 @@ export class QueryBuilder<T extends BaseModel> {
     async update(item: Partial<T>): Promise<T> {
         if (!this.tableName) Error('Table name not specified');
 
-        Logger.info(`Updating ${this.tableName} record with ${JSON.stringify(this.tableName)}`);
+        Logger.info(`Updating ${this.tableName} record with ${JSON.stringify(item)}`);
 
         const updateExpression: string[] = [];
         let updateExpressionAttributes: object = {};

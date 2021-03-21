@@ -23,4 +23,10 @@ export default class User implements BaseModel {
             status: this.status,
         };
     }
+
+    public toDynamoDbObject() {
+        return {
+            // TODO: implement
+        };
+    }
 }
