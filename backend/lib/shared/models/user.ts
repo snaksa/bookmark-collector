@@ -26,7 +26,11 @@ export default class User implements BaseModel {
 
     public toDynamoDbObject() {
         return {
-            // TODO: implement
+            pk: this.pk,
+            sk: this.sk,
+            entityType: this.entityType,
+            GSI1: this.GSI1,
+            status: this.status,
         };
     }
 }
