@@ -28,7 +28,7 @@ export class LabelsStack extends Stack {
         const labels = this.api.root.addResource('labels');
 
         labels.addMethod('GET', new LambdaIntegration(
-            new GetAllLambda(this, 'get-all-lambda', {
+            new GetAllLambda(this, 'list-lambda', {
                 dbStore: this.dbStore,
             })
         ), {
