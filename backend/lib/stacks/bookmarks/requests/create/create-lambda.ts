@@ -16,6 +16,6 @@ export class CreateLambda extends NodejsFunction {
             }
         });
 
-        props.dbStore.grantWriteData(this);
+        props.dbStore.grantReadWriteData(this);
     }
 }

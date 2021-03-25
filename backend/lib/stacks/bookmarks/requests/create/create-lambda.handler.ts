@@ -4,9 +4,12 @@ import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
 import Bookmark from '../../../../shared/models/bookmark';
+import Label from '../../../../shared/models/label';
+import BookmarkLabel from '../../../../shared/models/bookmark-label';
 
 interface CreateEventData {
     url: string;
+    labelIds: string[];
 }
 
 class CreateLambdaHandler extends BaseHandler {
@@ -31,6 +34,27 @@ class CreateLambdaHandler extends BaseHandler {
         await new QueryBuilder<Bookmark>()
             .table(process.env.dbStore ?? '')
             .create(bookmark);
+
+        if (this.input.labelIds) {
+            for (let i = 0; i < this.input.labelIds.length; i++) {
+                const label = await new QueryBuilder<Label>()
+                    .table(process.env.dbStore ?? '')
+                    .where({
+                        pk: `USER#${this.userId}`,
+                        sk: `LABEL#${this.input.labelIds[i]}`
+                    })
+                    .one();
+
+                if (label) {
+                    const bookmarkLabel = new BookmarkLabel(`LABEL#${label.id}`, `BOOKMARK#${bookmark.id}`, this.userId, label.title, label.color, bookmark.url);
+                    
+                    // TODO: create the records in parallel
+                    await new QueryBuilder<BookmarkLabel>()
+                        .table(process.env.dbStore ?? '')
+                        .create(bookmarkLabel);
+                }
+            }
+        }
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,
