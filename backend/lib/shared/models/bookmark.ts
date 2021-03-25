@@ -43,7 +43,6 @@ export default class Bookmark implements BaseModel {
     }
 
     public static fromDynamoDb(o: Bookmark) {
-        console.log(o);
         return new Bookmark(o.id, o.userId, o.url);
     }
 }

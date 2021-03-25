@@ -7,6 +7,7 @@ import { DynamoDbHelper } from '../../shared/helpers/dynamodbdb-helper';
 import { AwsResources } from '../../shared/enums/aws-resources';
 import { ApiGatewayHelper } from '../../shared/helpers/api-gateway-helper';
 import { CreateLambda } from './requests/create/create-lambda';
+import { DeleteLambda } from './requests/delete/delete-lambda';
 
 export class BookmarksStack extends Stack {
     dbStore: ITable;
@@ -28,6 +29,18 @@ export class BookmarksStack extends Stack {
         bookmarks.addMethod('POST', new LambdaIntegration(
             new CreateLambda(this, 'create-lambda', {
                 dbStore: this.dbStore,
+            })
+        ), {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: { authorizerId: this.authorizerRef },
+        });
+
+        const singleBookmark = bookmarks.addResource('{id}');
+
+        singleBookmark.addMethod('DELETE', new LambdaIntegration(
+            new DeleteLambda(this, 'delete-lambda', {
+                dbStore: this.dbStore,
+                reversedDbStore: AwsResources.DB_STORE_TABLE_REVERSED
             })
         ), {
             authorizationType: AuthorizationType.COGNITO,
