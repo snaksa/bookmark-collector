@@ -1,7 +1,6 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Label from '../../../../shared/models/label';
 import Bookmark from '../../../../shared/models/bookmark';
 
 class DeleteLambdaHandler extends BaseHandler {
@@ -26,17 +25,18 @@ class DeleteLambdaHandler extends BaseHandler {
         })
         .all();
 
-        // TODO: foreach the fetched bookmarks and delete by the PK and SK
-        // for(let i = 0; i < bookmarks.length; i++) {
+        bookmarks = bookmarks.map((bookmark: Bookmark) => Bookmark.fromDynamoDb(bookmark));
+
+        for(let i = 0; i < bookmarks.length; i++) {
+            // TODO: delete in parallel
             await new QueryBuilder<Bookmark>()
             .table(process.env.dbStore ?? '')
             .where({
-                pk: `USER#${this.userId}`,
-                sk: `BOOKMARK#${this.bookmarkId}`,
+                pk: bookmarks[i].pk,
+                sk: bookmarks[i].sk,
             })
             .delete();
-        // }
-        
+        }
 
         return {
             statusCode: ApiGatewayResponseCodes.NO_CONTENT,

@@ -1,13 +1,17 @@
 import { BaseModel } from "./base-model";
 
 export default class Bookmark implements BaseModel {
+    pk: string;
+    sk: string;
     id: string;
     userId: string;
     url: string;
     GSI1: string;
     entityType: string = 'bookmark';
 
-    constructor(id: string, userId: string, url: string) {
+    constructor(id: string, userId: string, url: string, pk: string = '', sk: string = '') {
+        this.pk = pk;
+        this.sk = sk;
         this.id = id;
         this.userId = userId;
         this.url = url;
@@ -43,6 +47,6 @@ export default class Bookmark implements BaseModel {
     }
 
     public static fromDynamoDb(o: Bookmark) {
-        return new Bookmark(o.id, o.userId, o.url);
+        return new Bookmark(o.id, o.userId, o.url, o.pk, o.sk);
     }
 }
