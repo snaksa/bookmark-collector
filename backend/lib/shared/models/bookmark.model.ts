@@ -18,7 +18,7 @@ export default class Bookmark implements BaseModel {
     constructor(id: string, userId: string, bookmarkUrl: string) {
         this.pk = `USER#${userId}`;
         this.sk = `BOOKMARK#${id}`;
-        this.GSI1 = `USER#${this.userId}`;
+        this.GSI1 = `USER#${userId}`;
 
         this.bookmarkId = id;
         this.userId = userId;

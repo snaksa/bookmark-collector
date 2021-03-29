@@ -8,16 +8,16 @@ export default class Label implements BaseModel {
     GSI1: string;
     entityType: string = Label.ENTITY_TYPE;
 
-    id: string;
+    labelId: string;
     userId: string;
     title: string;
     color: string;
 
     constructor(id: string, userId: string, title: string, color: string) {
-        this.pk = `USER#${this.userId}`;
-        this.sk = `LABEL#${this.id}`;
+        this.pk = `USER#${userId}`;
+        this.sk = `LABEL#${id}`;
 
-        this.id = id;
+        this.labelId = id;
         this.userId = userId;
         this.title = title;
         this.color = color;
@@ -25,7 +25,7 @@ export default class Label implements BaseModel {
 
     public toObject() {
         return {
-            id: this.id,
+            id: this.labelId,
             title: this.title,
             color: this.color,
         };
@@ -43,7 +43,7 @@ export default class Label implements BaseModel {
 
         return {
             ...result,
-            id: this.id,
+            labelId: this.labelId,
             userId: this.userId,
             title: this.title,
             color: this.color,
@@ -52,6 +52,6 @@ export default class Label implements BaseModel {
     }
 
     public static fromDynamoDb(o: Label) {
-        return new Label(o.id, o.userId, o.title, o.color);
+        return new Label(o.labelId, o.userId, o.title, o.color);
     }
 }

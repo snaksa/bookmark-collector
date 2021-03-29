@@ -2,10 +2,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
-import { QueryBuilder } from '../../../../shared/services/query-builder';
 import Bookmark from '../../../../shared/models/bookmark.model';
-import Label from '../../../../shared/models/label.model';
 import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
+import { BookmarkService } from '../../../../shared/services/bookmark-service';
+import { LabelService } from '../../../../shared/services/label-service';
 
 interface CreateEventData {
     url: string;
@@ -13,8 +13,18 @@ interface CreateEventData {
 }
 
 class CreateLambdaHandler extends BaseHandler {
+    bookmarkService: BookmarkService;
+    labelService: LabelService;
+
     private input: CreateEventData;
     private userId: string;
+
+    constructor() {
+        super();
+
+        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '');
+        this.labelService = new LabelService(process.env.dbStore ?? '');
+    }
 
     parseEvent(event: any) {
         this.input = JSON.parse(event.body) as CreateEventData;
@@ -31,29 +41,23 @@ class CreateLambdaHandler extends BaseHandler {
 
     async run(): Promise<Response> {
         const bookmark = new Bookmark(uuidv4(), this.userId, this.input.url);
-        await new QueryBuilder<Bookmark>()
-            .table(process.env.dbStore ?? '')
-            .create(bookmark);
+        const save = await this.bookmarkService.save(bookmark);
+
+        if (!save) {
+            throw new Error('Could not save bookmark');
+        }
 
         if (this.input.labelIds) {
-            for (let i = 0; i < this.input.labelIds.length; i++) {
-                const label = await new QueryBuilder<Label>()
-                    .table(process.env.dbStore ?? '')
-                    .where({
-                        pk: `USER#${this.userId}`,
-                        sk: `LABEL#${this.input.labelIds[i]}`
-                    })
-                    .one();
+            const labels = await this.labelService.findByIds(this.input.labelIds, this.userId);
 
-                if (label) {
-                    const bookmarkLabel = new BookmarkLabel(label.id, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl);
-                    
-                    // TODO: create the records in parallel
-                    await new QueryBuilder<BookmarkLabel>()
-                        .table(process.env.dbStore ?? '')
-                        .create(bookmarkLabel);
-                }
+            const bookmarkLabels: Promise<boolean>[] = [];
+            for (let i = 0; i < labels.length; i++) {
+                const label = labels[i];
+                const bookmarkLabel = new BookmarkLabel(label.labelId, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl);
+                bookmarkLabels.push(this.bookmarkService.saveLabel(bookmarkLabel));
             }
+
+            await Promise.all(bookmarkLabels);
         }
 
         return {

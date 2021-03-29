@@ -18,7 +18,7 @@ export default class BookmarkLabel implements BaseModel {
     constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', bookmarkUrl: string = '') {
         this.pk = `LABEL#${labelId}`;
         this.sk = `BOOKMARK#${bookmarkId}`;
-        this.GSI1 = `USER#${this.userId}`
+        this.GSI1 = `USER#${userId}`
 
         this.labelId = labelId;
         this.bookmarkId = bookmarkId;
