@@ -1,7 +1,7 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Bookmark from '../../../../shared/models/bookmark';
+import Bookmark from '../../../../shared/models/bookmark.model';
 
 class DeleteLambdaHandler extends BaseHandler {
     private userId: string;

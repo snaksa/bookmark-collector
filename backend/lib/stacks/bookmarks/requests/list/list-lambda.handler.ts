@@ -1,9 +1,9 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Label from '../../../../shared/models/label';
-import Bookmark from '../../../../shared/models/bookmark';
-import BookmarkLabel from '../../../../shared/models/bookmark-label';
+import Label from '../../../../shared/models/label.model';
+import Bookmark from '../../../../shared/models/bookmark.model';
+import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
 
 class ListLambdaHandler extends BaseHandler {
     private userId: string;

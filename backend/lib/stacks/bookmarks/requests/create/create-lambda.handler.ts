@@ -3,9 +3,9 @@ import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-re
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Bookmark from '../../../../shared/models/bookmark';
-import Label from '../../../../shared/models/label';
-import BookmarkLabel from '../../../../shared/models/bookmark-label';
+import Bookmark from '../../../../shared/models/bookmark.model';
+import Label from '../../../../shared/models/label.model';
+import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
 
 interface CreateEventData {
     url: string;

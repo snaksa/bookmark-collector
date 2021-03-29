@@ -1,5 +1,5 @@
 import { DynamoDbHelper, LoggerHelper as Logger } from "../helpers";
-import { BaseModel } from "../models/base-model";
+import { BaseModel } from "../models/base.model";
 
 export class QueryBuilder<T extends BaseModel> {
     db: DynamoDbHelper;

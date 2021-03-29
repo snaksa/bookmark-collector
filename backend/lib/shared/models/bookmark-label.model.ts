@@ -1,27 +1,31 @@
-import { BaseModel } from "./base-model";
+import { BaseModel } from "./base.model";
 
 export default class BookmarkLabel implements BaseModel {
+    static ENTITY_TYPE: string = 'bookmarkLabel';
+
     pk: string;
     sk: string;
+    GSI1: string;
+    entityType: string = BookmarkLabel.ENTITY_TYPE;
+    
     labelId: string;
     bookmarkId: string;
     userId: string;
     bookmarkUrl: string;
     title: string;
     color: string;
-    GSI1: string;
-    entityType: string = 'bookmarkLabel';
 
     constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', bookmarkUrl: string = '') {
-        this.labelId = labelId;
-        this.bookmarkId = bookmarkId;
         this.pk = `LABEL#${labelId}`;
         this.sk = `BOOKMARK#${bookmarkId}`;
+        this.GSI1 = `USER#${this.userId}`
+
+        this.labelId = labelId;
+        this.bookmarkId = bookmarkId;
         this.userId = userId;
         this.title = title;
         this.color = color;
         this.bookmarkUrl = bookmarkUrl;
-        this.GSI1 = `USER#${this.userId}`
     }
 
     public toObject() {
@@ -31,7 +35,6 @@ export default class BookmarkLabel implements BaseModel {
             bookmarkUrl: this.bookmarkUrl,
             title: this.title,
             color: this.color,
-            entityType: this.entityType,
         };
     }
 
@@ -54,7 +57,7 @@ export default class BookmarkLabel implements BaseModel {
             color: this.color,
             bookmarkUrl: this.bookmarkUrl,
             GSI1: this.GSI1,
-            entityType: this.entityType,
+            entityType: BookmarkLabel.ENTITY_TYPE,
         };
     }
 

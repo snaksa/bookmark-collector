@@ -1,6 +1,6 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import User from '../../../../shared/models/user';
+import User from '../../../../shared/models/user.model';
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
