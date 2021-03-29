@@ -46,7 +46,7 @@ class CreateLambdaHandler extends BaseHandler {
                     .one();
 
                 if (label) {
-                    const bookmarkLabel = new BookmarkLabel(`LABEL#${label.id}`, `BOOKMARK#${bookmark.id}`, this.userId, label.title, label.color, bookmark.url);
+                    const bookmarkLabel = new BookmarkLabel(label.id, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.url);
                     
                     // TODO: create the records in parallel
                     await new QueryBuilder<BookmarkLabel>()

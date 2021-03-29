@@ -5,6 +5,7 @@ import * as path from 'path';
 
 interface ListLambdaProps {
     dbStore: ITable;
+    dbStoreGSI1: string;
 }
 
 export class ListLambda extends NodejsFunction {
@@ -13,6 +14,7 @@ export class ListLambda extends NodejsFunction {
             entry: path.resolve(__dirname, "./list-lambda.handler.ts"),
             environment: {
                 dbStore: props.dbStore.tableName,
+                dbStoreGSI1: props.dbStoreGSI1,
             }
         });
 

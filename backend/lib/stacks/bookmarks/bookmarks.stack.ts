@@ -8,6 +8,7 @@ import { AwsResources } from '../../shared/enums/aws-resources';
 import { ApiGatewayHelper } from '../../shared/helpers/api-gateway-helper';
 import { CreateLambda } from './requests/create/create-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
+import { ListLambda } from './requests/list/list-lambda';
 
 export class BookmarksStack extends Stack {
     dbStore: ITable;
@@ -29,6 +30,16 @@ export class BookmarksStack extends Stack {
         bookmarks.addMethod('POST', new LambdaIntegration(
             new CreateLambda(this, 'create-lambda', {
                 dbStore: this.dbStore,
+            })
+        ), {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: { authorizerId: this.authorizerRef },
+        });
+
+        bookmarks.addMethod('GET', new LambdaIntegration(
+            new ListLambda(this, 'list-lambda', {
+                dbStore: this.dbStore,
+                dbStoreGSI1: AwsResources.DB_STORE_TABLE_GSI1,
             })
         ), {
             authorizationType: AuthorizationType.COGNITO,

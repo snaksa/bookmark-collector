@@ -1,10 +1,13 @@
 import { BaseModel } from "./base-model";
 
 export default class Label implements BaseModel {
+    pk: string;
+    sk: string;
     id: string;
     userId: string;
     title: string;
     color: string;
+    GSI1: string;
     entityType: string = 'label';
 
     constructor(id: string, userId: string, title: string, color: string) {

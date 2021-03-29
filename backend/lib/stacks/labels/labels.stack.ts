@@ -7,7 +7,7 @@ import { SsmHelper } from '../../shared/helpers/ssm-helper';
 import { DynamoDbHelper } from '../../shared/helpers/dynamodbdb-helper';
 import { AwsResources } from '../../shared/enums/aws-resources';
 import { ApiGatewayHelper } from '../../shared/helpers/api-gateway-helper';
-import { GetAllLambda } from './requests/list/list-lambda';
+import { ListLambda } from './requests/list/list-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
 import { UpdateLambda } from './requests/update/update-lambda';
 
@@ -28,7 +28,7 @@ export class LabelsStack extends Stack {
         const labels = this.api.root.addResource('labels');
 
         labels.addMethod('GET', new LambdaIntegration(
-            new GetAllLambda(this, 'list-lambda', {
+            new ListLambda(this, 'list-lambda', {
                 dbStore: this.dbStore,
             })
         ), {

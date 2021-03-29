@@ -3,6 +3,8 @@ import { BaseModel } from "./base-model";
 export default class BookmarkLabel implements BaseModel {
     pk: string;
     sk: string;
+    labelId: string;
+    bookmarkId: string;
     userId: string;
     url: string;
     title: string;
@@ -10,9 +12,11 @@ export default class BookmarkLabel implements BaseModel {
     GSI1: string;
     entityType: string = 'bookmarkLabel';
 
-    constructor(pk: string, sk: string, userId: string, title: string = '', color: string = '', url: string = '') {
-        this.pk = pk;
-        this.sk = sk;
+    constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', url: string = '') {
+        this.labelId = labelId;
+        this.bookmarkId = bookmarkId;
+        this.pk = `LABEL#${labelId}`;
+        this.sk = `BOOKMARK#${bookmarkId}`;
         this.userId = userId;
         this.title = title;
         this.color = color;
@@ -22,6 +26,8 @@ export default class BookmarkLabel implements BaseModel {
 
     public toObject() {
         return {
+            labelId: this.labelId,
+            bookmarkId: this.bookmarkId,
             url: this.url,
             title: this.title,
             color: this.color,
@@ -41,6 +47,8 @@ export default class BookmarkLabel implements BaseModel {
 
         return {
             ...result,
+            labelId: this.labelId,
+            bookmarkId: this.bookmarkId,
             userId: this.userId,
             title: this.title,
             color: this.color,
