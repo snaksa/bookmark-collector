@@ -6,17 +6,17 @@ export default class Bookmark implements BaseModel {
     sk: string;
     bookmarkId: string;
     userId: string;
-    url: string;
+    bookmarkUrl: string;
     GSI1: string;
     entityType: string = 'bookmark';
     labels: Label[];
 
-    constructor(id: string, userId: string, url: string, pk: string = '', sk: string = '') {
+    constructor(id: string, userId: string, bookmarkUrl: string, pk: string = '', sk: string = '') {
         this.pk = pk;
         this.sk = sk;
         this.bookmarkId = id;
         this.userId = userId;
-        this.url = url;
+        this.bookmarkUrl = bookmarkUrl;
         this.GSI1 = `USER#${this.userId}`;
         this.labels = [];
     }
@@ -28,7 +28,7 @@ export default class Bookmark implements BaseModel {
     public toObject() {
         return {
             id: this.bookmarkId,
-            url: this.url,
+            bookmarkUrl: this.bookmarkUrl,
             entityType: this.entityType,
             labels: this.labels.map((label: Label) => label.toObject()),
         };
@@ -48,13 +48,13 @@ export default class Bookmark implements BaseModel {
             ...result,
             bookmarkId: this.bookmarkId,
             userId: this.userId,
-            url: this.url,
+            bookmarkUrl: this.bookmarkUrl,
             GSI1: this.GSI1,
             entityType: this.entityType,
         };
     }
 
     public static fromDynamoDb(o: Bookmark) {
-        return new Bookmark(o.bookmarkId, o.userId, o.url, o.pk, o.sk);
+        return new Bookmark(o.bookmarkId, o.userId, o.bookmarkUrl, o.pk, o.sk);
     }
 }

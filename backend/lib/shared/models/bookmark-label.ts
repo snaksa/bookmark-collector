@@ -6,13 +6,13 @@ export default class BookmarkLabel implements BaseModel {
     labelId: string;
     bookmarkId: string;
     userId: string;
-    url: string;
+    bookmarkUrl: string;
     title: string;
     color: string;
     GSI1: string;
     entityType: string = 'bookmarkLabel';
 
-    constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', url: string = '') {
+    constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', bookmarkUrl: string = '') {
         this.labelId = labelId;
         this.bookmarkId = bookmarkId;
         this.pk = `LABEL#${labelId}`;
@@ -20,7 +20,7 @@ export default class BookmarkLabel implements BaseModel {
         this.userId = userId;
         this.title = title;
         this.color = color;
-        this.url = url;
+        this.bookmarkUrl = bookmarkUrl;
         this.GSI1 = `USER#${this.userId}`
     }
 
@@ -28,7 +28,7 @@ export default class BookmarkLabel implements BaseModel {
         return {
             labelId: this.labelId,
             bookmarkId: this.bookmarkId,
-            url: this.url,
+            bookmarkUrl: this.bookmarkUrl,
             title: this.title,
             color: this.color,
             entityType: this.entityType,
@@ -52,13 +52,13 @@ export default class BookmarkLabel implements BaseModel {
             userId: this.userId,
             title: this.title,
             color: this.color,
-            url: this.url,
+            bookmarkUrl: this.bookmarkUrl,
             GSI1: this.GSI1,
             entityType: this.entityType,
         };
     }
 
     public static fromDynamoDb(o: BookmarkLabel) {
-        return new BookmarkLabel(o.pk, o.sk, o.userId, o.title, o.color, o.url);
+        return new BookmarkLabel(o.labelId, o.bookmarkId, o.userId, o.title, o.color, o.bookmarkUrl);
     }
 }

@@ -4,6 +4,7 @@ import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
 import Label from '../../../../shared/models/label';
+import BookmarkLabel from '../../../../shared/models/bookmark-label';
 
 interface UpdateEventData {
     label: string;
@@ -44,12 +45,12 @@ class UpdateLambdaHandler extends BaseHandler {
                 body: {},
             };
         }
-        
+
         const label = Label.fromDynamoDb(result);
-        if(this.input.label) {
+        if (this.input.label) {
             label.title = this.input.label;
         }
-        if(this.input.color) {
+        if (this.input.color) {
             label.color = this.input.color;
         }
 
@@ -60,6 +61,32 @@ class UpdateLambdaHandler extends BaseHandler {
                 sk: `LABEL#${this.labelId}`
             })
             .update(label.toDynamoDbObject(true));
+
+        const bookmarkLabels = await new QueryBuilder<BookmarkLabel>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `LABEL#${this.labelId}`,
+            })
+            .all();
+
+        for (let i = 0; i < bookmarkLabels.length; i++) {
+            const bl = BookmarkLabel.fromDynamoDb(bookmarkLabels[i]);
+
+            if (this.input.label) {
+                bl.title = this.input.label;
+            }
+            if (this.input.color) {
+                bl.color = this.input.color;
+            }
+
+            await new QueryBuilder<BookmarkLabel>()
+                .table(process.env.dbStore ?? '')
+                .where({
+                    pk: `LABEL#${this.labelId}`,
+                    sk: `BOOKMARK#${bl.bookmarkId}`
+                })
+                .update(bl.toDynamoDbObject(true));
+        }
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

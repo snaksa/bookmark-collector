@@ -29,13 +29,13 @@ class ListLambdaHandler extends BaseHandler {
 
         records.forEach((record: BookmarkLabel) => {
             if(!(record.bookmarkId in bookmarks)) {
-                bookmarks[record.bookmarkId] = new Bookmark(record.bookmarkId, record.userId, record.url);
+                bookmarks[record.bookmarkId] = new Bookmark(record.bookmarkId, record.userId, record.bookmarkUrl);
             }
 
             if(record.entityType === 'bookmark') {
                 bookmarks[record.bookmarkId].bookmarkId = record.bookmarkId;
                 bookmarks[record.bookmarkId].userId = record.userId;
-                bookmarks[record.bookmarkId].url = record.url;
+                bookmarks[record.bookmarkId].bookmarkUrl = record.bookmarkUrl;
             }
 
             if(record.entityType === 'bookmarkLabel') {
