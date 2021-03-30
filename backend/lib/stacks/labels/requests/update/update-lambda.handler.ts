@@ -5,6 +5,7 @@ import { Validator } from '../../../../shared/validators/validator';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
 import Label from '../../../../shared/models/label.model';
 import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
+import { LabelService } from '../../../../shared/services/label-service';
 
 interface UpdateEventData {
     label: string;
@@ -12,9 +13,17 @@ interface UpdateEventData {
 }
 
 class UpdateLambdaHandler extends BaseHandler {
+    private labelService: LabelService;
+
     private input: UpdateEventData;
     private userId: string;
     private labelId: string;
+
+    constructor() {
+        super();
+
+        this.labelService = new LabelService(process.env.dbStore ?? '');
+    }
 
     parseEvent(event: any) {
         this.input = JSON.parse(event.body) as UpdateEventData;
@@ -31,22 +40,15 @@ class UpdateLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        const result = await new QueryBuilder<Label>()
-            .table(process.env.dbStore ?? '')
-            .where({
-                pk: `USER#${this.userId}`,
-                sk: `LABEL#${this.labelId}`
-            })
-            .one();
+        const label = await this.labelService.findOne(this.labelId, this.userId);
 
-        if (!result) {
+        if (!label) {
             return {
                 statusCode: ApiGatewayResponseCodes.NOT_FOUND,
                 body: {},
             };
         }
 
-        const label = Label.fromDynamoDb(result);
         if (this.input.label) {
             label.title = this.input.label;
         }
@@ -54,39 +56,27 @@ class UpdateLambdaHandler extends BaseHandler {
             label.color = this.input.color;
         }
 
-        await new QueryBuilder<Label>()
-            .table(process.env.dbStore ?? '')
-            .where({
-                pk: `USER#${this.userId}`,
-                sk: `LABEL#${this.labelId}`
-            })
-            .update(label.toDynamoDbObject(true));
+        await this.labelService.update(label);
 
-        const bookmarkLabels = await new QueryBuilder<BookmarkLabel>()
-            .table(process.env.dbStore ?? '')
-            .where({
-                pk: `LABEL#${this.labelId}`,
-            })
-            .all();
+        // TODO: update bookmark labels in stream
+        const bookmarkLabels = await this.labelService.findBookmarks(label.labelId);
 
+        const updated: Promise<BookmarkLabel>[] = [];
         for (let i = 0; i < bookmarkLabels.length; i++) {
-            const bl = BookmarkLabel.fromDynamoDb(bookmarkLabels[i]);
+            const bl = bookmarkLabels[i];
 
             if (this.input.label) {
                 bl.title = this.input.label;
             }
+            
             if (this.input.color) {
                 bl.color = this.input.color;
             }
 
-            await new QueryBuilder<BookmarkLabel>()
-                .table(process.env.dbStore ?? '')
-                .where({
-                    pk: `LABEL#${this.labelId}`,
-                    sk: `BOOKMARK#${bl.bookmarkId}`
-                })
-                .update(bl.toDynamoDbObject(true));
+            updated.push(this.labelService.updateBookmarks(bl));
         }
+
+        await Promise.all(updated);
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

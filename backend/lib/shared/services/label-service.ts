@@ -1,3 +1,4 @@
+import BookmarkLabel from "../models/bookmark-label.model";
 import Label from "../models/label.model";
 import { QueryBuilder } from "./query-builder";
 
@@ -8,6 +9,18 @@ export class LabelService {
         return new QueryBuilder<Label>()
             .table(this.dbStore)
             .create(label);
+    }
+
+    async update(label: Label): Promise<Label> {
+        const updated = await new QueryBuilder<Label>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `USER#${label.userId}`,
+                sk: `LABEL#${label.labelId}`
+            })
+            .update(label.toDynamoDbObject(true));
+
+        return Label.fromDynamoDb(updated);
     }
 
     async deleteById(labelId: string, userId: string) {
@@ -53,5 +66,28 @@ export class LabelService {
             .all();
 
         return labels.map((label: Label) => Label.fromDynamoDb(label));
+    }
+
+    async findBookmarks(labelId: string): Promise<BookmarkLabel[]> {
+        const result = await new QueryBuilder<BookmarkLabel>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `LABEL#${labelId}`,
+            })
+            .all();
+
+        return result.map((bookmarkLabel: BookmarkLabel) => BookmarkLabel.fromDynamoDb(bookmarkLabel));
+    }
+
+    async updateBookmarks(bookmarkLabel: BookmarkLabel) {
+        const updated = await new QueryBuilder<BookmarkLabel>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `LABEL#${bookmarkLabel.labelId}`,
+                sk: `BOOKMARK#${bookmarkLabel.bookmarkId}`
+            })
+            .update(bookmarkLabel.toDynamoDbObject(true));
+
+        return BookmarkLabel.fromDynamoDb(updated);
     }
 }
