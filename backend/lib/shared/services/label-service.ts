@@ -21,13 +21,15 @@ export class LabelService {
     }
 
     async findOne(labelId: string, userId: string): Promise<Label | null> {
-        return await new QueryBuilder<Label>()
+        const label = await new QueryBuilder<Label>()
             .table(this.dbStore)
             .where({
                 pk: `USER#${userId}`,
                 sk: `LABEL#${labelId}`,
             })
             .one();
+
+        return label ? Label.fromDynamoDb(label) : null;
     }
 
     async findByIds(labelIds: string[], userId: string): Promise<Label[]> {
@@ -36,7 +38,20 @@ export class LabelService {
             labels.push(this.findOne(labelIds[i], userId));
         }
 
-        const result = await Promise.all(labels);
-        return result.filter((label: Label | null) => label !== null) as Label[];
+        return (await Promise.all(labels))
+            .filter((label): label is Label => label !== null)
+            .map((label: Label) => Label.fromDynamoDb(label));
+    }
+
+    async findAll(userId: string): Promise<Label[]> {
+        const labels = await new QueryBuilder<Label>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `USER#${userId}`,
+            })
+            .skBeginsWith('LABEL#')
+            .all();
+
+        return labels.map((label: Label) => Label.fromDynamoDb(label));
     }
 }
