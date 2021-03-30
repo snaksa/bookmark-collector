@@ -10,6 +10,16 @@ export class LabelService {
             .create(label);
     }
 
+    async deleteById(labelId: string, userId: string) {
+        return new QueryBuilder<Label>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: `USER#${userId}`,
+                sk: `LABEL#${labelId}`,
+            })
+            .delete()
+    }
+
     async findOne(labelId: string, userId: string): Promise<Label | null> {
         return await new QueryBuilder<Label>()
             .table(this.dbStore)

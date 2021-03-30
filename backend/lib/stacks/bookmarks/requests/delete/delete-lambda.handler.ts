@@ -27,6 +27,8 @@ class DeleteLambdaHandler extends BaseHandler {
     async run(): Promise<Response> {
         let bookmarks = await this.bookmarkService.findBookmarkRecords(this.bookmarkId);
 
+        // TODO: delete only the main record
+        // TODO: delete attached bookmark label records in stream
         const deleteBookmarkRecords: Promise<Bookmark>[] = [];
         for (let i = 0; i < bookmarks.length; i++) {
             deleteBookmarkRecords.push(this.bookmarkService.deleteByKeys(bookmarks[i].pk, bookmarks[i].sk));
