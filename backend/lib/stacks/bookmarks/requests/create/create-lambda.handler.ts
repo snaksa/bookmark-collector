@@ -13,8 +13,8 @@ interface CreateEventData {
 }
 
 class CreateLambdaHandler extends BaseHandler {
-    bookmarkService: BookmarkService;
-    labelService: LabelService;
+    private bookmarkService: BookmarkService;
+    private labelService: LabelService;
 
     private input: CreateEventData;
     private userId: string;

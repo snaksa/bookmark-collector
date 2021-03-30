@@ -4,7 +4,7 @@ import Bookmark from '../../../../shared/models/bookmark.model';
 import { BookmarkService } from '../../../../shared/services/bookmark-service';
 
 class DeleteLambdaHandler extends BaseHandler {
-    bookmarkService: BookmarkService;
+    private bookmarkService: BookmarkService;
 
     private userId: string;
     private bookmarkId: string;

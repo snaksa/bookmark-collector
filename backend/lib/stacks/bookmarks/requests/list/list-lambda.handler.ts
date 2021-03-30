@@ -1,12 +1,18 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
-import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Label from '../../../../shared/models/label.model';
 import Bookmark from '../../../../shared/models/bookmark.model';
-import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
+import { BookmarkService } from '../../../../shared/services/bookmark-service';
 
 class ListLambdaHandler extends BaseHandler {
+    private bookmarkService: BookmarkService;
+
     private userId: string;
+
+    constructor() {
+        super();
+
+        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '', process.env.reversedDbStore ?? '', process.env.dbStoreGSI1 ?? '');
+    }
 
     parseEvent(event: any) {
         this.userId = event.requestContext.authorizer.claims.sub;
@@ -17,42 +23,9 @@ class ListLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        const records: BookmarkLabel[] = await new QueryBuilder<BookmarkLabel>()
-            .table(process.env.dbStore ?? '')
-            .index(process.env.dbStoreGSI1 ?? '')
-            .where({
-                GSI1: `USER#${this.userId}`,
-            })
-            .all();
-
-        let bookmarks: {[key: string]: Bookmark} = {};
-
-        records.forEach((record: BookmarkLabel) => {
-            if(!(record.bookmarkId in bookmarks)) {
-                bookmarks[record.bookmarkId] = new Bookmark(record.bookmarkId, record.userId, record.bookmarkUrl);
-            }
-
-            if(record.entityType === 'bookmark') {
-                bookmarks[record.bookmarkId].bookmarkId = record.bookmarkId;
-                bookmarks[record.bookmarkId].userId = record.userId;
-                bookmarks[record.bookmarkId].bookmarkUrl = record.bookmarkUrl;
-            }
-
-            if(record.entityType === 'bookmarkLabel') {
-                const l = new Label(record.labelId, record.userId, record.title, record.color);
-                bookmarks[record.bookmarkId].addLabel(l);
-            }
-
-        });
-
-        const result = [];
-        for (let [key, value] of Object.entries(bookmarks)) {
-            result.push(value.toObject());
-        }
-
         return {
             statusCode: ApiGatewayResponseCodes.OK,
-            body: result,
+            body: (await this.bookmarkService.findAll(this.userId)).map((bookmark: Bookmark) => bookmark.toObject()),
         };
     }
 }
