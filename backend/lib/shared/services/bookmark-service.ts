@@ -7,7 +7,7 @@ export class BookmarkService {
     constructor(private dbStore: string, private reversedDbStore: string = '', private dbStoreGSI1: string = '') { }
 
     async save(bookmark: Bookmark): Promise<boolean> {
-        return await new QueryBuilder<Bookmark>()
+        return new QueryBuilder<Bookmark>()
             .table(this.dbStore)
             .create(bookmark);
     }

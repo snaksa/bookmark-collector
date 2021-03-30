@@ -4,6 +4,12 @@ import { QueryBuilder } from "./query-builder";
 export class LabelService {
     constructor(private dbStore: string) { }
 
+    async save(label: Label): Promise<boolean> {
+        return new QueryBuilder<Label>()
+            .table(this.dbStore)
+            .create(label);
+    }
+
     async findOne(labelId: string, userId: string): Promise<Label | null> {
         return await new QueryBuilder<Label>()
             .table(this.dbStore)
