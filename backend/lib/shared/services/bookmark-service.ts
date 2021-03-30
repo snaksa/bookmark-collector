@@ -3,7 +3,7 @@ import Bookmark from "../models/bookmark.model";
 import { QueryBuilder } from "./query-builder";
 
 export class BookmarkService {
-    constructor(private dbStore: string) { }
+    constructor(private dbStore: string, private reversedDbStore: string = '') { }
 
     async save(bookmark: Bookmark): Promise<boolean> {
         return await new QueryBuilder<Bookmark>()
@@ -12,8 +12,30 @@ export class BookmarkService {
     }
 
     async saveLabel(bookmarkLabel: BookmarkLabel): Promise<boolean> {
-        return await new QueryBuilder<BookmarkLabel>()
+        return new QueryBuilder<BookmarkLabel>()
             .table(this.dbStore)
             .create(bookmarkLabel);
+    }
+
+    async findBookmarkRecords(bookmarkId: string): Promise<Bookmark[]> {
+        const bookmarks = await new QueryBuilder<Bookmark>()
+            .table(this.dbStore)
+            .index(this.reversedDbStore)
+            .where({
+                sk: `BOOKMARK#${bookmarkId}`,
+            })
+            .all();
+
+        return bookmarks;
+    }
+
+    async deleteByKeys(pk: string, sk: string): Promise<Bookmark> {
+        return new QueryBuilder<Bookmark>()
+            .table(process.env.dbStore ?? '')
+            .where({
+                pk: pk,
+                sk: sk,
+            })
+            .delete();
     }
 }
