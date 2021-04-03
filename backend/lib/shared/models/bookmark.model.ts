@@ -1,7 +1,7 @@
-import { BaseModel } from "./base.model";
+import { Model } from "./base.model";
 import Label from "./label.model";
 
-export default class Bookmark implements BaseModel {
+export default class Bookmark implements Model {
     static ENTITY_TYPE: string = 'bookmark';
 
     pk: string;

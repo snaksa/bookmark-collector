@@ -1,68 +1,58 @@
 import { DynamoDB } from 'aws-sdk';
 import BaseHandler, { Response } from '../../../shared/base-handler';
-import { BaseModel } from '../../../shared/models/base.model';
+import { ApiGatewayResponseCodes } from '../../../shared/enums/api-gateway-response-codes';
+import { StreamEventTypes } from '../../../shared/enums/stream-event-types';
+import { Model } from '../../../shared/models/base.model';
 import BookmarkLabel from '../../../shared/models/bookmark-label.model';
 import Bookmark from '../../../shared/models/bookmark.model';
 import Label from '../../../shared/models/label.model';
-import { BookmarkService } from '../../../shared/services/bookmark-service';
-import { LabelService } from '../../../shared/services/label-service';
-
-enum EventTypes {
-    INSERT = 'INSERT',
-    MODIFY = 'MODIFY',
-    REMOVE = 'REMOVE'
-}
+import { BookmarkRepository } from '../../../shared/repositories/bookmark.repository';
+import { LabelRepository } from '../../../shared/repositories/label.repository';
 
 interface StreamEvent {
     type: string;
-    object: BaseModel;
+    object: Model;
 }
 
 class StreamLambdaHandler extends BaseHandler {
-    private labelService: LabelService;
-    private bookmarkService: BookmarkService;
+    private labelRepository: LabelRepository;
+    private bookmarkRepository: BookmarkRepository;
 
     private records: StreamEvent[] = [];
 
     constructor() {
         super();
 
-        this.labelService = new LabelService(process.env.dbStore ?? '');
-        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '');
     }
 
     parseEvent(event: any) {
         event.Records.map((record: any) => {
-            const e: StreamEvent = {
+            const streamEvent: StreamEvent = {
                 type: record.eventName,
-                object: this.getObject(record.eventName === EventTypes.REMOVE ? record.dynamodb.OldImage : record.dynamodb.NewImage)
+                object: this.getObject(record.eventName === StreamEventTypes.REMOVE ? record.dynamodb.OldImage : record.dynamodb.NewImage)
             };
 
-            this.records.push(e);
+            this.records.push(streamEvent);
         })
     }
 
-    getObject(object: any): BaseModel {
+    getObject(object: any): Model {
         let unmarshalledObject = DynamoDB.Converter.unmarshall(object);
-        let result: BaseModel;
 
         switch (unmarshalledObject.entityType) {
             case Label.ENTITY_TYPE:
-                result = Label.fromDynamoDb(unmarshalledObject as Label);
-                break;
+                return Label.fromDynamoDb(unmarshalledObject as Label);
             case BookmarkLabel.ENTITY_TYPE:
-                result = BookmarkLabel.fromDynamoDb(unmarshalledObject as BookmarkLabel);
-                break;
+                return BookmarkLabel.fromDynamoDb(unmarshalledObject as BookmarkLabel);
             default:
-                result = Bookmark.fromDynamoDb(unmarshalledObject as Bookmark)
+                return Bookmark.fromDynamoDb(unmarshalledObject as Bookmark)
         }
-
-        return result;
-
     }
 
     async updateBookmarkLabels(label: Label) {
-        const bookmarkLabels = await this.labelService.findBookmarks(label.labelId);
+        const bookmarkLabels = await this.labelRepository.findBookmarks(label.labelId);
 
         const updated: Promise<BookmarkLabel>[] = [];
         for (let i = 0; i < bookmarkLabels.length; i++) {
@@ -70,36 +60,36 @@ class StreamLambdaHandler extends BaseHandler {
             bl.title = label.title;
             bl.color = label.color;
 
-            updated.push(this.labelService.updateBookmarks(bl));
+            updated.push(this.labelRepository.updateBookmarks(bl));
         }
 
         await Promise.all(updated);
     }
 
     async deleteBookmarkLabels(label: Label) {
-        const bookmarkLabels = await this.labelService.findBookmarks(label.labelId);
+        const bookmarkLabels = await this.labelRepository.findBookmarks(label.labelId);
 
         const updated: Promise<Bookmark>[] = [];
         for (let i = 0; i < bookmarkLabels.length; i++) {
-            updated.push(this.bookmarkService.deleteByKeys(bookmarkLabels[i].pk, bookmarkLabels[i].sk));
+            updated.push(this.bookmarkRepository.deleteByKeys(bookmarkLabels[i].pk, bookmarkLabels[i].sk));
         }
 
         await Promise.all(updated);
     }
 
     async run(): Promise<Response> {
-        for(let i = 0; i < this.records.length; i++) {
+        for (let i = 0; i < this.records.length; i++) {
             const record: StreamEvent = this.records[i];
-            if (record.type === EventTypes.MODIFY && record.object.entityType === Label.ENTITY_TYPE) {
+            if (record.type === StreamEventTypes.MODIFY && record.object.entityType === Label.ENTITY_TYPE) {
                 await this.updateBookmarkLabels(record.object as Label);
             }
-            if (record.type === EventTypes.REMOVE && record.object.entityType === Label.ENTITY_TYPE) {
+            if (record.type === StreamEventTypes.REMOVE && record.object.entityType === Label.ENTITY_TYPE) {
                 await this.deleteBookmarkLabels(record.object as Label);
             }
         }
 
         return {
-            statusCode: 200,
+            statusCode: ApiGatewayResponseCodes.OK,
             body: {}
         };
     }

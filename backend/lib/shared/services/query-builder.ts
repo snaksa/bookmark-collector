@@ -1,7 +1,7 @@
 import { DynamoDbHelper, LoggerHelper as Logger } from "../helpers";
-import { BaseModel } from "../models/base.model";
+import { Model } from "../models/base.model";
 
-export class QueryBuilder<T extends BaseModel> {
+export class QueryBuilder<T extends Model> {
     db: DynamoDbHelper;
 
     // table to be queried

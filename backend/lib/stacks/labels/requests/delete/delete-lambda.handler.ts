@@ -1,11 +1,9 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
-import { QueryBuilder } from '../../../../shared/services/query-builder';
-import Label from '../../../../shared/models/label.model';
-import { LabelService } from '../../../../shared/services/label-service';
+import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
 class DeleteLambdaHandler extends BaseHandler {
-    private labelService: LabelService;
+    private labelRepository: LabelRepository;
 
     private userId: string;
     private labelId: string;
@@ -13,7 +11,7 @@ class DeleteLambdaHandler extends BaseHandler {
     constructor() {
         super();
 
-        this.labelService = new LabelService(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
     }
 
     parseEvent(event: any) {
@@ -26,8 +24,7 @@ class DeleteLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        await this.labelService.deleteById(this.labelId, this.userId);
-        // TODO: delete attached bookmarks in stream
+        await this.labelRepository.deleteById(this.labelId, this.userId);
 
         return {
             statusCode: ApiGatewayResponseCodes.NO_CONTENT,

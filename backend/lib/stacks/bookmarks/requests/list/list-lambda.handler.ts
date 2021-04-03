@@ -1,17 +1,17 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import Bookmark from '../../../../shared/models/bookmark.model';
-import { BookmarkService } from '../../../../shared/services/bookmark-service';
+import { BookmarkRepository } from '../../../../shared/repositories/bookmark.repository';
 
 class ListLambdaHandler extends BaseHandler {
-    private bookmarkService: BookmarkService;
+    private bookmarkRepository: BookmarkRepository;
 
     private userId: string;
 
     constructor() {
         super();
 
-        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '', process.env.reversedDbStore ?? '', process.env.dbStoreGSI1 ?? '');
+        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '', process.env.reversedDbStore ?? '', process.env.dbStoreGSI1 ?? '');
     }
 
     parseEvent(event: any) {
@@ -23,9 +23,11 @@ class ListLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
+        const result = await this.bookmarkRepository.findAll(this.userId);
+        
         return {
             statusCode: ApiGatewayResponseCodes.OK,
-            body: (await this.bookmarkService.findAll(this.userId)).map((bookmark: Bookmark) => bookmark.toObject()),
+            body: result.map((bookmark: Bookmark) => bookmark.toObject()),
         };
     }
 }

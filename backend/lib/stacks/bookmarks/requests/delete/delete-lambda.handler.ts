@@ -1,10 +1,10 @@
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import Bookmark from '../../../../shared/models/bookmark.model';
-import { BookmarkService } from '../../../../shared/services/bookmark-service';
+import { BookmarkRepository } from '../../../../shared/repositories/bookmark.repository';
 
 class DeleteLambdaHandler extends BaseHandler {
-    private bookmarkService: BookmarkService;
+    private bookmarkRepository: BookmarkRepository;
 
     private userId: string;
     private bookmarkId: string;
@@ -12,7 +12,7 @@ class DeleteLambdaHandler extends BaseHandler {
     constructor() {
         super();
 
-        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '', process.env.reversedDbStore ?? '');
+        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '', process.env.reversedDbStore ?? '');
     }
 
     parseEvent(event: any) {
@@ -25,12 +25,12 @@ class DeleteLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        let bookmarks = await this.bookmarkService.findBookmarkRecords(this.bookmarkId);
+        let bookmarks = await this.bookmarkRepository.findBookmarkRecords(this.bookmarkId);
 
         const deleteBookmarkRecords: Promise<Bookmark>[] = [];
-        for (let i = 0; i < bookmarks.length; i++) {
-            deleteBookmarkRecords.push(this.bookmarkService.deleteByKeys(bookmarks[i].pk, bookmarks[i].sk));
-        }
+        bookmarks.forEach(
+            bookmark => deleteBookmarkRecords.push(this.bookmarkRepository.deleteByKeys(bookmark.pk, bookmark.sk))
+        );
 
         await Promise.all(deleteBookmarkRecords);
 

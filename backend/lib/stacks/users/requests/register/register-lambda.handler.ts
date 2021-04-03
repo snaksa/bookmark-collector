@@ -4,7 +4,7 @@ import User from '../../../../shared/models/user.model';
 import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
-import { QueryBuilder } from '../../../../shared/services/query-builder';
+import { UserRepository } from '../../../../shared/repositories/user.repository';
 
 interface RegisterEventData {
     email: string;
@@ -12,7 +12,14 @@ interface RegisterEventData {
 }
 
 class RegisterLambdaHandler extends BaseHandler {
+    private userRepository: UserRepository;
     private input: RegisterEventData;
+
+    constructor() {
+        super();
+
+        this.userRepository = new UserRepository(process.env.dbStore ?? '', process.env.userIndexByEmail ?? '');
+    }
 
     parseEvent(event: any) {
         this.input = JSON.parse(event.body) as RegisterEventData;
@@ -24,15 +31,9 @@ class RegisterLambdaHandler extends BaseHandler {
 
     async run(): Promise<Response> {
         // check if user with the provided email already exists 
-        const existingUser = await new QueryBuilder<User>()
-            .table(process.env.dbStore ?? '')
-            .index(process.env.userIndexByEmail ?? '')
-            .where({
-                GSI1: this.input.email
-            })
-            .all();
+        const userExists = await this.userRepository.userExists(this.input.email);
 
-        if (existingUser.length) {
+        if (userExists) {
             throw new Error('User with this email already exists');
         }
 
@@ -55,11 +56,8 @@ class RegisterLambdaHandler extends BaseHandler {
             throw Error("Couldn't create user");
         }
 
-        // generate token and create temporary user record 
         const id = uuidv4();
-        await new QueryBuilder<User>()
-            .table(process.env.dbStore ?? '')
-            .create(new User(id, this.input.email, 1));
+        await this.userRepository.save(new User(id, this.input.email, 1));
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

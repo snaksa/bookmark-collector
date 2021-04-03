@@ -1,6 +1,6 @@
-import { BaseModel } from "./base.model";
+import { Model } from "./base.model";
 
-export default class Label implements BaseModel {
+export default class Label implements Model {
     static ENTITY_TYPE: string = 'label';
 
     pk: string;

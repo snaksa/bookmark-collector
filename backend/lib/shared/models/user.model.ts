@@ -1,7 +1,7 @@
-import { BaseModel } from "./base.model";
+import { Model } from "./base.model";
 
 
-export default class User implements BaseModel {
+export default class User implements Model {
     static ENTITY_TYPE: string = 'user';
 
     pk: string;

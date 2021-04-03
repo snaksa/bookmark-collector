@@ -4,8 +4,8 @@ import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
 import Bookmark from '../../../../shared/models/bookmark.model';
 import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
-import { BookmarkService } from '../../../../shared/services/bookmark-service';
-import { LabelService } from '../../../../shared/services/label-service';
+import { BookmarkRepository } from '../../../../shared/repositories/bookmark.repository';
+import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
 interface CreateEventData {
     url: string;
@@ -13,8 +13,8 @@ interface CreateEventData {
 }
 
 class CreateLambdaHandler extends BaseHandler {
-    private bookmarkService: BookmarkService;
-    private labelService: LabelService;
+    private bookmarkRepository: BookmarkRepository;
+    private labelRepository: LabelRepository;
 
     private input: CreateEventData;
     private userId: string;
@@ -22,8 +22,8 @@ class CreateLambdaHandler extends BaseHandler {
     constructor() {
         super();
 
-        this.bookmarkService = new BookmarkService(process.env.dbStore ?? '');
-        this.labelService = new LabelService(process.env.dbStore ?? '');
+        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
     }
 
     parseEvent(event: any) {
@@ -41,21 +41,20 @@ class CreateLambdaHandler extends BaseHandler {
 
     async run(): Promise<Response> {
         const bookmark = new Bookmark(uuidv4(), this.userId, this.input.url);
-        const save = await this.bookmarkService.save(bookmark);
+        const save = await this.bookmarkRepository.save(bookmark);
 
         if (!save) {
             throw new Error('Could not save bookmark');
         }
 
         if (this.input.labelIds) {
-            const labels = await this.labelService.findByIds(this.input.labelIds, this.userId);
+            const labels = await this.labelRepository.findByIds(this.input.labelIds, this.userId);
 
             const bookmarkLabels: Promise<boolean>[] = [];
-            for (let i = 0; i < labels.length; i++) {
-                const label = labels[i];
+            labels.forEach(label => {
                 const bookmarkLabel = new BookmarkLabel(label.labelId, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl);
-                bookmarkLabels.push(this.bookmarkService.saveLabel(bookmarkLabel));
-            }
+                bookmarkLabels.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
+            });
 
             await Promise.all(bookmarkLabels);
         }

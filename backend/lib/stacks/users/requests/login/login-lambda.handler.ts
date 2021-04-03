@@ -16,13 +16,10 @@ class LoginHandler extends BaseHandler {
     }
 
     validate() {
-        // check if email and password are provided
-        return Validator.notEmpty(this.input.email)
-            && Validator.notEmpty(this.input.password);
+        return Validator.notEmpty(this.input.email) && Validator.notEmpty(this.input.password);
     }
 
     async run(): Promise<Response> {
-        console.log(this.input);
         const authenticationData = {
             AuthFlow: "USER_PASSWORD_AUTH",
             ClientId: process.env.cognitoClientId ?? '',

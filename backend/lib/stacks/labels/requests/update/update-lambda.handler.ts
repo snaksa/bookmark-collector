@@ -5,7 +5,7 @@ import { Validator } from '../../../../shared/validators/validator';
 import { QueryBuilder } from '../../../../shared/services/query-builder';
 import Label from '../../../../shared/models/label.model';
 import BookmarkLabel from '../../../../shared/models/bookmark-label.model';
-import { LabelService } from '../../../../shared/services/label-service';
+import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
 interface UpdateEventData {
     label: string;
@@ -13,7 +13,7 @@ interface UpdateEventData {
 }
 
 class UpdateLambdaHandler extends BaseHandler {
-    private labelService: LabelService;
+    private labelRepository: LabelRepository;
 
     private input: UpdateEventData;
     private userId: string;
@@ -22,7 +22,7 @@ class UpdateLambdaHandler extends BaseHandler {
     constructor() {
         super();
 
-        this.labelService = new LabelService(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
     }
 
     parseEvent(event: any) {
@@ -40,43 +40,21 @@ class UpdateLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        const label = await this.labelService.findOne(this.labelId, this.userId);
+        const label = await this.labelRepository.findOne(this.labelId, this.userId);
 
-        if (!label) {
+        if (!label)
             return {
                 statusCode: ApiGatewayResponseCodes.NOT_FOUND,
                 body: {},
             };
-        }
 
-        if (this.input.label) {
+        if (this.input.label)
             label.title = this.input.label;
-        }
-        if (this.input.color) {
+
+        if (this.input.color)
             label.color = this.input.color;
-        }
 
-        await this.labelService.update(label);
-
-        // TODO: update bookmark labels in stream
-        const bookmarkLabels = await this.labelService.findBookmarks(label.labelId);
-
-        const updated: Promise<BookmarkLabel>[] = [];
-        for (let i = 0; i < bookmarkLabels.length; i++) {
-            const bl = bookmarkLabels[i];
-
-            if (this.input.label) {
-                bl.title = this.input.label;
-            }
-            
-            if (this.input.color) {
-                bl.color = this.input.color;
-            }
-
-            updated.push(this.labelService.updateBookmarks(bl));
-        }
-
-        await Promise.all(updated);
+        await this.labelRepository.update(label);
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

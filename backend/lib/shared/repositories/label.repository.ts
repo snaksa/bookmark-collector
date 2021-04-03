@@ -1,8 +1,8 @@
 import BookmarkLabel from "../models/bookmark-label.model";
 import Label from "../models/label.model";
-import { QueryBuilder } from "./query-builder";
+import { QueryBuilder } from "../services/query-builder";
 
-export class LabelService {
+export class LabelRepository {
     constructor(private dbStore: string) { }
 
     async save(label: Label): Promise<boolean> {

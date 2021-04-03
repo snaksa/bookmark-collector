@@ -3,7 +3,7 @@ import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-re
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { Validator } from '../../../../shared/validators/validator';
 import Label from '../../../../shared/models/label.model';
-import { LabelService } from '../../../../shared/services/label-service';
+import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
 interface CreateEventData {
     label: string;
@@ -11,7 +11,7 @@ interface CreateEventData {
 }
 
 class CreateLambdaHandler extends BaseHandler {
-    private labelService: LabelService;
+    private labelRepository: LabelRepository;
 
     private input: CreateEventData;
     private userId: string;
@@ -19,7 +19,7 @@ class CreateLambdaHandler extends BaseHandler {
     constructor() {
         super();
 
-        this.labelService = new LabelService(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
     }
 
     parseEvent(event: any) {
@@ -37,7 +37,7 @@ class CreateLambdaHandler extends BaseHandler {
 
     async run(): Promise<Response> {
         const label = new Label(uuidv4(), this.userId, this.input.label, this.input.color);
-        const save = await this.labelService.save(label);
+        const save = await this.labelRepository.save(label);
 
         if(!save) {
             throw new Error('Could not save label');

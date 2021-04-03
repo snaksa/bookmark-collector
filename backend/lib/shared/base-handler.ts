@@ -7,8 +7,8 @@ export interface Response {
 }
 
 export default abstract class BaseHandler {
-    protected parseEvent(event: any) {
-        throw new Error("Not implemeted");
+    protected parseEvent(event: any): void {
+        return;
     }
 
     protected validate(): boolean {
