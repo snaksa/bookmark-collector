@@ -18,7 +18,7 @@ export class UserRepository {
 
     async save(user: User): Promise<boolean> {
         return await new QueryBuilder<User>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .create(user);
     }
 }

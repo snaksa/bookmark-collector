@@ -8,8 +8,16 @@ interface LoginEventData {
     password: string;
 }
 
+interface Env {
+    cognitoClientId: string;
+}
+
 class LoginHandler extends BaseHandler {
     private input: LoginEventData;
+
+    private env: Env = {
+        cognitoClientId: process.env.cognitoClientId ?? '',
+    };
 
     parseEvent(event: any) {
         this.input = JSON.parse(event.body) as LoginEventData;
@@ -22,7 +30,7 @@ class LoginHandler extends BaseHandler {
     async run(): Promise<Response> {
         const authenticationData = {
             AuthFlow: "USER_PASSWORD_AUTH",
-            ClientId: process.env.cognitoClientId ?? '',
+            ClientId: this.env.cognitoClientId,
             AuthParameters: {
                 "USERNAME": this.input.email,
                 "PASSWORD": this.input.password
@@ -30,7 +38,7 @@ class LoginHandler extends BaseHandler {
         };
 
         let authenticationDetails;
-        
+
         try {
             const cognitoidentity = new AWS.CognitoIdentityServiceProvider();
             authenticationDetails = await cognitoidentity.initiateAuth(authenticationData).promise();

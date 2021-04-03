@@ -12,6 +12,10 @@ interface CreateEventData {
     labelIds: string[];
 }
 
+interface Env {
+    dbStore: string;
+}
+
 class CreateLambdaHandler extends BaseHandler {
     private bookmarkRepository: BookmarkRepository;
     private labelRepository: LabelRepository;
@@ -19,11 +23,15 @@ class CreateLambdaHandler extends BaseHandler {
     private input: CreateEventData;
     private userId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? ''
+    };
+
     constructor() {
         super();
 
-        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '');
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.bookmarkRepository = new BookmarkRepository(this.env.dbStore);
+        this.labelRepository = new LabelRepository(this.env.dbStore);
     }
 
     parseEvent(event: any) {
@@ -52,6 +60,7 @@ class CreateLambdaHandler extends BaseHandler {
 
             const bookmarkLabels: Promise<boolean>[] = [];
             labels.forEach(label => {
+                bookmark.addLabel(label);
                 const bookmarkLabel = new BookmarkLabel(label.labelId, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl);
                 bookmarkLabels.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
             });

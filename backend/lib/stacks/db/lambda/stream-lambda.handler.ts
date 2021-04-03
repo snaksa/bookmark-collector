@@ -14,17 +14,25 @@ interface StreamEvent {
     object: Model;
 }
 
+interface Env {
+    dbStore: string,
+}
+
 class StreamLambdaHandler extends BaseHandler {
     private labelRepository: LabelRepository;
     private bookmarkRepository: BookmarkRepository;
 
     private records: StreamEvent[] = [];
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+    };
+
     constructor() {
         super();
 
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
-        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(this.env.dbStore);
+        this.bookmarkRepository = new BookmarkRepository(this.env.dbStore);
     }
 
     parseEvent(event: any) {

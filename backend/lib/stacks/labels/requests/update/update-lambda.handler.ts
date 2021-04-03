@@ -12,6 +12,10 @@ interface UpdateEventData {
     color: string;
 }
 
+interface Env {
+    dbStore: string;
+}
+
 class UpdateLambdaHandler extends BaseHandler {
     private labelRepository: LabelRepository;
 
@@ -19,10 +23,14 @@ class UpdateLambdaHandler extends BaseHandler {
     private userId: string;
     private labelId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+    };
+
     constructor() {
         super();
 
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(this.env.dbStore);
     }
 
     parseEvent(event: any) {

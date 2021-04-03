@@ -10,16 +10,24 @@ interface CreateEventData {
     color: string;
 }
 
+interface Env {
+    dbStore: string;
+}
+
 class CreateLambdaHandler extends BaseHandler {
     private labelRepository: LabelRepository;
 
     private input: CreateEventData;
     private userId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? ''
+    };
+
     constructor() {
         super();
 
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(this.env.dbStore);
     }
 
     parseEvent(event: any) {
@@ -39,7 +47,7 @@ class CreateLambdaHandler extends BaseHandler {
         const label = new Label(uuidv4(), this.userId, this.input.label, this.input.color);
         const save = await this.labelRepository.save(label);
 
-        if(!save) {
+        if (!save) {
             throw new Error('Could not save label');
         }
 

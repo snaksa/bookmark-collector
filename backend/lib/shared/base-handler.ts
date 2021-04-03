@@ -7,6 +7,7 @@ export interface Response {
 }
 
 export default abstract class BaseHandler {
+
     protected parseEvent(event: any): void {
         return;
     }
@@ -40,7 +41,7 @@ export default abstract class BaseHandler {
     public create() {
         return async (event: any) => {
             Logger.info(event);
-            
+
             this.parseEvent(event);
 
             if (!this.validate()) {

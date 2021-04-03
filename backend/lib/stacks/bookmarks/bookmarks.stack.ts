@@ -1,11 +1,7 @@
-import { Stack, StackProps, Construct } from '@aws-cdk/core';
-import { ITable } from '@aws-cdk/aws-dynamodb';
-import { AuthorizationType } from '@aws-cdk/aws-apigateway';
-import { IRestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
-import { SsmHelper } from '../../shared/helpers/ssm-helper';
-import { DynamoDbHelper } from '../../shared/helpers/dynamodbdb-helper';
+import { StackProps, Construct } from '@aws-cdk/core';
+import { LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { AwsResources } from '../../shared/enums/aws-resources';
-import { ApiGatewayHelper } from '../../shared/helpers/api-gateway-helper';
+import { ApiGatewayRequestMethods } from '../../shared/enums/api-gateway-request-methods';
 import { CreateLambda } from './requests/create/create-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
 import { ListLambda } from './requests/list/list-lambda';
@@ -19,39 +15,42 @@ export class BookmarksStack extends BaseStack {
         this.loadTables();
         this.loadApi();
         this.loadAuth();
+        this.loadAuthorizer();
 
         const bookmarks = this.api.root.addResource('bookmarks');
 
+        bookmarks.addMethod(
+            ApiGatewayRequestMethods.POST,
+            new LambdaIntegration(
+                new CreateLambda(this, 'create-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
 
-        bookmarks.addMethod('POST', new LambdaIntegration(
-            new CreateLambda(this, 'create-lambda', {
-                dbStore: this.dbStore,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
-
-        bookmarks.addMethod('GET', new LambdaIntegration(
-            new ListLambda(this, 'list-lambda', {
-                dbStore: this.dbStore,
-                dbStoreGSI1: AwsResources.DB_STORE_TABLE_GSI1,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        bookmarks.addMethod(
+            ApiGatewayRequestMethods.GET,
+            new LambdaIntegration(
+                new ListLambda(this, 'list-lambda', {
+                    dbStore: this.dbStore,
+                    dbStoreGSI1: AwsResources.DB_STORE_TABLE_GSI1,
+                })
+            ),
+            this.getAuthorization()
+        );
 
         const singleBookmark = bookmarks.addResource('{id}');
 
-        singleBookmark.addMethod('DELETE', new LambdaIntegration(
-            new DeleteLambda(this, 'delete-lambda', {
-                dbStore: this.dbStore,
-                reversedDbStore: AwsResources.DB_STORE_TABLE_REVERSED
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        singleBookmark.addMethod(
+            ApiGatewayRequestMethods.DELETE,
+            new LambdaIntegration(
+                new DeleteLambda(this, 'delete-lambda', {
+                    dbStore: this.dbStore,
+                    reversedDbStore: AwsResources.DB_STORE_TABLE_REVERSED
+                })
+            ),
+            this.getAuthorization()
+        );
     }
 }

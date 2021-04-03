@@ -56,7 +56,7 @@ export class BookmarkRepository {
 
     async deleteByKeys(pk: string, sk: string): Promise<Bookmark> {
         return new QueryBuilder<Bookmark>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: pk,
                 sk: sk,

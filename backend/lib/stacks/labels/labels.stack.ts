@@ -1,11 +1,11 @@
-import { Stack, StackProps, Construct } from '@aws-cdk/core';
-import { AuthorizationType } from '@aws-cdk/aws-apigateway';
-import { IRestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
+import { StackProps, Construct } from '@aws-cdk/core';
+import { LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { CreateLambda } from './requests/create/create-lambda';
 import { ListLambda } from './requests/list/list-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
 import { UpdateLambda } from './requests/update/update-lambda';
 import { BaseStack } from '../base.stack';
+import { ApiGatewayRequestMethods } from '../../shared/enums/api-gateway-request-methods';
 
 export class LabelsStack extends BaseStack {
 
@@ -15,46 +15,50 @@ export class LabelsStack extends BaseStack {
         this.loadTables();
         this.loadApi();
         this.loadAuth();
-        this.loadAithorizer();
+        this.loadAuthorizer();
 
         const labels = this.api.root.addResource('labels');
 
-        labels.addMethod('GET', new LambdaIntegration(
-            new ListLambda(this, 'list-lambda', {
-                dbStore: this.dbStore,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        labels.addMethod(
+            ApiGatewayRequestMethods.GET,
+            new LambdaIntegration(
+                new ListLambda(this, 'list-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
 
-        labels.addMethod('POST', new LambdaIntegration(
-            new CreateLambda(this, 'create-lambda', {
-                dbStore: this.dbStore,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        labels.addMethod(
+            ApiGatewayRequestMethods.POST,
+            new LambdaIntegration(
+                new CreateLambda(this, 'create-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
 
         const singleLabel = labels.addResource('{id}');
 
-        singleLabel.addMethod('DELETE', new LambdaIntegration(
-            new DeleteLambda(this, 'delete-lambda', {
-                dbStore: this.dbStore,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        singleLabel.addMethod(
+            ApiGatewayRequestMethods.DELETE,
+            new LambdaIntegration(
+                new DeleteLambda(this, 'delete-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
 
-        singleLabel.addMethod('PUT', new LambdaIntegration(
-            new UpdateLambda(this, 'update-lambda', {
-                dbStore: this.dbStore,
-            })
-        ), {
-            authorizationType: AuthorizationType.COGNITO,
-            authorizer: { authorizerId: this.authorizerRef },
-        });
+        singleLabel.addMethod(
+            ApiGatewayRequestMethods.PUT,
+            new LambdaIntegration(
+                new UpdateLambda(this, 'update-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
     }
 }

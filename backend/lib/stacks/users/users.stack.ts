@@ -1,10 +1,11 @@
-import { Stack, StackProps, Construct } from '@aws-cdk/core';
+import { StackProps, Construct } from '@aws-cdk/core';
 import { ITable } from '@aws-cdk/aws-dynamodb';
 import { IRestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { LoginLambda } from './requests/login/login-lambda';
 import { RegisterLambda } from './requests/register/register-lambda';
 import { AwsResources } from '../../shared/enums/aws-resources';
 import { BaseStack } from '../base.stack';
+import { ApiGatewayRequestMethods } from '../../shared/enums/api-gateway-request-methods';
 
 export class UsersStack extends BaseStack {
     dbStore: ITable;
@@ -18,23 +19,30 @@ export class UsersStack extends BaseStack {
         this.loadTables();
         this.loadApi();
         this.loadAuth();
+        this.loadAuthorizer();
 
         const auth = this.api.root.addResource('auth');
 
         auth.addResource('register')
-            .addMethod('POST', new LambdaIntegration(
-                new RegisterLambda(this, 'register-lambda', {
-                    dbStore: this.dbStore,
-                    userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
-                    cognitoClientId: this.cognitoClientId
-                })
-            ));
+            .addMethod(
+                ApiGatewayRequestMethods.POST,
+                new LambdaIntegration(
+                    new RegisterLambda(this, 'register-lambda', {
+                        dbStore: this.dbStore,
+                        userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
+                        cognitoClientId: this.cognitoClientId
+                    })
+                )
+            );
 
         auth.addResource('login')
-            .addMethod('POST', new LambdaIntegration(
-                new LoginLambda(this, 'login-lambda', {
-                    cognitoClientId: this.cognitoClientId
-                })
-            ));
+            .addMethod(
+                ApiGatewayRequestMethods.POST,
+                new LambdaIntegration(
+                    new LoginLambda(this, 'login-lambda', {
+                        cognitoClientId: this.cognitoClientId
+                    })
+                )
+            );
     }
 }

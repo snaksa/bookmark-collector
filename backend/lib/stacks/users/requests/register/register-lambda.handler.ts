@@ -11,14 +11,26 @@ interface RegisterEventData {
     password: string;
 }
 
+interface Env {
+    dbStore: string;
+    userIndexByEmail: string;
+    cognitoClientId: string;
+}
+
 class RegisterLambdaHandler extends BaseHandler {
     private userRepository: UserRepository;
     private input: RegisterEventData;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+        userIndexByEmail: process.env.userIndexByEmail ?? '',
+        cognitoClientId: process.env.cognitoClientId ?? '',
+    };
+
     constructor() {
         super();
 
-        this.userRepository = new UserRepository(process.env.dbStore ?? '', process.env.userIndexByEmail ?? '');
+        this.userRepository = new UserRepository(this.env.dbStore, this.env.userIndexByEmail);
     }
 
     parseEvent(event: any) {
@@ -38,7 +50,7 @@ class RegisterLambdaHandler extends BaseHandler {
         }
 
         const registerData = {
-            ClientId: process.env.cognitoClientId ?? '',
+            ClientId: this.env.cognitoClientId,
             Username: this.input.email,
             Password: this.input.password,
             UserAttributes: [{

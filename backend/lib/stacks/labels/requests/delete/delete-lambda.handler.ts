@@ -2,16 +2,24 @@ import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-re
 import BaseHandler, { Response } from '../../../../shared/base-handler';
 import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
+interface Env {
+    dbStore: string;
+}
+
 class DeleteLambdaHandler extends BaseHandler {
     private labelRepository: LabelRepository;
 
     private userId: string;
     private labelId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+    };
+
     constructor() {
         super();
 
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(this.env.dbStore);
     }
 
     parseEvent(event: any) {

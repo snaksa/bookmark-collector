@@ -3,16 +3,26 @@ import BaseHandler, { Response } from '../../../../shared/base-handler';
 import Bookmark from '../../../../shared/models/bookmark.model';
 import { BookmarkRepository } from '../../../../shared/repositories/bookmark.repository';
 
+interface Env {
+    dbStore: string;
+    reversedDbStore: string,
+}
+
 class DeleteLambdaHandler extends BaseHandler {
     private bookmarkRepository: BookmarkRepository;
 
     private userId: string;
     private bookmarkId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+        reversedDbStore: process.env.reversedDbStore ?? '',
+    }
+
     constructor() {
         super();
 
-        this.bookmarkRepository = new BookmarkRepository(process.env.dbStore ?? '', process.env.reversedDbStore ?? '');
+        this.bookmarkRepository = new BookmarkRepository(this.env.dbStore, this.env.reversedDbStore);
     }
 
     parseEvent(event: any) {

@@ -1,4 +1,4 @@
-import { IRestApi } from '@aws-cdk/aws-apigateway';
+import { AuthorizationType, IRestApi } from '@aws-cdk/aws-apigateway';
 import { ITable } from '@aws-cdk/aws-dynamodb';
 import { Construct, Stack, StackProps } from '@aws-cdk/core';
 import { AwsResources } from '../shared/enums/aws-resources';
@@ -31,7 +31,14 @@ export class BaseStack extends Stack {
         this.cognitoClientId = SsmHelper.getParameter(this, AwsResources.COGNITO_CLIENT_ID);
     }
 
-    loadAithorizer() {
+    loadAuthorizer() {
         this.authorizerRef = SsmHelper.getParameter(this, AwsResources.REST_API_COGNITO_AUTHORIZER);
+    }
+
+    getAuthorization() {
+        return {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: { authorizerId: this.authorizerRef },
+        };
     }
 }

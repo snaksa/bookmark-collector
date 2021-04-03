@@ -3,7 +3,10 @@ import Label from "../models/label.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class LabelRepository {
-    constructor(private dbStore: string) { }
+    constructor(private dbStore: string) {
+        console.log('set in LabelRepository');
+        console.log(this.dbStore);
+     }
 
     async save(label: Label): Promise<boolean> {
         return new QueryBuilder<Label>()
@@ -13,7 +16,7 @@ export class LabelRepository {
 
     async update(label: Label): Promise<Label> {
         const updated = await new QueryBuilder<Label>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: `USER#${label.userId}`,
                 sk: `LABEL#${label.labelId}`
@@ -25,7 +28,7 @@ export class LabelRepository {
 
     async deleteById(labelId: string, userId: string) {
         return new QueryBuilder<Label>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: `USER#${userId}`,
                 sk: `LABEL#${labelId}`,
@@ -58,7 +61,7 @@ export class LabelRepository {
 
     async findAll(userId: string): Promise<Label[]> {
         const labels = await new QueryBuilder<Label>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: `USER#${userId}`,
             })
@@ -70,7 +73,7 @@ export class LabelRepository {
 
     async findBookmarks(labelId: string): Promise<BookmarkLabel[]> {
         const result = await new QueryBuilder<BookmarkLabel>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: `LABEL#${labelId}`,
             })
@@ -81,7 +84,7 @@ export class LabelRepository {
 
     async updateBookmarks(bookmarkLabel: BookmarkLabel) {
         const updated = await new QueryBuilder<BookmarkLabel>()
-            .table(process.env.dbStore ?? '')
+            .table(this.dbStore)
             .where({
                 pk: `LABEL#${bookmarkLabel.labelId}`,
                 sk: `BOOKMARK#${bookmarkLabel.bookmarkId}`

@@ -3,16 +3,25 @@ import BaseHandler, { Response } from '../../../../shared/base-handler';
 import Label from '../../../../shared/models/label.model';
 import { LabelRepository } from '../../../../shared/repositories/label.repository';
 
+interface Env {
+    dbStore: string;
+}
+
 class ListLambdaHandler extends BaseHandler {
     private labelRepository: LabelRepository;
 
     private userId: string;
 
+    private env: Env = {
+        dbStore: process.env.dbStore ?? '',
+    };
+
     constructor() {
         super();
 
-        this.labelRepository = new LabelRepository(process.env.dbStore ?? '');
+        this.labelRepository = new LabelRepository(this.env.dbStore);
     }
+
 
     parseEvent(event: any) {
         this.userId = event.requestContext.authorizer.claims.sub;
