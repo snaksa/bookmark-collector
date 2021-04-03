@@ -1,7 +1,10 @@
-import { AttributeType } from '@aws-cdk/aws-dynamodb';
+import { AttributeType, StreamViewType } from '@aws-cdk/aws-dynamodb';
 import { Construct, Stack, StackProps } from '@aws-cdk/core';
+import { DynamoEventSource } from '@aws-cdk/aws-lambda-event-sources';
+import { StartingPosition } from '@aws-cdk/aws-lambda';
 import { DynamoDbHelper } from '../../shared/helpers/dynamodbdb-helper';
 import { AwsResources } from '../../shared/enums/aws-resources';
+import { StreamLambda } from './lambda/stream-lambda';
 
 export default class DbStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -16,6 +19,7 @@ export default class DbStack extends Stack {
             name: 'sk',
             type: AttributeType.STRING
         },
+        stream: StreamViewType.NEW_AND_OLD_IMAGES,
     });
 
     dbStore.addGlobalSecondaryIndex({
@@ -41,5 +45,16 @@ export default class DbStack extends Stack {
             type: AttributeType.STRING
         },
     });
+
+    new StreamLambda(this, 'DbStoreStream', {dbStore: dbStore})
+    .addEventSource(new DynamoEventSource(
+        dbStore,
+        {
+          startingPosition: StartingPosition.TRIM_HORIZON,
+          batchSize: 5,
+          bisectBatchOnError: true,
+          retryAttempts: 10,
+        }
+      ));
   }
 }
