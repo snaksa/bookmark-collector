@@ -9,13 +9,9 @@ import { ApiGatewayHelper } from '../../shared/helpers/api-gateway-helper';
 import { CreateLambda } from './requests/create/create-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
 import { ListLambda } from './requests/list/list-lambda';
+import { BaseStack } from '../base.stack';
 
-export class BookmarksStack extends Stack {
-    dbStore: ITable;
-    dbStoreGSI1: ITable;
-    api: IRestApi;
-    cognitoClientId: string;
-    authorizerRef: string;
+export class BookmarksStack extends BaseStack {
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
@@ -57,21 +53,5 @@ export class BookmarksStack extends Stack {
             authorizationType: AuthorizationType.COGNITO,
             authorizer: { authorizerId: this.authorizerRef },
         });
-    }
-
-    loadTables() {
-        this.dbStore = DynamoDbHelper.getTable(this, AwsResources.DB_STORE_TABLE, [AwsResources.DB_STORE_TABLE_REVERSED, AwsResources.DB_STORE_TABLE_GSI1]);
-    }
-
-    loadApi() {
-        const restApiId = SsmHelper.getParameter(this, AwsResources.REST_API_ID);
-        const restApiRootResourceId = SsmHelper.getParameter(this, AwsResources.REST_API_ROOT_RESOURCE_ID);
-
-        this.api = ApiGatewayHelper.getRestApi(this, restApiId, restApiRootResourceId);
-        this.authorizerRef = SsmHelper.getParameter(this, AwsResources.REST_API_COGNITO_AUTHORIZER);
-    }
-
-    loadAuth() {
-        this.cognitoClientId = SsmHelper.getParameter(this, AwsResources.COGNITO_CLIENT_ID);
     }
 }

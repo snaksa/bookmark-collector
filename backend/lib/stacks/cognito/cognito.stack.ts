@@ -2,9 +2,10 @@ import { UserPool, UserPoolClient } from '@aws-cdk/aws-cognito';
 import { Stack, StackProps, Construct } from '@aws-cdk/core';
 import { AwsResources } from '../../shared/enums/aws-resources';
 import { SsmHelper } from '../../shared/helpers/ssm-helper';
+import { BaseStack } from '../base.stack';
 import { CognitoConfirmationLambda } from './lambda/cognito-confirmation-lambda';
 
-export class CognitoStack extends Stack {
+export class CognitoStack extends BaseStack {
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);

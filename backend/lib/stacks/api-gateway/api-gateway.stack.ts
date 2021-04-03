@@ -2,10 +2,9 @@ import * as cdk from '@aws-cdk/core';
 import { AuthorizationType, CfnAuthorizer, Cors, RestApi } from "@aws-cdk/aws-apigateway";
 import { AwsResources } from '../../shared/enums/aws-resources';
 import { SsmHelper } from '../../shared/helpers/ssm-helper';
+import { BaseStack } from '../base.stack';
 
-export class ApiGatewayStack extends cdk.Stack {
-    private readonly api: RestApi;
-
+export class ApiGatewayStack extends BaseStack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
