@@ -7,9 +7,9 @@ import AuthForm from '../../forms/auth-form/auth-form';
 export default function LoginScreen() {
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container maxWidth="xs">
       <CssBaseline />
-      <AuthForm title="Sign Up"/>
+      <AuthForm isLogin={true} title="Sign In"/>
       <Box mt={5}>
         <Copyright />
       </Box>

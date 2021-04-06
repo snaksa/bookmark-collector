@@ -4,11 +4,11 @@ import Container from '@material-ui/core/Container';
 import Copyright from '../../organisms/copyright/copyright';
 import AuthForm from '../../forms/auth-form/auth-form';
 
-export default function RegisterScreen() {
+export default function SignUpScreen() {
   return (
-    <Container component="main" maxWidth="xs">
+    <Container maxWidth="xs">
       <CssBaseline />
-      <AuthForm isLogin={true} title="Sign In"/>
+      <AuthForm title="Sign Up"/>
       <Box mt={5}>
         <Copyright />
       </Box>
