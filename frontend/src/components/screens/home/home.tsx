@@ -6,7 +6,7 @@ export default function HomeScreen() {
 
     return (
         <Container >
-            <Grid direction="column">
+            <Grid container direction="column">
                 <Grid item>
                     <NavLink to={'/login'} exact>Login</NavLink>
                 </Grid>

@@ -1,7 +1,8 @@
 import { Avatar, Button, Grid, Link, TextField, Typography } from "@material-ui/core";
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import * as Yup from 'yup';
+import { NavLink } from "react-router-dom";
 import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from "./styles";
 
 interface PropTypes {
@@ -9,16 +10,31 @@ interface PropTypes {
     title: string;
 };
 
+interface FormFields {
+    firstName?: string;
+    lastName?: string;
+    email: string;
+    password: string;
+};
+
 export default function AuthForm({ isLogin, title }: PropTypes) {
     const classes = useStyles();
 
     const schema = () => {
-        return Yup.object().shape({
-            firstName: Yup.string().required("Enter first name"),
-            lastName: Yup.string().required("Enter last name"),
+        let shape: any = {
             email: Yup.string().email().required("Enter email"),
             password: Yup.string().required("Enter password"),
-        });
+        };
+
+        if (!isLogin) {
+            shape = {
+                ...shape,
+                firstName: Yup.string().required("Enter first name"),
+                lastName: Yup.string().required("Enter last name"),
+            };
+        }
+
+        return Yup.object().shape(shape);
     };
 
     return <div className={classes.paper}>
@@ -36,7 +52,7 @@ export default function AuthForm({ isLogin, title }: PropTypes) {
                 email: '',
                 password: '',
             }}
-            onSubmit={(values) => {
+            onSubmit={(values: FormFields) => {
                 console.log(values);
             }}
         >
@@ -122,9 +138,7 @@ export default function AuthForm({ isLogin, title }: PropTypes) {
                     {
                         !isLogin && <Grid container justify="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    Already have an account? Sign in
-                    </Link>
+                                <NavLink to={'/login'}>Already have an account? Sign in</NavLink>
                             </Grid>
                         </Grid>
                     }
