@@ -8,10 +8,10 @@ export default function LoginScreen() {
 
   return (
     <Container maxWidth="xs">
-      <CssBaseline />
+      <CssBaseline/>
       <AuthForm isLogin={true} title="Sign In"/>
       <Box mt={5}>
-        <Copyright />
+        <Copyright/>
       </Box>
     </Container>
   );

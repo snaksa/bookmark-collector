@@ -7,10 +7,10 @@ import AuthForm from '../../forms/auth-form/auth-form';
 export default function SignUpScreen() {
   return (
     <Container maxWidth="xs">
-      <CssBaseline />
+      <CssBaseline/>
       <AuthForm title="Sign Up"/>
       <Box mt={5}>
-        <Copyright />
+        <Copyright/>
       </Box>
     </Container>
   );
