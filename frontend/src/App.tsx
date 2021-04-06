@@ -3,14 +3,14 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import { Container } from "@material-ui/core";
 import LoginScreen from "./components/screens/login/login"
 import SignUpScreen from "./components/screens/signup/signup";
 import HomeScreen from "./components/screens/home/home";
-import './App.css';
 
 function App() {
   return (
-    <div className="App">
+    <Container>
       <Router>
         <Switch>
           <Route path="/login">
@@ -24,7 +24,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
-    </div>
+    </Container>
   );
 }
 
