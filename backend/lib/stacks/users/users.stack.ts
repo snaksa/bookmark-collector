@@ -1,6 +1,6 @@
 import { StackProps, Construct } from '@aws-cdk/core';
 import { ITable } from '@aws-cdk/aws-dynamodb';
-import { IRestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
+import { Cors, IRestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { LoginLambda } from './requests/login/login-lambda';
 import { RegisterLambda } from './requests/register/register-lambda';
 import { AwsResources } from '../../shared/enums/aws-resources';
@@ -21,9 +21,21 @@ export class UsersStack extends BaseStack {
         this.loadAuth();
         this.loadAuthorizer();
 
-        const auth = this.api.root.addResource('auth');
+        const auth = this.api.root.addResource('auth', {defaultCorsPreflightOptions: {
+            allowOrigins: Cors.ALL_ORIGINS,
+            allowMethods: Cors.ALL_METHODS,
+            allowHeaders: ['*'],
+            disableCache: true,
+        }});
 
-        auth.addResource('register')
+        auth.addResource('register', {
+            defaultCorsPreflightOptions: {
+                allowOrigins: Cors.ALL_ORIGINS,
+                allowMethods: Cors.ALL_METHODS,
+                allowHeaders: ['*'],
+                disableCache: true,
+            }
+        })
             .addMethod(
                 ApiGatewayRequestMethods.POST,
                 new LambdaIntegration(
@@ -35,7 +47,14 @@ export class UsersStack extends BaseStack {
                 )
             );
 
-        auth.addResource('login')
+        auth.addResource('login', {
+            defaultCorsPreflightOptions: {
+                allowOrigins: Cors.ALL_ORIGINS,
+                allowMethods: Cors.ALL_METHODS,
+                allowHeaders: ['*'],
+                disableCache: true,
+            }
+        })
             .addMethod(
                 ApiGatewayRequestMethods.POST,
                 new LambdaIntegration(

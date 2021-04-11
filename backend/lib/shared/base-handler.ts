@@ -24,6 +24,11 @@ export default abstract class BaseHandler {
         return {
             statusCode: data.statusCode ?? ApiGatewayResponseCodes.OK,
             body: JSON.stringify(data.body) ?? {},
+            headers: {
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            }
         };
     }
 
@@ -31,6 +36,11 @@ export default abstract class BaseHandler {
         return {
             statusCode: code,
             body: JSON.stringify({ message }),
+            headers: {
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            }
         };
     }
 
