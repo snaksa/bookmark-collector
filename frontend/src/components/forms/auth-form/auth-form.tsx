@@ -1,24 +1,29 @@
-import {Avatar, Button, Grid, Link, TextField, Typography} from "@material-ui/core";
+import React, {useState} from 'react';
+import {Avatar, Button, Grid, TextField, Typography} from "@material-ui/core";
 import {NavLink} from "react-router-dom";
 import {Formik, Form} from 'formik';
 import * as Yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from "./styles";
+import HttpClient from "../../../services/http-client";
 
 interface PropTypes {
+  onSuccess?: Function;
   isLogin?: boolean;
   title: string;
-};
+}
 
 interface FormFields {
   firstName?: string;
   lastName?: string;
   email: string;
   password: string;
-};
+}
 
-export default function AuthForm({isLogin, title}: PropTypes) {
+export default function AuthForm({onSuccess, isLogin, title}: PropTypes) {
   const classes = useStyles();
+  const [error, setError] = useState<string>('');
+  const [submitting, isSubmitting] = useState<boolean>(false);
 
   const schema = () => {
     let shape: any = {
@@ -37,6 +42,27 @@ export default function AuthForm({isLogin, title}: PropTypes) {
     return Yup.object().shape(shape);
   };
 
+  const onSubmit = (values: FormFields) => {
+    isSubmitting(true);
+    let data = {
+      email: values.email,
+      password: values.password,
+      ...(isLogin ? {} : {
+        // todo add first and last name
+      }),
+    };
+    HttpClient.post(`https://5eujqj1lva.execute-api.us-east-1.amazonaws.com/prod/auth/${isLogin ? 'login' : 'register'}`, {}, data).then(data => {
+      isSubmitting(false);
+      if (data.status === 200) {
+        if (onSuccess) {
+          onSuccess(data);
+        }
+      } else {
+        setError(data.data);
+      }
+    });
+  }
+
   return <div className={classes.paper}>
     <Avatar className={classes.avatar}>
       <LockOutlinedIcon/>
@@ -52,9 +78,7 @@ export default function AuthForm({isLogin, title}: PropTypes) {
         email: '',
         password: '',
       }}
-      onSubmit={(values: FormFields) => {
-        console.log(values);
-      }}
+      onSubmit={onSubmit}
     >
       {({errors, touched, values, handleChange, handleBlur}) => (
         <Form className={classes.form} noValidate={true}>
@@ -132,9 +156,11 @@ export default function AuthForm({isLogin, title}: PropTypes) {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={submitting}
           >
             {title.toUpperCase()}
           </Button>
+          {error}
           {
             !isLogin && <Grid container justify="flex-end">
               <Grid item>
