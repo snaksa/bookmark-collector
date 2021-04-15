@@ -1,5 +1,5 @@
 import { StackProps, Construct } from '@aws-cdk/core';
-import { LambdaIntegration } from '@aws-cdk/aws-apigateway';
+import { Cors, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { CreateLambda } from './requests/create/create-lambda';
 import { ListLambda } from './requests/list/list-lambda';
 import { DeleteLambda } from './requests/delete/delete-lambda';
@@ -17,7 +17,14 @@ export class LabelsStack extends BaseStack {
         this.loadAuth();
         this.loadAuthorizer();
 
-        const labels = this.api.root.addResource('labels');
+        const labels = this.api.root.addResource('labels', {
+            defaultCorsPreflightOptions: {
+                allowOrigins: Cors.ALL_ORIGINS,
+                allowMethods: Cors.ALL_METHODS,
+                allowHeaders: ['*'],
+                disableCache: true,
+            }
+        });
 
         labels.addMethod(
             ApiGatewayRequestMethods.GET,

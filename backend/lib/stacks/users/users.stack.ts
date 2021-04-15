@@ -21,12 +21,14 @@ export class UsersStack extends BaseStack {
         this.loadAuth();
         this.loadAuthorizer();
 
-        const auth = this.api.root.addResource('auth', {defaultCorsPreflightOptions: {
-            allowOrigins: Cors.ALL_ORIGINS,
-            allowMethods: Cors.ALL_METHODS,
-            allowHeaders: ['*'],
-            disableCache: true,
-        }});
+        const auth = this.api.root.addResource('auth', {
+            defaultCorsPreflightOptions: {
+                allowOrigins: Cors.ALL_ORIGINS,
+                allowMethods: Cors.ALL_METHODS,
+                allowHeaders: ['*'],
+                disableCache: true,
+            }
+        });
 
         auth.addResource('register', {
             defaultCorsPreflightOptions: {
