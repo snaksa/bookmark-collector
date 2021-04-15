@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 
-const baseUrl = 'https://s6yse3f9o6.execute-api.us-east-1.amazonaws.com/prod/';
+const baseUrl = 'https://0853c6yht3.execute-api.us-east-1.amazonaws.com/prod/';
 
 export default function useHttpPost(url: string) {
     const [response, setResponse] = React.useState([]);
@@ -19,8 +19,10 @@ export default function useHttpPost(url: string) {
             const responseData = response.data;
             setResponse(responseData);
             setIsLoading(false);
+            
             return responseData;
         } catch (error) {
+            setIsLoading(false);
             setError({
                 status: error.response.status,
                 message: error.response.data.message,

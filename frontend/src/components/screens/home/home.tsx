@@ -9,7 +9,6 @@ import MyLabels from '../../organisms/my-labels';
 export default function HomeScreen() {
   const {isAuthenticated, onLogout} = useAuth();
   const history = useHistory();
-  console.log('isAuth', isAuthenticated);
 
   const logout = () => {
     onLogout();

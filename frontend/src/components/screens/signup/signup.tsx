@@ -4,18 +4,27 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Copyright from '../../organisms/copyright';
-import AuthForm from '../../forms/auth-form/auth-form';
+import RegisterForm, {FormFields} from '../../forms/auth-forms/register-form';
+import useHttpPost from '../../../hooks/useHttpPost';
 
 export default function SignUpScreen() {
   const history = useHistory();
-  const onSuccess = () => {
-    history.push('/login');
+  const { error, isLoading, execute: register } = useHttpPost(`auth/register`);
+
+  const onSubmit = (data: FormFields) => {
+    register(data)
+      .then((responseData: any) => {
+        if (responseData) {
+          history.push('/login');
+        }
+      });
   }
 
   return (
     <Container maxWidth="xs">
       <CssBaseline/>
-      <AuthForm onSuccess={onSuccess} title="Sign Up"/>
+      <RegisterForm onSubmit={onSubmit} isLoading={isLoading}/>
+      <Box>{error?.message}</Box>
       <Box mt={5}>
         <Copyright/>
       </Box>

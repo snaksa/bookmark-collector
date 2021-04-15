@@ -10,6 +10,5 @@ export default function MyLabels() {
     {
       isLoading ? <Box>Loading...</Box> : <LabelsList labels={labels}></LabelsList>
     }
-
   </Box>;
 }

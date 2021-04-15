@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 
-const baseUrl = 'https://s6yse3f9o6.execute-api.us-east-1.amazonaws.com/prod/';
+const baseUrl = 'https://0853c6yht3.execute-api.us-east-1.amazonaws.com/prod/';
 
 export default function useHttpGet(url: string, params: { [key: string]: string | number } = {}) {
     const [response, setResponse] = React.useState([]);
@@ -19,6 +19,7 @@ export default function useHttpGet(url: string, params: { [key: string]: string 
             setResponse(data);
             setIsLoading(false);
         } catch (error) {
+            console.log(JSON.parse(JSON.stringify(error)));
             setError({
                 status: error.response.status,
                 message: error.response.data.message,
