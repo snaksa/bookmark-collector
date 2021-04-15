@@ -12,7 +12,7 @@ export default function LoginScreen() {
   const {onLogin} = useAuth();
 
   const onSuccess = (data: any) => {
-    onLogin(data.data.tokens.IdToken);
+    onLogin(data.tokens.IdToken);
     history.push('/');
   }
 

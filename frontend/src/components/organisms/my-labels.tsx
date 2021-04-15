@@ -1,19 +1,15 @@
 import { Box } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import HttpClient from "../../services/http-client";
+import useHttpGet from "../../hooks/useHttpGet";
 import LabelsList from './labels-list';
 
 export default function MyLabels() {
-  const [labels, setLabels] = useState([]);
 
-  useEffect(() => {
-    // fetch labels
-    HttpClient.get('labels').then(response => {
-      setLabels(response);
-    });
-  }, []);
+  const { response: labels, isLoading } = useHttpGet('labels');
 
   return <Box>
-    <LabelsList labels={labels}></LabelsList>
+    {
+      isLoading ? <Box>Loading...</Box> : <LabelsList labels={labels}></LabelsList>
+    }
+
   </Box>;
 }

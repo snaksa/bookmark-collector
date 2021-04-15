@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from "./styles";
-import HttpClient from "../../../services/http-client";
+import useHttpPost from '../../../hooks/useHttpPost';
 
 interface PropTypes {
   onSuccess?: Function;
@@ -22,8 +22,8 @@ interface FormFields {
 
 export default function AuthForm({ onSuccess, isLogin, title }: PropTypes) {
   const classes = useStyles();
-  const [error, setError] = useState<string>('');
   const [submitting, isSubmitting] = useState<boolean>(false);
+  const { error, execute: authenticate } = useHttpPost(`auth/${isLogin ? 'login' : 'register'}`);
 
   const schema = () => {
     let shape: any = {
@@ -51,15 +51,11 @@ export default function AuthForm({ onSuccess, isLogin, title }: PropTypes) {
         // todo add first and last name
       }),
     };
-    HttpClient.post(`auth/${isLogin ? 'login' : 'register'}`, {}, data)
-      .then(data => {
+    authenticate(data)
+      .then((responseData: any) => {
         isSubmitting(false);
-        if (data.status === 200) {
-          if (onSuccess) {
-            onSuccess(data);
-          }
-        } else {
-          setError(data.data);
+        if (responseData && onSuccess) {
+          onSuccess(responseData);
         }
       });
   }
@@ -161,7 +157,7 @@ export default function AuthForm({ onSuccess, isLogin, title }: PropTypes) {
           >
             {title.toUpperCase()}
           </Button>
-          {error}
+          {error?.message}
           {
             !isLogin && <Grid container justify="flex-end">
               <Grid item>
