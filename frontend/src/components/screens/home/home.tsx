@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import {NavLink} from 'react-router-dom';
 import {useAuth} from "../../../hooks/useAuth";
 import {useHistory} from "react-router";
+import MyLabels from '../../organisms/my-labels';
 
 export default function HomeScreen() {
   const {isAuthenticated, onLogout} = useAuth();
@@ -20,6 +21,7 @@ export default function HomeScreen() {
       {
         isAuthenticated && <Grid container direction='column'>
           <Grid item>Authenticated</Grid>
+          <Grid item><MyLabels></MyLabels></Grid>
           <Grid item><Button onClick={logout}>Log Out</Button></Grid>
         </Grid>
       }

@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {Avatar, Button, Grid, TextField, Typography} from "@material-ui/core";
-import {NavLink} from "react-router-dom";
-import {Formik, Form} from 'formik';
+import React, { useState } from 'react';
+import { Avatar, Button, Grid, TextField, Typography } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from "./styles";
@@ -20,7 +20,7 @@ interface FormFields {
   password: string;
 }
 
-export default function AuthForm({onSuccess, isLogin, title}: PropTypes) {
+export default function AuthForm({ onSuccess, isLogin, title }: PropTypes) {
   const classes = useStyles();
   const [error, setError] = useState<string>('');
   const [submitting, isSubmitting] = useState<boolean>(false);
@@ -51,21 +51,22 @@ export default function AuthForm({onSuccess, isLogin, title}: PropTypes) {
         // todo add first and last name
       }),
     };
-    HttpClient.post(`https://5eujqj1lva.execute-api.us-east-1.amazonaws.com/prod/auth/${isLogin ? 'login' : 'register'}`, {}, data).then(data => {
-      isSubmitting(false);
-      if (data.status === 200) {
-        if (onSuccess) {
-          onSuccess(data);
+    HttpClient.post(`auth/${isLogin ? 'login' : 'register'}`, {}, data)
+      .then(data => {
+        isSubmitting(false);
+        if (data.status === 200) {
+          if (onSuccess) {
+            onSuccess(data);
+          }
+        } else {
+          setError(data.data);
         }
-      } else {
-        setError(data.data);
-      }
-    });
+      });
   }
 
   return <div className={classes.paper}>
     <Avatar className={classes.avatar}>
-      <LockOutlinedIcon/>
+      <LockOutlinedIcon />
     </Avatar>
     <Typography component="h1" variant="h5">
       {title}
@@ -80,7 +81,7 @@ export default function AuthForm({onSuccess, isLogin, title}: PropTypes) {
       }}
       onSubmit={onSubmit}
     >
-      {({errors, touched, values, handleChange, handleBlur}) => (
+      {({ errors, touched, values, handleChange, handleBlur }) => (
         <Form className={classes.form} noValidate={true}>
           <Grid container spacing={2}>
             {

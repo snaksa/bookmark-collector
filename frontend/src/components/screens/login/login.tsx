@@ -3,7 +3,7 @@ import {useHistory} from 'react-router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import Copyright from '../../organisms/copyright/copyright';
+import Copyright from '../../organisms/copyright';
 import AuthForm from '../../forms/auth-form/auth-form';
 import {useAuth} from "../../../hooks/useAuth";
 
@@ -12,7 +12,7 @@ export default function LoginScreen() {
   const {onLogin} = useAuth();
 
   const onSuccess = (data: any) => {
-    onLogin(data.data.IdToken);
+    onLogin(data.data.tokens.IdToken);
     history.push('/');
   }
 
