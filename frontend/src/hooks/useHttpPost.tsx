@@ -1,17 +1,16 @@
+import React, {useState} from 'react';
 import axios from 'axios';
-import React, { useEffect } from 'react';
-
-const baseUrl = 'https://0853c6yht3.execute-api.us-east-1.amazonaws.com/prod/';
+import config from '../config';
 
 export default function useHttpPost(url: string) {
-    const [response, setResponse] = React.useState([]);
-    const [error, setError] = React.useState<any>(null);
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [response, setResponse] = useState([]);
+    const [error, setError] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     const execute = async (data: { [key: string]: any } = {}) => {
         setIsLoading(true);
         try {
-            const response = await axios(`${baseUrl}${url}`, {
+            const response = await axios(`${config.apiBaseUrl}${url}`, {
                 method: 'POST',
                 data: data
             });

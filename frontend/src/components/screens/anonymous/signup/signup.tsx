@@ -3,9 +3,9 @@ import {useHistory} from 'react-router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import Copyright from '../../organisms/copyright';
-import RegisterForm, {FormFields} from '../../forms/auth-forms/register-form';
-import useHttpPost from '../../../hooks/useHttpPost';
+import Copyright from '../../../organisms/copyright';
+import RegisterForm, {FormFields} from '../../../forms/auth-forms/register-form';
+import useHttpPost from '../../../../hooks/useHttpPost';
 
 export default function SignUpScreen() {
   const history = useHistory();

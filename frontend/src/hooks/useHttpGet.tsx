@@ -1,7 +1,6 @@
-import axios from 'axios';
 import React, { useEffect } from 'react';
-
-const baseUrl = 'https://0853c6yht3.execute-api.us-east-1.amazonaws.com/prod/';
+import axios from 'axios';
+import config from '../config';
 
 export default function useHttpGet(url: string, params: { [key: string]: string | number } = {}) {
     const [response, setResponse] = React.useState([]);
@@ -11,7 +10,7 @@ export default function useHttpGet(url: string, params: { [key: string]: string 
     const fetch = async () => {
         setIsLoading(true);
         try {
-            const response = await axios(`${baseUrl}${url}`, {
+            const response = await axios(`${config.apiBaseUrl}${url}`, {
                 method: 'GET',
                 params: params,
             });

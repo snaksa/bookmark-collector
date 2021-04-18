@@ -3,10 +3,10 @@ import { useHistory } from 'react-router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import Copyright from '../../organisms/copyright';
-import LoginForm, { FormFields } from '../../forms/auth-forms/login-form';
-import { useAuth } from "../../../hooks/useAuth";
-import useHttpPost from '../../../hooks/useHttpPost';
+import Copyright from '../../../organisms/copyright';
+import LoginForm, { FormFields } from '../../../forms/auth-forms/login-form';
+import { useAuth } from "../../../../hooks/useAuth";
+import useHttpPost from '../../../../hooks/useHttpPost';
 
 export default function LoginScreen() {
   const history = useHistory();
@@ -19,7 +19,7 @@ export default function LoginScreen() {
       .then((responseData: any) => {
         if (responseData) {
           onLogin(responseData.tokens.IdToken);
-          history.push('/');
+          history.push('/my-list');
         }
       });
   }
