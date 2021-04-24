@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import config from '../config';
 
-export default function useHttpGet(url: string, params: { [key: string]: string | number } = {}) {
-    const [response, setResponse] = React.useState([]);
-    const [error, setError] = React.useState<object | null>(null);
-    const [isLoading, setIsLoading] = React.useState(false);
+export default function useHttpGet(url: string, params: { [key: string]: string | number } = {}, lazyFetch = false) {
+    const [response, setResponse] = useState([]);
+    const [error, setError] = useState<object | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetch = async () => {
         setIsLoading(true);
@@ -17,6 +17,8 @@ export default function useHttpGet(url: string, params: { [key: string]: string 
             const data = response.data;
             setResponse(data);
             setIsLoading(false);
+
+            return data;
         } catch (error) {
             console.log(JSON.parse(JSON.stringify(error)));
             setError({
@@ -24,11 +26,15 @@ export default function useHttpGet(url: string, params: { [key: string]: string 
                 message: error.response.data.message,
             });
         }
+
+        return [];
     };
 
     useEffect(() => {
-        fetch();
+        if(!lazyFetch) {
+            fetch();
+        }
     }, []);
 
-    return { response, error, isLoading, refresh: fetch };
+    return { response, error, isLoading, fetch };
 }

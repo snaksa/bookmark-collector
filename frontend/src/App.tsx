@@ -12,6 +12,7 @@ import HomeScreen from "./components/screens/anonymous/home/home";
 import axios from 'axios';
 import MyListScreen from "./components/screens/private/my-list/my-list";
 import PrivateRoute from "./components/screens/private/private";
+import BookmarksProvider from "./hooks/useBookmarks";
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -41,27 +42,29 @@ const theme = createMuiTheme({
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <Switch>
-            <Route path="/login">
-              <LoginScreen/>
-            </Route>
-            <Route path="/signup">
-              <SignUpScreen/>
-            </Route>
-            <Route path="/my-list">
-              <PrivateRoute screen={<MyListScreen/>}/>
-            </Route>
-            <Route path="/my-list/archived">
-              <PrivateRoute screen={<MyListScreen/>}/>
-            </Route>
-            <Route path="/">
-              <HomeScreen/>
-            </Route>
-          </Switch>
-        </Router>
-      </ThemeProvider>
+      <BookmarksProvider>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Switch>
+              <Route path="/login">
+                <LoginScreen/>
+              </Route>
+              <Route path="/signup">
+                <SignUpScreen/>
+              </Route>
+              <Route path="/my-list">
+                <PrivateRoute screen={<MyListScreen/>}/>
+              </Route>
+              <Route path="/my-list/archived">
+                <PrivateRoute screen={<MyListScreen/>}/>
+              </Route>
+              <Route path="/">
+                <HomeScreen/>
+              </Route>
+            </Switch>
+          </Router>
+        </ThemeProvider>
+      </BookmarksProvider>
     </AuthProvider>
   );
 }
