@@ -3,7 +3,11 @@ export class Validator {
         return Boolean(input && input.length);
     }
 
+    public static notEmptyStringArray(input?: string[]): boolean {
+        return Boolean(input && input.length);
+    }
+
     public static notNull(input?: any): boolean {
-        return Boolean(input);
+        return input === null;
     }
 }

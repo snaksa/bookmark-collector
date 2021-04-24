@@ -18,6 +18,16 @@ export class BookmarkRepository {
             .create(bookmarkLabel);
     }
 
+  async removeLabel(bookmarkId:string, labelId: string): Promise<BookmarkLabel> {
+    return new QueryBuilder<BookmarkLabel>()
+      .table(this.dbStore)
+      .where({
+        pk: `LABEL#${labelId}`,
+        sk: `BOOKMARK#${bookmarkId}`,
+      })
+      .delete();
+  }
+
     async update(bookmark: Bookmark): Promise<Bookmark> {
         const updated = await new QueryBuilder<Bookmark>()
           .table(this.dbStore)

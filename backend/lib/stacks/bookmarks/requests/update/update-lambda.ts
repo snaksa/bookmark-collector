@@ -5,6 +5,7 @@ import * as path from 'path';
 
 interface UpdateLambdaProps {
     dbStore: ITable;
+    reversedDbStore: string;
 }
 
 export class UpdateLambda extends NodejsFunction {
@@ -13,6 +14,7 @@ export class UpdateLambda extends NodejsFunction {
             entry: path.resolve(__dirname, "./update-lambda.handler.ts"),
             environment: {
                 dbStore: props.dbStore.tableName,
+                reversedDbStore: props.reversedDbStore,
             }
         });
 

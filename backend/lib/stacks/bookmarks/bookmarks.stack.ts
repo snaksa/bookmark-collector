@@ -62,6 +62,7 @@ export class BookmarksStack extends BaseStack {
       new LambdaIntegration(
         new UpdateLambda(this, 'update-lambda', {
           dbStore: this.dbStore,
+          reversedDbStore: AwsResources.DB_STORE_TABLE_REVERSED
         })
       ),
       this.getAuthorization()
