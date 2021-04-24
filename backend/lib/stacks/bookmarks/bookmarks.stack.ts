@@ -6,6 +6,7 @@ import {CreateLambda} from './requests/create/create-lambda';
 import {DeleteLambda} from './requests/delete/delete-lambda';
 import {ListLambda} from './requests/list/list-lambda';
 import {BaseStack} from '../base.stack';
+import {UpdateLambda} from "./requests/update/update-lambda";
 
 export class BookmarksStack extends BaseStack {
 
@@ -55,6 +56,16 @@ export class BookmarksStack extends BaseStack {
         disableCache: true,
       }
     });
+
+    singleBookmark.addMethod(
+      ApiGatewayRequestMethods.PUT,
+      new LambdaIntegration(
+        new UpdateLambda(this, 'update-lambda', {
+          dbStore: this.dbStore,
+        })
+      ),
+      this.getAuthorization()
+    );
 
     singleBookmark.addMethod(
       ApiGatewayRequestMethods.DELETE,

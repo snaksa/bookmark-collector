@@ -47,7 +47,7 @@ export default class DbStack extends BaseStack {
             },
         });
 
-        new StreamLambda(this, 'DbStoreStream', { dbStore: dbStore })
+        new StreamLambda(this, 'DbStoreStream', { dbStore: dbStore, reversedDbStore: AwsResources.DB_STORE_TABLE_REVERSED })
             .addEventSource(new DynamoEventSource(
                 dbStore,
                 {

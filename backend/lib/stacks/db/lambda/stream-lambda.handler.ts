@@ -16,6 +16,7 @@ interface StreamEvent {
 
 interface Env {
     dbStore: string,
+    reversedDbStore: string,
 }
 
 class StreamLambdaHandler extends BaseHandler {
@@ -26,13 +27,14 @@ class StreamLambdaHandler extends BaseHandler {
 
     private env: Env = {
         dbStore: process.env.dbStore ?? '',
+        reversedDbStore: process.env.reversedDbStore ?? '',
     };
 
     constructor() {
         super();
 
         this.labelRepository = new LabelRepository(this.env.dbStore);
-        this.bookmarkRepository = new BookmarkRepository(this.env.dbStore);
+        this.bookmarkRepository = new BookmarkRepository(this.env.dbStore, this.env.reversedDbStore);
     }
 
     parseEvent(event: any) {
@@ -59,7 +61,7 @@ class StreamLambdaHandler extends BaseHandler {
         }
     }
 
-    async updateBookmarkLabels(label: Label) {
+    async updateBookmarkLabelsByLabel(label: Label) {
         const bookmarkLabels = await this.labelRepository.findBookmarks(label.labelId);
 
         const updated: Promise<BookmarkLabel>[] = [];
@@ -67,6 +69,20 @@ class StreamLambdaHandler extends BaseHandler {
             const bl = bookmarkLabels[i];
             bl.title = label.title;
             bl.color = label.color;
+
+            updated.push(this.labelRepository.updateBookmarks(bl));
+        }
+
+        await Promise.all(updated);
+    }
+
+    async updateBookmarkLabelsByBookmark(bookmark: Bookmark) {
+        const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(bookmark.bookmarkId);
+
+        const updated: Promise<BookmarkLabel>[] = [];
+        for (let i = 0; i < bookmarkLabels.length; i++) {
+            const bl = bookmarkLabels[i];
+            bl.bookmarkUrl = bookmark.bookmarkUrl;
 
             updated.push(this.labelRepository.updateBookmarks(bl));
         }
@@ -89,10 +105,13 @@ class StreamLambdaHandler extends BaseHandler {
         for (let i = 0; i < this.records.length; i++) {
             const record: StreamEvent = this.records[i];
             if (record.type === StreamEventTypes.MODIFY && record.object.entityType === Label.ENTITY_TYPE) {
-                await this.updateBookmarkLabels(record.object as Label);
+                await this.updateBookmarkLabelsByLabel(record.object as Label);
             }
             if (record.type === StreamEventTypes.REMOVE && record.object.entityType === Label.ENTITY_TYPE) {
                 await this.deleteBookmarkLabels(record.object as Label);
+            }
+            if (record.type === StreamEventTypes.MODIFY && record.object.entityType === Bookmark.ENTITY_TYPE) {
+                await this.updateBookmarkLabelsByBookmark(record.object as Bookmark);
             }
         }
 

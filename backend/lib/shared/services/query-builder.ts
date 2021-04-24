@@ -61,8 +61,10 @@ export class QueryBuilder<T extends Model> {
     }
 
     beginsWith: string;
-    skBeginsWith(str: string): QueryBuilder<T> {
-        this.beginsWith = str;
+    fieldBeginsWith: string;
+    sortKeyBeginsWith(beginsWith: string, fieldBeginsWith: string = 'sk'): QueryBuilder<T> {
+        this.beginsWith = beginsWith;
+        this.fieldBeginsWith = fieldBeginsWith;
 
         return this;
     }
@@ -107,11 +109,11 @@ export class QueryBuilder<T extends Model> {
         for (const [key, value] of Object.entries(this.conditions)) {
             conditionExpression.push(`${key} = :${key}`);
             conditionExpressionAttributes = { [`:${key}`]: value, ...conditionExpressionAttributes };
-        };
+        }
 
         if(this.beginsWith) {
-            conditionExpression.push(`begins_with(sk, :sk)`);
-            conditionExpressionAttributes = { [`:sk`]: this.beginsWith, ...conditionExpressionAttributes };
+            conditionExpression.push(`begins_with(${this.fieldBeginsWith}, :${this.fieldBeginsWith})`);
+            conditionExpressionAttributes = { [`:${this.fieldBeginsWith}`]: this.beginsWith, ...conditionExpressionAttributes };
         }
 
         const params = {

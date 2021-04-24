@@ -65,7 +65,7 @@ export class LabelRepository {
             .where({
                 pk: `USER#${userId}`,
             })
-            .skBeginsWith('LABEL#')
+            .sortKeyBeginsWith('LABEL#')
             .all();
 
         return labels.map((label: Label) => Label.fromDynamoDb(label));

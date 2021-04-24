@@ -18,16 +18,51 @@ export class BookmarkRepository {
             .create(bookmarkLabel);
     }
 
-    async findBookmarkRecords(bookmarkId: string): Promise<Bookmark[]> {
-        const bookmarks = await new QueryBuilder<Bookmark>()
+    async update(bookmark: Bookmark): Promise<Bookmark> {
+        const updated = await new QueryBuilder<Bookmark>()
+          .table(this.dbStore)
+          .where({
+              pk: `USER#${bookmark.userId}`,
+              sk: `BOOKMARK#${bookmark.bookmarkId}`
+          })
+          .update(bookmark.toDynamoDbObject(true));
+
+        return Bookmark.fromDynamoDb(updated);
+    }
+
+    async findOne(bookmarkId: string, userId: string): Promise<Bookmark | null> {
+        const bookmark = await new QueryBuilder<Bookmark>()
+          .table(this.dbStore)
+          .where({
+              pk: `USER#${userId}`,
+              sk: `BOOKMARK#${bookmarkId}`,
+          })
+          .one();
+
+        return bookmark ? Bookmark.fromDynamoDb(bookmark) : null;
+    }
+
+    async findBookmarkRecords(bookmarkId: string): Promise<(Bookmark | BookmarkLabel)[]> {
+        return await new QueryBuilder<Bookmark | BookmarkLabel>()
             .table(this.dbStore)
             .index(this.reversedDbStore)
             .where({
                 sk: `BOOKMARK#${bookmarkId}`,
             })
             .all();
+    }
 
-        return bookmarks;
+    async findBookmarkLabelRecords(bookmarkId: string): Promise<(BookmarkLabel)[]> {
+        const result = await new QueryBuilder<BookmarkLabel>()
+          .table(this.dbStore)
+          .index(this.reversedDbStore)
+          .sortKeyBeginsWith('LABEL#', 'pk')
+          .where({
+              sk: `BOOKMARK#${bookmarkId}`,
+          })
+          .all();
+
+      return result.map((bookmarkLabel: BookmarkLabel) => BookmarkLabel.fromDynamoDb(bookmarkLabel));
     }
 
     async findAll(userId: string): Promise<Bookmark[]> {

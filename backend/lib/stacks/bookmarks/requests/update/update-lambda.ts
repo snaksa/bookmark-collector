@@ -3,18 +3,16 @@ import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { ITable } from "@aws-cdk/aws-dynamodb";
 import * as path from 'path';
 
-interface StreamLambdaProps {
+interface UpdateLambdaProps {
     dbStore: ITable;
-    reversedDbStore: string;
 }
 
-export class StreamLambda extends NodejsFunction {
-    constructor(scope: Construct, id: string, props: StreamLambdaProps) {
+export class UpdateLambda extends NodejsFunction {
+    constructor(scope: Construct, id: string, props: UpdateLambdaProps) {
         super(scope, id, {
-            entry: path.resolve(__dirname, "./stream-lambda.handler.ts"),
+            entry: path.resolve(__dirname, "./update-lambda.handler.ts"),
             environment: {
                 dbStore: props.dbStore.tableName,
-                reversedDbStore: props.reversedDbStore,
             }
         });
 
