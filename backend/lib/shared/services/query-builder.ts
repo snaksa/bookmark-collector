@@ -16,6 +16,15 @@ export class QueryBuilder<T extends Model> {
     // conditions to be applied
     conditions: object = {};
 
+    // filter expression to be applied
+    filterExpression: object = {};
+
+    // sortKey condition to begin with
+    beginsWith: string;
+
+    // sortKey attribute name
+    fieldBeginsWith: string;
+
     constructor() {
         this.db = new DynamoDbHelper();
     }
@@ -60,8 +69,12 @@ export class QueryBuilder<T extends Model> {
         return this;
     }
 
-    beginsWith: string;
-    fieldBeginsWith: string;
+    filter(filterExpression: { [index: string]: any; }): QueryBuilder<T> {
+        this.filterExpression = filterExpression;
+
+        return this;
+    }
+
     sortKeyBeginsWith(beginsWith: string, fieldBeginsWith: string = 'sk'): QueryBuilder<T> {
         this.beginsWith = beginsWith;
         this.fieldBeginsWith = fieldBeginsWith;
@@ -111,6 +124,15 @@ export class QueryBuilder<T extends Model> {
             conditionExpressionAttributes = { [`:${key}`]: value, ...conditionExpressionAttributes };
         }
 
+        const filterExpressionConditions: string[] = [];
+        if(Object.entries(this.filterExpression).length) {
+            for (const [key, value] of Object.entries(this.filterExpression)) {
+                console.log('Filter by key and value:', key, value);
+                filterExpressionConditions.push(`${key} = :${key}`);
+                conditionExpressionAttributes = { [`:${key}`]: value, ...conditionExpressionAttributes };
+            }
+        }
+
         if(this.beginsWith) {
             conditionExpression.push(`begins_with(${this.fieldBeginsWith}, :${this.fieldBeginsWith})`);
             conditionExpressionAttributes = { [`:${this.fieldBeginsWith}`]: this.beginsWith, ...conditionExpressionAttributes };
@@ -121,6 +143,7 @@ export class QueryBuilder<T extends Model> {
             IndexName: this.indexName ? this.indexName : undefined,
             KeyConditionExpression: conditionExpression.join(' and '),
             ExpressionAttributeValues: conditionExpressionAttributes,
+            FilterExpression: filterExpressionConditions.length ? filterExpressionConditions.join(' and ') : undefined
         };
 
         const result = await this.db.getAll(params);
