@@ -4,6 +4,7 @@ import { Validator } from '../../../../shared/validators/validator';
 import {BookmarkRepository} from "../../../../shared/repositories/bookmark.repository";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import {LabelRepository} from "../../../../shared/repositories/label.repository";
+import Label from "../../../../shared/models/label.model";
 
 interface UpdateEventData {
     url: string;
@@ -107,6 +108,12 @@ class UpdateLambdaHandler extends BaseHandler {
         }
 
         await this.bookmarkRepository.update(bookmark);
+
+        // if labels are not passed include them to the object
+        if(!this.input.labelIds) {
+            const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
+            bookmarkLabels.forEach(label => bookmark.addLabel(new Label(label.labelId, this.userId, label.title, label.color)));
+        }
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

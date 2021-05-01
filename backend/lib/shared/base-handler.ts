@@ -27,7 +27,7 @@ export default abstract class BaseHandler {
             headers: {
                 "Access-Control-Allow-Headers" : "Content-Type",
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+                "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
             }
         };
     }
@@ -39,7 +39,7 @@ export default abstract class BaseHandler {
             headers: {
                 "Access-Control-Allow-Headers" : "Content-Type",
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+                "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
             }
         };
     }
