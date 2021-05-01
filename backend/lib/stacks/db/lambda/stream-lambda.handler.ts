@@ -39,16 +39,19 @@ class StreamLambdaHandler extends BaseHandler {
 
     parseEvent(event: any) {
         event.Records.map((record: any) => {
-            const streamEvent: StreamEvent = {
-                type: record.eventName,
-                object: this.getObject(record.eventName === StreamEventTypes.REMOVE ? record.dynamodb.OldImage : record.dynamodb.NewImage)
-            };
+            const object = this.getObject(record.eventName === StreamEventTypes.REMOVE ? record.dynamodb.OldImage : record.dynamodb.NewImage);
+            if(object) {
+                const streamEvent: StreamEvent = {
+                    type: record.eventName,
+                    object: object
+                };
 
-            this.records.push(streamEvent);
+                this.records.push(streamEvent);
+            }
         })
     }
 
-    getObject(object: any): Model {
+    getObject(object: any): Model | null {
         let unmarshalledObject = DynamoDB.Converter.unmarshall(object);
 
         switch (unmarshalledObject.entityType) {
@@ -56,8 +59,10 @@ class StreamLambdaHandler extends BaseHandler {
                 return Label.fromDynamoDb(unmarshalledObject as Label);
             case BookmarkLabel.ENTITY_TYPE:
                 return BookmarkLabel.fromDynamoDb(unmarshalledObject as BookmarkLabel);
+            case Bookmark.ENTITY_TYPE:
+                return Bookmark.fromDynamoDb(unmarshalledObject as Bookmark);
             default:
-                return Bookmark.fromDynamoDb(unmarshalledObject as Bookmark)
+                return null;
         }
     }
 

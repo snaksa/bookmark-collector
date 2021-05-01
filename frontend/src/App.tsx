@@ -5,6 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import {createMuiTheme, ThemeProvider} from "@material-ui/core";
+import {Provider} from "react-redux";
 import AuthProvider from './hooks/useAuth'
 import LoginScreen from "./components/screens/anonymous/login/login"
 import SignUpScreen from "./components/screens/anonymous/signup/signup";
@@ -16,6 +17,7 @@ import BookmarksProvider from "./hooks/useBookmarks";
 import FavoritesScreen from "./components/screens/private/favorites/favorites";
 import ArchivedScreen from "./components/screens/private/archived/archived";
 import TagsScreen from "./components/screens/private/tags/tags";
+import store from './redux/store';
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -45,6 +47,7 @@ const theme = createMuiTheme({
 function App() {
   return (
     <AuthProvider>
+      <Provider store={store}>
       <BookmarksProvider>
         <ThemeProvider theme={theme}>
           <Router>
@@ -74,6 +77,7 @@ function App() {
           </Router>
         </ThemeProvider>
       </BookmarksProvider>
+      </Provider>
     </AuthProvider>
   );
 }
