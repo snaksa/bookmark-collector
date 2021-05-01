@@ -5,9 +5,10 @@ import {
   StarOutline as StarBorderIcon,
   MoveToInbox as MoveToInboxIcon,
   LocalOfferOutlined as LocalOfferIcon,
+  Add as AddIcon,
 } from "@material-ui/icons";
 
-export default function BookmarkView({bookmark, onDelete}: any) {
+export default function BookmarkView({bookmark, onDelete, onFavoriteUpdate, onArchivedUpdate}: any) {
   const classes = useStyles();
   return <Grid container direction='row'>
     <Grid item md={9} lg={9}>
@@ -29,11 +30,11 @@ export default function BookmarkView({bookmark, onDelete}: any) {
       </Grid>
     </Grid>
     <Grid item md={3} lg={3} className={classes.actions}>
-      <IconButton>
-        <StarBorderIcon/>
+      <IconButton onClick={() => onFavoriteUpdate(bookmark.id, !bookmark.isFavorite)}>
+        <StarBorderIcon style={{color: bookmark.isFavorite ? 'orange' : 'black'}} />
       </IconButton>
-      <IconButton>
-        <MoveToInboxIcon/>
+      <IconButton onClick={() => onArchivedUpdate(bookmark.id, !bookmark.isArchived)}>
+        {bookmark.isArchived ? <AddIcon/> : <MoveToInboxIcon/>}
       </IconButton>
       <IconButton>
         <LocalOfferIcon/>
