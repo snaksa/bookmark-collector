@@ -15,6 +15,7 @@ import PrivateRoute from "./components/screens/private/private";
 import BookmarksProvider from "./hooks/useBookmarks";
 import FavoritesScreen from "./components/screens/private/favorites/favorites";
 import ArchivedScreen from "./components/screens/private/archived/archived";
+import TagsScreen from "./components/screens/private/tags/tags";
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -59,6 +60,9 @@ function App() {
               </Route>
               <Route path="/my-list/archived">
                 <PrivateRoute screen={<ArchivedScreen/>}/>
+              </Route>
+              <Route path="/my-list/tags">
+                <PrivateRoute screen={<TagsScreen/>}/>
               </Route>
               <Route path="/my-list">
                 <PrivateRoute screen={<MyListScreen/>}/>

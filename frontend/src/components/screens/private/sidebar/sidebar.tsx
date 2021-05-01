@@ -15,6 +15,9 @@ export default function Sidebar() {
       <SidebarOption to='/my-list/favorites' icon={<Star/>} title='Favorites'/>
     </Grid>
     <Grid item>
+      <SidebarOption to='/my-list/tags' icon={<Star/>} title='Tags'/>
+    </Grid>
+    <Grid item>
       <SidebarOption to='/my-profile' icon={<AccountCircle/>} title='My Profile'/>
     </Grid>
   </Grid>;

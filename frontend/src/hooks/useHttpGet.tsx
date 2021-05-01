@@ -7,10 +7,12 @@ export default function useHttpGet(url: string, params: { [key: string]: string 
     const [error, setError] = useState<object | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetch = async () => {
+    const fetch = async (passedUrl: string = '') => {
+        const requestUrl = passedUrl ? passedUrl : url;
+
         setIsLoading(true);
         try {
-            const response = await axios(`${config.apiBaseUrl}${url}`, {
+            const response = await axios(`${config.apiBaseUrl}${requestUrl}`, {
                 method: 'GET',
                 params: params,
             });
