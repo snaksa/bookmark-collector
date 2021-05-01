@@ -83,6 +83,8 @@ class StreamLambdaHandler extends BaseHandler {
         for (let i = 0; i < bookmarkLabels.length; i++) {
             const bl = bookmarkLabels[i];
             bl.bookmarkUrl = bookmark.bookmarkUrl;
+            bl.isFavorite = bookmark.isFavorite;
+            bl.isArchived = bookmark.isArchived;
 
             updated.push(this.labelRepository.updateBookmarks(bl));
         }

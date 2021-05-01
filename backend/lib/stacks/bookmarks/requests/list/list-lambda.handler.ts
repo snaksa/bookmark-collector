@@ -15,6 +15,7 @@ class ListLambdaHandler extends BaseHandler {
     private userId: string;
     private favorites: boolean;
     private archived: boolean;
+    private excludeArchived: boolean;
 
     private env: Env = {
         dbStore: process.env.dbStore ?? '',
@@ -33,11 +34,13 @@ class ListLambdaHandler extends BaseHandler {
 
         this.favorites = false;
         this.archived = false;
+        this.excludeArchived = false;
 
         const queryParams = event.queryStringParameters;
         if(queryParams) {
             this.favorites = queryParams.favorites === '1';
             this.archived = queryParams.archived === '1';
+            this.excludeArchived = queryParams.excludeArchived === '1';
         }
     }
 
@@ -46,7 +49,7 @@ class ListLambdaHandler extends BaseHandler {
     }
 
     async run(): Promise<Response> {
-        const result = await this.bookmarkRepository.findAll(this.userId, this.favorites, this.archived);
+        const result = await this.bookmarkRepository.findAll(this.userId, this.favorites, this.archived, this.excludeArchived);
 
         return {
             statusCode: ApiGatewayResponseCodes.OK,

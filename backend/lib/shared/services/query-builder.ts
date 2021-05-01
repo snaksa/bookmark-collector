@@ -143,7 +143,7 @@ export class QueryBuilder<T extends Model> {
             IndexName: this.indexName ? this.indexName : undefined,
             KeyConditionExpression: conditionExpression.join(' and '),
             ExpressionAttributeValues: conditionExpressionAttributes,
-            FilterExpression: filterExpressionConditions.length ? filterExpressionConditions.join(' and ') : undefined
+                FilterExpression: filterExpressionConditions.length ? filterExpressionConditions.join(' and ') : undefined
         };
 
         const result = await this.db.getAll(params);

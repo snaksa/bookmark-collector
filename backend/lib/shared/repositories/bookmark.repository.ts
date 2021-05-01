@@ -77,7 +77,7 @@ export class BookmarkRepository {
         return result.map((bookmarkLabel: BookmarkLabel) => BookmarkLabel.fromDynamoDb(bookmarkLabel));
     }
 
-    async findAll(userId: string, onlyFavorites: boolean = false, onlyArchived: boolean = false): Promise<Bookmark[]> {
+    async findAll(userId: string, onlyFavorites: boolean = false, onlyArchived: boolean = false, excludeArchived: boolean = false): Promise<Bookmark[]> {
         const query = new QueryBuilder<BookmarkLabel>()
             .table(this.dbStore)
             .index(this.dbStoreGSI1)
@@ -88,14 +88,21 @@ export class BookmarkRepository {
         if (onlyFavorites) {
             console.log('Include only favorites');
             query.filter({
-                isFavorite: 1
+                isFavorite: true
             });
         }
 
         if (onlyArchived) {
             console.log('Include only archived');
             query.filter({
-                isArchived: 1
+                isArchived: true
+            });
+        }
+
+        if(excludeArchived) {
+            console.log('Exclude archived');
+            query.filter({
+                isArchived: false
             });
         }
 
@@ -104,7 +111,7 @@ export class BookmarkRepository {
         let bookmarks: { [key: string]: Bookmark } = {};
         records.forEach((record: BookmarkLabel) => {
             if (!(record.bookmarkId in bookmarks)) {
-                bookmarks[record.bookmarkId] = new Bookmark(record.bookmarkId, record.userId, record.bookmarkUrl);
+                bookmarks[record.bookmarkId] = new Bookmark(record.bookmarkId, record.userId, record.bookmarkUrl, record.isFavorite, record.isArchived);
             }
 
             if (record.entityType === BookmarkLabel.ENTITY_TYPE) {

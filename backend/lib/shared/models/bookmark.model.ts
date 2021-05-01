@@ -10,12 +10,14 @@ export default class Bookmark implements Model {
     entityType: string = Bookmark.ENTITY_TYPE;
 
     bookmarkId: string;
+    isFavorite: boolean;
+    isArchived: boolean;
     userId: string;
     bookmarkUrl: string;
 
     labels: Label[];
 
-    constructor(id: string, userId: string, bookmarkUrl: string) {
+    constructor(id: string, userId: string, bookmarkUrl: string, isFavorite: boolean = false, isArchived: boolean = false) {
         this.pk = `USER#${userId}`;
         this.sk = `BOOKMARK#${id}`;
         this.GSI1 = `USER#${userId}`;
@@ -23,6 +25,8 @@ export default class Bookmark implements Model {
         this.bookmarkId = id;
         this.userId = userId;
         this.bookmarkUrl = bookmarkUrl;
+        this.isFavorite = isFavorite;
+        this.isArchived = isArchived;
 
         this.labels = [];
     }
@@ -40,6 +44,8 @@ export default class Bookmark implements Model {
             id: this.bookmarkId,
             url: this.bookmarkUrl,
             labels: this.labels.map((label: Label) => label.toObject()),
+            isFavorite: this.isFavorite,
+            isArchived: this.isArchived,
         };
     }
 
@@ -58,12 +64,14 @@ export default class Bookmark implements Model {
             bookmarkId: this.bookmarkId,
             userId: this.userId,
             bookmarkUrl: this.bookmarkUrl,
+            isFavorite: this.isFavorite,
+            isArchived: this.isArchived,
             GSI1: this.GSI1,
             entityType: Bookmark.ENTITY_TYPE,
         };
     }
 
     public static fromDynamoDb(o: Bookmark) {
-        return new Bookmark(o.bookmarkId, o.userId, o.bookmarkUrl);
+        return new Bookmark(o.bookmarkId, o.userId, o.bookmarkUrl, o.isFavorite, o.isArchived);
     }
 }

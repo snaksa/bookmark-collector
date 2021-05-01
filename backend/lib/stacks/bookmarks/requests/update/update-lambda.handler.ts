@@ -8,6 +8,8 @@ import {LabelRepository} from "../../../../shared/repositories/label.repository"
 interface UpdateEventData {
     url: string;
     labelIds: string[];
+    isFavorite: boolean;
+    isArchived: boolean;
 }
 
 interface Env {
@@ -39,10 +41,15 @@ class UpdateLambdaHandler extends BaseHandler {
         this.input = JSON.parse(event.body) as UpdateEventData;
         this.userId = event.requestContext.authorizer.claims.sub;
         this.bookmarkId = event.pathParameters.id;
+        console.log('Parsed input:', this.input);
     }
 
     validate() {
-        return this.input && (Validator.notEmpty(this.input.url) || Validator.notNull(this.input.labelIds));
+        return this.input &&
+            (Validator.notEmpty(this.input.url)
+                || Validator.notNull(this.input.labelIds)
+                || 'isFavorite' in this.input
+                || 'isArchived' in this.input);
     }
 
     authorize(): boolean {
@@ -61,7 +68,16 @@ class UpdateLambdaHandler extends BaseHandler {
         if (this.input.url)
             bookmark.bookmarkUrl = this.input.url;
 
-        if(this.input.labelIds !== null) {
+        if ('isFavorite' in this.input)
+            bookmark.isFavorite = this.input.isFavorite;
+
+        if ('isArchived' in this.input)
+            bookmark.isArchived = this.input.isArchived;
+
+        if (this.input.url)
+            bookmark.bookmarkUrl = this.input.url;
+
+        if(this.input.labelIds) {
             const newLabelIds = this.input.labelIds;
             const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
             const oldBookmarkLabels = bookmarkLabels.map((bl: BookmarkLabel) => bl.labelId);
@@ -71,7 +87,7 @@ class UpdateLambdaHandler extends BaseHandler {
             labels.forEach(label => {
               const index = oldBookmarkLabels.indexOf(label.labelId);
                 if(index === -1) {
-                    const bookmarkLabel = new BookmarkLabel(label.labelId, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl);
+                    const bookmarkLabel = new BookmarkLabel(label.labelId, bookmark.bookmarkId, this.userId, label.title, label.color, bookmark.bookmarkUrl, bookmark.isFavorite, bookmark.isArchived);
                     created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
                 } else {
                     oldBookmarkLabels.splice(index, 1);

@@ -12,10 +12,12 @@ export default class BookmarkLabel implements Model {
     bookmarkId: string;
     userId: string;
     bookmarkUrl: string;
+    isFavorite: boolean;
+    isArchived: boolean;
     title: string;
     color: string;
 
-    constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', bookmarkUrl: string = '') {
+    constructor(labelId: string, bookmarkId: string, userId: string, title: string = '', color: string = '', bookmarkUrl: string = '', isFavorite: boolean = false, isArchived: boolean = false) {
         this.pk = `LABEL#${labelId}`;
         this.sk = `BOOKMARK#${bookmarkId}`;
         this.GSI1 = `USER#${userId}`
@@ -26,6 +28,8 @@ export default class BookmarkLabel implements Model {
         this.title = title;
         this.color = color;
         this.bookmarkUrl = bookmarkUrl;
+        this.isFavorite = isFavorite;
+        this.isArchived = isArchived;
     }
 
     public toObject() {
@@ -56,12 +60,14 @@ export default class BookmarkLabel implements Model {
             title: this.title,
             color: this.color,
             bookmarkUrl: this.bookmarkUrl,
+            isFavorite: this.isFavorite,
+            isArchived: this.isArchived,
             GSI1: this.GSI1,
             entityType: BookmarkLabel.ENTITY_TYPE,
         };
     }
 
     public static fromDynamoDb(o: BookmarkLabel) {
-        return new BookmarkLabel(o.labelId, o.bookmarkId, o.userId, o.title, o.color, o.bookmarkUrl);
+        return new BookmarkLabel(o.labelId, o.bookmarkId, o.userId, o.title, o.color, o.bookmarkUrl, o.isFavorite, o.isArchived);
     }
 }
