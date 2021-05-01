@@ -1,4 +1,5 @@
 import { Model } from "./base.model";
+import Bookmark from "./bookmark.model";
 
 export default class Label implements Model {
     static ENTITY_TYPE: string = 'label';
@@ -13,6 +14,8 @@ export default class Label implements Model {
     title: string;
     color: string;
 
+    bookmarks: Bookmark[] = [];
+
     constructor(id: string, userId: string, title: string, color: string) {
         this.pk = `USER#${userId}`;
         this.sk = `LABEL#${id}`;
@@ -23,12 +26,22 @@ export default class Label implements Model {
         this.color = color;
     }
 
-    public toObject() {
-        return {
+    public setBookmarks(bookmarks: Bookmark[]) {
+        this.bookmarks = bookmarks;
+    }
+
+    public toObject(includeBookmarks: boolean = false) {
+        const label: any = {
             id: this.labelId,
             title: this.title,
             color: this.color,
         };
+
+        if(includeBookmarks) {
+            label.bookmarks = this.bookmarks.map(bookmark => bookmark.toObject());
+        }
+
+        return label;
     }
 
     public toDynamoDbObject(removeKeys: boolean = false): Partial<Label> {

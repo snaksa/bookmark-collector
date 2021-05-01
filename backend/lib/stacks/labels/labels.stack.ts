@@ -6,6 +6,7 @@ import { DeleteLambda } from './requests/delete/delete-lambda';
 import { UpdateLambda } from './requests/update/update-lambda';
 import { BaseStack } from '../base.stack';
 import { ApiGatewayRequestMethods } from '../../shared/enums/api-gateway-request-methods';
+import {SingleLambda} from "./requests/single/single-lambda";
 
 export class LabelsStack extends BaseStack {
 
@@ -47,6 +48,16 @@ export class LabelsStack extends BaseStack {
         );
 
         const singleLabel = labels.addResource('{id}');
+
+        singleLabel.addMethod(
+            ApiGatewayRequestMethods.GET,
+            new LambdaIntegration(
+                new SingleLambda(this, 'single-lambda', {
+                    dbStore: this.dbStore,
+                })
+            ),
+            this.getAuthorization()
+        );
 
         singleLabel.addMethod(
             ApiGatewayRequestMethods.DELETE,
