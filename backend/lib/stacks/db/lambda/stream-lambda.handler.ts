@@ -38,6 +38,7 @@ class StreamLambdaHandler extends BaseHandler {
     }
 
     parseEvent(event: any) {
+        this.records = [];
         event.Records.map((record: any) => {
             const object = this.getObject(record.eventName === StreamEventTypes.REMOVE ? record.dynamodb.OldImage : record.dynamodb.NewImage);
             if(object) {
