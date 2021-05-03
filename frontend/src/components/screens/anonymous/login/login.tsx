@@ -1,12 +1,12 @@
-import React from 'react';
-import { useHistory } from 'react-router';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import Copyright from '../../../organisms/copyright';
-import LoginForm, { FormFields } from '../../../forms/auth-forms/login-form';
+import React from "react";
+import { useHistory } from "react-router";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Copyright from "../../../organisms/copyright";
+import LoginForm, { FormFields } from "../../../forms/auth-forms/login-form";
 import { useAuth } from "../../../../hooks/useAuth";
-import useHttpPost from '../../../../hooks/useHttpPost';
+import useHttpPost from "../../../../hooks/useHttpPost";
 
 export default function LoginScreen() {
   const history = useHistory();
@@ -15,14 +15,13 @@ export default function LoginScreen() {
   const { error, isLoading, execute: login } = useHttpPost(`auth/login`);
 
   const onSubmit = (data: FormFields) => {
-    login(data)
-      .then((responseData: any) => {
-        if (responseData) {
-          onLogin(responseData.tokens.IdToken);
-          history.push('/my-list');
-        }
-      });
-  }
+    login(data).then((responseData: any) => {
+      if (responseData) {
+        onLogin(responseData.tokens.IdToken);
+        history.push("/my-list");
+      }
+    });
+  };
 
   return (
     <Container maxWidth="xs">

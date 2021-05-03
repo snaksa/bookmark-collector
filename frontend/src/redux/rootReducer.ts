@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
-import bookmarksReducer from './bookmarks/bookmarks.reducer';
+import { combineReducers } from "redux";
+import bookmarksReducer from "./bookmarks/bookmarks.reducer";
 
 const rootReducer = combineReducers({
-    bookmarks: bookmarksReducer,
+  bookmarks: bookmarksReducer,
 });
 
 export default rootReducer;

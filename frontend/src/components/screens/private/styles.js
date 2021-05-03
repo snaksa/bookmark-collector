@@ -1,16 +1,16 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   main: {
     backgroundColor: theme.palette.background.default,
   },
   header: {
     padding: theme.spacing(1, 0),
     marginBottom: theme.spacing(8),
-    borderBottom: '1px solid #ccc',
+    borderBottom: "1px solid #ccc",
   },
   urlTextField: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
 }));
 

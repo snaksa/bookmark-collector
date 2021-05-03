@@ -14,9 +14,7 @@ const initialProps: AuthContextProps = {
   isAuthenticated: false,
 };
 
-export const AuthContext = createContext<AuthContextProps>(
-  initialProps
-);
+export const AuthContext = createContext<AuthContextProps>(initialProps);
 
 const AuthProvider = (props: any) => {
   const [authData, setAuthData] = useState<string | null>(null);
@@ -28,23 +26,22 @@ const AuthProvider = (props: any) => {
     setIsAuthenticated(!!token);
   }
 
-
   const onLogout = () => {
     setAuthData("");
     setIsAuthenticated(false);
     localStorage.removeItem("token");
-  }
+  };
 
   const onLogin = (newAuthData: string) => {
     setAuthData(newAuthData);
     setIsAuthenticated(true);
     localStorage.setItem("token", newAuthData);
-  }
+  };
 
   const authDataValue = { authData, onLogin, onLogout, isAuthenticated };
 
   return <AuthContext.Provider value={authDataValue} {...props} />;
-}
+};
 
 export const useAuth = () => useContext(AuthContext);
 
