@@ -7,7 +7,8 @@ import Sidebar from "./sidebar/sidebar";
 import useStyle from './styles';
 import {Add as AddIcon, Clear as ClearIcon} from "@material-ui/icons";
 import useHttpPost from "../../../hooks/useHttpPost";
-import {useBookmarks} from "../../../hooks/useBookmarks";
+import {useDispatch} from "react-redux";
+import {addNewBookmark} from "../../../redux/bookmarks/bookmarks.actions";
 
 export default function SidebarOption({screen}: any) {
   const classes = useStyle();
@@ -18,7 +19,7 @@ export default function SidebarOption({screen}: any) {
   const [url, setUrl] = useState<string>('');
   const {execute: createBookmark} = useHttpPost('bookmarks');
 
-  const {addBookmarks} = useBookmarks();
+  const dispatch = useDispatch();
 
   const logout = () => {
     onLogout();
@@ -29,8 +30,8 @@ export default function SidebarOption({screen}: any) {
     createBookmark({
       url: url
     }).then((data) => {
-      addBookmarks([data]);
       setShowNewUrl(false);
+      dispatch(addNewBookmark(data));
     });
   }
 

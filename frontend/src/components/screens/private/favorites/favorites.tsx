@@ -6,10 +6,11 @@ import useHttpDelete from "../../../../hooks/useHttpDelete";
 import useHttpPut from "../../../../hooks/useHttpPut";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    addToArchivedBookmark,
     addToFavoritesBookmark,
     deleteBookmark,
     initializedFavoriteBookmarks,
-    initializeFavoriteBookmarks, removeFromFavoritesBookmark
+    initializeFavoriteBookmarks, removeFromArchivedBookmark, removeFromFavoritesBookmark
 } from "../../../../redux/bookmarks/bookmarks.actions";
 
 export default function FavoritesScreen() {
@@ -22,15 +23,17 @@ export default function FavoritesScreen() {
     const {execute: updateBookmarkRequest} = useHttpPut();
 
     useEffect(() => {
-        dispatch(initializeFavoriteBookmarks());
-        fetchBookmarks().then((data) => {
-            dispatch(initializedFavoriteBookmarks(data));
-        });
+        if(!favorites || !favorites.initialized) {
+            dispatch(initializeFavoriteBookmarks());
+            fetchBookmarks().then((data) => {
+                dispatch(initializedFavoriteBookmarks(data));
+            });
+        }
     }, [])
 
     const onFavoriteUpdate = (bookmarkId: string, isFavorite: boolean) => {
         updateBookmarkRequest(`bookmarks/${bookmarkId}`, {isFavorite: isFavorite}).then((data) => {
-            if(data.isFavorite) {
+            if(isFavorite) {
                 dispatch(addToFavoritesBookmark(data));
             } else {
                 dispatch(removeFromFavoritesBookmark(data));
@@ -44,9 +47,19 @@ export default function FavoritesScreen() {
         });
     }
 
+    const onArchivedUpdate = (bookmarkId: string, isArchived: boolean) => {
+        updateBookmarkRequest(`bookmarks/${bookmarkId}`, {isArchived: isArchived}).then((data) => {
+            if(isArchived) {
+                dispatch(addToArchivedBookmark(data));
+            } else {
+                dispatch(removeFromArchivedBookmark(data));
+            }
+        });
+    }
+
     return <Container>
         <Typography variant={'h4'}>Favorites</Typography>
-        {favorites.isLoading ? <Box>Loading...</Box> : <BookmarksList bookmarks={favorites.data} onDelete={onDelete} onFavoriteUpdate={onFavoriteUpdate} onArchivedUpdate={() => {}} />}
+        {favorites.isLoading ? <Box>Loading...</Box> : <BookmarksList bookmarks={favorites.data} onDelete={onDelete} onFavoriteUpdate={onFavoriteUpdate} onArchivedUpdate={onArchivedUpdate} />}
     </Container>;
 
 }

@@ -6,7 +6,10 @@ import {
     BOOKMARKS_FAVORITES_INITIALIZING,
     BOOKMARKS_FAVORITES_INITIALIZED,
     BOOKMARK_ADD_TO_FAVORITES,
-    BOOKMARK_REMOVE_FROM_FAVORITES
+    BOOKMARK_REMOVE_FROM_FAVORITES,
+    BOOKMARK_ADD_TO_ARCHIVED,
+    BOOKMARK_REMOVE_FROM_ARCHIVED,
+    BOOKMARKS_ARCHIVED_INITIALIZING, BOOKMARKS_ARCHIVED_INITIALIZED, BOOKMARK_ADD_NEW
 } from './bookmarks.types';
 
 export const initializeBookmarks = () => {
@@ -22,6 +25,13 @@ export const initializedBookmarks = (bookmarks: any) => {
     };
 };
 
+export const addNewBookmark = (bookmark: any) => {
+    return {
+        type: BOOKMARK_ADD_NEW,
+        payload: bookmark
+    };
+};
+
 export const addToFavoritesBookmark = (bookmark: any) => {
     return {
         type: BOOKMARK_ADD_TO_FAVORITES,
@@ -32,6 +42,20 @@ export const addToFavoritesBookmark = (bookmark: any) => {
 export const removeFromFavoritesBookmark = (bookmark: any) => {
     return {
         type: BOOKMARK_REMOVE_FROM_FAVORITES,
+        payload: bookmark
+    };
+};
+
+export const addToArchivedBookmark = (bookmark: any) => {
+    return {
+        type: BOOKMARK_ADD_TO_ARCHIVED,
+        payload: bookmark
+    };
+};
+
+export const removeFromArchivedBookmark = (bookmark: any) => {
+    return {
+        type: BOOKMARK_REMOVE_FROM_ARCHIVED,
         payload: bookmark
     };
 };
@@ -59,6 +83,19 @@ export const initializeFavoriteBookmarks = () => {
 export const initializedFavoriteBookmarks = (bookmarks: any) => {
     return {
         type: BOOKMARKS_FAVORITES_INITIALIZED,
+        payload: bookmarks
+    };
+};
+
+export const initializeArchivedBookmarks = () => {
+    return {
+        type: BOOKMARKS_ARCHIVED_INITIALIZING,
+    };
+};
+
+export const initializedArchivedBookmarks = (bookmarks: any) => {
+    return {
+        type: BOOKMARKS_ARCHIVED_INITIALIZED,
         payload: bookmarks
     };
 };

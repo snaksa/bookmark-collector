@@ -6,21 +6,31 @@ import {
     BOOKMARKS_FAVORITES_INITIALIZING,
     BOOKMARKS_FAVORITES_INITIALIZED,
     BOOKMARK_ADD_TO_FAVORITES,
-    BOOKMARK_REMOVE_FROM_FAVORITES
+    BOOKMARK_REMOVE_FROM_FAVORITES,
+    BOOKMARK_ADD_TO_ARCHIVED,
+    BOOKMARK_REMOVE_FROM_ARCHIVED,
+    BOOKMARKS_ARCHIVED_INITIALIZING, BOOKMARKS_ARCHIVED_INITIALIZED, BOOKMARK_ADD_NEW
 } from "./bookmarks.types";
 
 const INITIAL_STATE = {
     myList: {
         isLoading: false,
+        initialized: false,
         data: []
     },
     favorites: {
+        initialized: false,
+        isLoading: false,
+        data: []
+    },
+    archived: {
+        initialized: false,
         isLoading: false,
         data: []
     },
 };
 
-const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) => {
+const reducer = (state = INITIAL_STATE, action: { type: string, payload: any }) => {
     switch (action.type) {
         case BOOKMARKS_INITIALIZING:
             return {
@@ -35,7 +45,18 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                 ...state,
                 myList: {
                     isLoading: false,
+                    initialized: true,
                     data: [...action.payload]
+                },
+            };
+        case BOOKMARK_ADD_NEW:
+            return {
+                ...state,
+                myList: {
+                    data: [
+                        ...state.myList.data,
+                        action.payload
+                    ]
                 },
             };
         case BOOKMARK_ADD_TO_FAVORITES:
@@ -51,7 +72,11 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                         ...state.favorites.data,
                         action.payload
                     ],
-                }
+                },
+                archived: {
+                    ...state.archived,
+                    data: state.archived.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
             };
         case BOOKMARK_REMOVE_FROM_FAVORITES:
             return {
@@ -63,7 +88,50 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                 favorites: {
                     ...state.favorites,
                     data: state.favorites.data.filter((item: any) => item.id !== action.payload.id)
-                }
+                },
+                archived: {
+                    ...state.archived,
+                    data: state.archived.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
+            };
+
+        case BOOKMARK_ADD_TO_ARCHIVED:
+            return {
+                ...state,
+                myList: {
+                    ...state.myList,
+                    data: state.myList.data.filter((item: any) => item.id !== action.payload.id)
+                },
+                favorites: {
+                    ...state.favorites,
+                    data: state.favorites.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
+                archived: {
+                    ...state.archived,
+                    data: [
+                        ...state.archived.data,
+                        action.payload
+                    ],
+                },
+            };
+        case BOOKMARK_REMOVE_FROM_ARCHIVED:
+            return {
+                ...state,
+                myList: {
+                    ...state.myList,
+                    data: [
+                        ...state.myList.data,
+                        action.payload
+                    ]
+                },
+                favorites: {
+                    ...state.favorites,
+                    data: state.favorites.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
+                archived: {
+                    ...state.archived,
+                    data: state.archived.data.filter((item: any) => item.id !== action.payload.id)
+                },
             };
 
         case BOOKMARK_UPDATED:
@@ -72,6 +140,12 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                 myList: {
                     data: state.myList.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
                 },
+                favorites: {
+                    data: state.favorites.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
+                archived: {
+                    data: state.archived.data.map((item: any) => item.id === action.payload.id ? action.payload : item)
+                },
             };
         case BOOKMARK_DELETE:
             return {
@@ -79,6 +153,14 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                 myList: {
                     ...state.myList,
                     data: state.myList.data.filter((item: any) => item.id !== action.payload)
+                },
+                favorites: {
+                    ...state.favorites,
+                    data: state.favorites.data.filter((item: any) => item.id !== action.payload)
+                },
+                archived: {
+                    ...state.archived,
+                    data: state.archived.data.filter((item: any) => item.id !== action.payload)
                 },
             };
 
@@ -95,10 +177,31 @@ const reducer = (state = INITIAL_STATE, action: {type: string, payload: any}) =>
                 ...state,
                 favorites: {
                     isLoading: false,
-                    data: [...action.payload]
+                    initialized: true,
+                    data: action.payload
                 },
             };
-        default: return state;
+
+        case BOOKMARKS_ARCHIVED_INITIALIZING:
+            return {
+                ...state,
+                archived: {
+                    ...state.archived,
+                    isLoading: true,
+                },
+            };
+        case BOOKMARKS_ARCHIVED_INITIALIZED:
+            return {
+                ...state,
+                archived: {
+                    isLoading: false,
+                    initialized: true,
+                    data: action.payload
+                },
+            };
+
+        default:
+            return state;
     }
 };
 
