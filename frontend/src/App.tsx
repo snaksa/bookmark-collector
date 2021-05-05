@@ -15,6 +15,7 @@ import ArchivedScreen from "./components/screens/private/archived/archived";
 import TagsScreen from "./components/screens/private/tags/tags";
 import store from "./redux/store";
 import SingleTagScreen from "./components/screens/private/tags/single-tag";
+import MyProfileScreen from "./components/screens/private/my-profile/my-profile";
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -69,6 +70,9 @@ function App(): JSX.Element {
                 </Route>
                 <Route path="/my-list">
                   <PrivateRoute screen={<MyListScreen />} />
+                </Route>
+                <Route path="/my-profile">
+                  <PrivateRoute screen={<MyProfileScreen />} />
                 </Route>
                 <Route path="/">
                   <HomeScreen />
