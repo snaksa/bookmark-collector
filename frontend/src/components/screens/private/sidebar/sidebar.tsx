@@ -1,6 +1,13 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
-import { AccountCircle, Folder, Home, Star } from "@material-ui/icons";
+import {
+  AccountCircle,
+  Folder,
+  Home,
+  LocalOffer,
+  LocalOfferOutlined as LocalOfferIcon,
+  Star,
+} from "@material-ui/icons";
 import SidebarOption from "./sidebar-option/sidebar-option";
 
 export default function Sidebar() {
@@ -24,7 +31,7 @@ export default function Sidebar() {
         />
       </Grid>
       <Grid item>
-        <SidebarOption to="/my-list/tags" icon={<Star />} title="Tags" />
+        <SidebarOption to="/my-list/tags" icon={<LocalOffer />} title="Tags" />
       </Grid>
       <Grid item>
         <SidebarOption

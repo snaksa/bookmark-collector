@@ -14,6 +14,7 @@ import FavoritesScreen from "./components/screens/private/favorites/favorites";
 import ArchivedScreen from "./components/screens/private/archived/archived";
 import TagsScreen from "./components/screens/private/tags/tags";
 import store from "./redux/store";
+import SingleTagScreen from "./components/screens/private/tags/single-tag";
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -40,7 +41,7 @@ const theme = createMuiTheme({
   spacing: 4,
 });
 
-function App() {
+function App(): JSX.Element {
   return (
     <AuthProvider>
       <Provider store={store}>
@@ -59,6 +60,9 @@ function App() {
                 </Route>
                 <Route path="/my-list/archived">
                   <PrivateRoute screen={<ArchivedScreen />} />
+                </Route>
+                <Route path="/my-list/tags/:id">
+                  <PrivateRoute screen={<SingleTagScreen />} />
                 </Route>
                 <Route path="/my-list/tags">
                   <PrivateRoute screen={<TagsScreen />} />

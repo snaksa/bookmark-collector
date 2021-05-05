@@ -1,47 +1,77 @@
-import React from "react";
-import { Box, Container, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Grid,
+  Chip,
+} from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
-import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initializedLabels,
+  initializeLabels,
+} from "../../../../redux/labels/labels.actions";
+import { useHistory } from "react-router";
 
 export default function TagsScreen() {
-  const {
-    isLoading: labelDetailsLoading,
-    response: labelDetails,
-    fetch: fetchLabelDetails,
-  } = useHttpGet("labels", {}, true);
-  const { response: labels, isLoading: labelsLoading } = useHttpGet("labels");
+  const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
 
+  const dispatch = useDispatch();
+  const labels = useSelector((state: any) => state.labels.list);
+
+  useEffect(() => {
+    if (!labels || !labels.initialized) {
+      dispatch(initializeLabels());
+      fetchLabels().then((data) => {
+        setSearchedLabels(data.slice(0, 5));
+        dispatch(initializedLabels(data));
+      });
+    }
+  }, []);
+
+  const history = useHistory();
   const onLabelClick = (labelId: string) => {
-    fetchLabelDetails(`labels/${labelId}`).then((data) => {
-      console.log("Label data: ", data);
-    });
+    history.push(`/my-list/tags/${labelId}`);
   };
 
-  const label: any = labelDetails;
+  const [searchedLabels, setSearchedLabels] = useState(labels.data.slice(0, 5));
+
+  const onLabelSearchChange = (event: any) => {
+    const searchKey = event.target.value.toLowerCase();
+    const filteredLabels = labels.data.filter((label: any) =>
+      label.title.toLowerCase().includes(searchKey)
+    );
+
+    setSearchedLabels(filteredLabels);
+  };
 
   return (
     <Container>
-      <Typography variant={"h4"}>Labels</Typography>
-      <Typography variant={"h6"}>
-        Selected: {labelDetails ? label.title : "none"}
-      </Typography>
-      {labelsLoading || !labels ? (
-        <Box>Loading labels...</Box>
-      ) : (
-        labels.map((label: any) => (
-          <Box onClick={() => onLabelClick(label.id)}>{label.title}</Box>
-        ))
-      )}
-      {labelDetailsLoading ? (
-        <Box>Loading label details...</Box>
-      ) : (
-        <BookmarksList
-          bookmarks={label.bookmarks ?? []}
-          onDelete={() => {}}
-          onFavoriteUpdate={() => {}}
-          onArchivedUpdate={() => {}}
-        />
-      )}
+      <Typography variant={"h4"}>Tags</Typography>
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <TextField
+            fullWidth={true}
+            variant="outlined"
+            placeholder={
+              labels.isLoading ? "Loading tags..." : "Search for your tags"
+            }
+            onChange={onLabelSearchChange}
+            disabled={labels.isLoading}
+          />
+        </Grid>
+        <Grid item>
+          {searchedLabels.map((label: any) => (
+            <Chip
+              key={label.id}
+              size="small"
+              label={label.title}
+              onClick={() => onLabelClick(label.id)}
+            />
+          ))}
+        </Grid>
+      </Grid>
     </Container>
   );
 }
