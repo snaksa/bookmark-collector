@@ -7,7 +7,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./styles";
 
 interface PropTypes {
-  onSubmit: Function;
+  onSubmit: any;
   isLoading: boolean;
 }
 
@@ -33,7 +33,7 @@ export default function RegisterForm({ onSubmit, isLoading }: PropTypes) {
   };
 
   const submit = (values: FormFields) => {
-    let data = {
+    const data = {
       email: values.email,
       password: values.password,
       // TODO: add first name and last name

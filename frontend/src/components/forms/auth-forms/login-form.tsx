@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./styles";
 
 interface PropTypes {
-  onSubmit: Function;
+  onSubmit: any;
   isLoading: boolean;
 }
 
@@ -19,7 +19,7 @@ export default function LoginForm({ onSubmit, isLoading }: PropTypes) {
   const classes = useStyles();
 
   const schema = () => {
-    let shape: any = {
+    const shape: any = {
       email: Yup.string().email().required("Enter email"),
       password: Yup.string().required("Enter password"),
     };
@@ -28,7 +28,7 @@ export default function LoginForm({ onSubmit, isLoading }: PropTypes) {
   };
 
   const submit = (values: FormFields) => {
-    let data = {
+    const data = {
       email: values.email,
       password: values.password,
     };

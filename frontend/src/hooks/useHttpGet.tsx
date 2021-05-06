@@ -8,10 +8,10 @@ export default function useHttpGet(
   lazyFetch = false
 ) {
   const [response, setResponse] = useState([]);
-  const [error, setError] = useState<object | null>(null);
+  const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetch = async (passedUrl: string = "") => {
+  const fetch = async (passedUrl = "") => {
     const requestUrl = passedUrl ? passedUrl : url;
 
     setIsLoading(true);

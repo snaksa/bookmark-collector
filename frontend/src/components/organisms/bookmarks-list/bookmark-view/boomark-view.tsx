@@ -1,3 +1,4 @@
+import React from "react";
 import { Chip, Grid, IconButton } from "@material-ui/core";
 import useStyles from "./styles";
 import {
@@ -56,7 +57,7 @@ export default function BookmarkView({
         <IconButton>
           <LocalOfferIcon />
         </IconButton>
-        <IconButton onClick={() => onDelete(bookmark)}>
+        <IconButton onClick={() => onDelete(bookmark.id)}>
           <DeleteIcon />
         </IconButton>
       </Grid>

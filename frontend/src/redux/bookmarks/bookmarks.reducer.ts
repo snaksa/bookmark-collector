@@ -72,7 +72,9 @@ const reducer = (
         },
         favorites: {
           ...state.favorites,
-          data: [...state.favorites.data, action.payload],
+          data: state.favorites.data.length
+            ? [...state.favorites.data, action.payload]
+            : [],
         },
         archived: {
           ...state.archived,
@@ -121,7 +123,9 @@ const reducer = (
         },
         archived: {
           ...state.archived,
-          data: [...state.archived.data, action.payload],
+          data: state.archived.data.length
+            ? [...state.archived.data, action.payload]
+            : [],
         },
       };
     case BOOKMARK_REMOVE_FROM_ARCHIVED:

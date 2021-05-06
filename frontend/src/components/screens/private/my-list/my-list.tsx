@@ -3,17 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, Container, Typography } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
-import useHttpDelete from "../../../../hooks/useHttpDelete";
-import useHttpPut from "../../../../hooks/useHttpPut";
+import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import {
   initializeBookmarks,
   initializedBookmarks,
-  deleteBookmark,
-  addToFavoritesBookmark,
-  removeFromFavoritesBookmark,
-  addToArchivedBookmark,
-  removeFromArchivedBookmark,
 } from "../../../../redux/bookmarks/bookmarks.actions";
+import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
+import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
 
 export default function MyListScreen() {
   const dispatch = useDispatch();
@@ -24,8 +20,6 @@ export default function MyListScreen() {
     { excludeArchived: 1 },
     true
   );
-  const { deleteAction } = useHttpDelete();
-  const { execute: updateBookmarkRequest } = useHttpPut();
 
   useEffect(() => {
     if (!myList || !myList.initialized) {
@@ -36,35 +30,9 @@ export default function MyListScreen() {
     }
   }, []);
 
-  const onFavoriteUpdate = (bookmarkId: string, isFavorite: boolean) => {
-    updateBookmarkRequest(`bookmarks/${bookmarkId}`, {
-      isFavorite: isFavorite,
-    }).then((data) => {
-      if (isFavorite) {
-        dispatch(addToFavoritesBookmark(data));
-      } else {
-        dispatch(removeFromFavoritesBookmark(data));
-      }
-    });
-  };
-
-  const onDelete = (bookmark: any) => {
-    deleteAction(`bookmarks/${bookmark.id}`).then((response) => {
-      dispatch(deleteBookmark(bookmark.id));
-    });
-  };
-
-  const onArchivedUpdate = (bookmarkId: string, isArchived: boolean) => {
-    updateBookmarkRequest(`bookmarks/${bookmarkId}`, {
-      isArchived: isArchived,
-    }).then((data) => {
-      if (isArchived) {
-        dispatch(addToArchivedBookmark(data));
-      } else {
-        dispatch(removeFromArchivedBookmark(data));
-      }
-    });
-  };
+  const updateFavoriteStatus = useFavoriteBookmarkUpdate();
+  const updateArchiveStatus = useArchiveBookmarkUpdate();
+  const deleteBookmark = useDeleteBookmark();
 
   return (
     <Container>
@@ -74,9 +42,9 @@ export default function MyListScreen() {
       ) : (
         <BookmarksList
           bookmarks={myList.data}
-          onDelete={onDelete}
-          onFavoriteUpdate={onFavoriteUpdate}
-          onArchivedUpdate={onArchivedUpdate}
+          onDelete={deleteBookmark}
+          onFavoriteUpdate={updateFavoriteStatus}
+          onArchivedUpdate={updateArchiveStatus}
         />
       )}
     </Container>

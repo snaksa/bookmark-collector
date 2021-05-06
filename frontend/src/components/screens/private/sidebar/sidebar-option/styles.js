@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     "&:hover": {
       backgroundColor: "transparent",
+      color: theme.palette.primary.main,
     },
   },
   active: {

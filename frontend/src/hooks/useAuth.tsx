@@ -2,15 +2,19 @@ import React, { createContext, useState, useContext } from "react";
 
 export interface AuthContextProps {
   authData: string | null;
-  onLogin: Function;
-  onLogout: Function;
+  onLogin: any;
+  onLogout: any;
   isAuthenticated: boolean;
 }
 
 const initialProps: AuthContextProps = {
   authData: "",
-  onLogin: () => {},
-  onLogout: () => {},
+  onLogin: () => {
+    console.log("uninitialized");
+  },
+  onLogout: () => {
+    console.log("uninitialized");
+  },
   isAuthenticated: false,
 };
 

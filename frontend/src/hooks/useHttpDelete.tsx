@@ -4,7 +4,7 @@ import config from "../config";
 
 export default function useHttpDelete() {
   const [response, setResponse] = React.useState([]);
-  const [error, setError] = React.useState<object | null>(null);
+  const [error, setError] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const execute = async (url: string) => {

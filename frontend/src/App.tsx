@@ -9,7 +9,6 @@ import HomeScreen from "./components/screens/anonymous/home/home";
 import axios from "axios";
 import MyListScreen from "./components/screens/private/my-list/my-list";
 import PrivateRoute from "./components/screens/private/private";
-import BookmarksProvider from "./hooks/useBookmarks";
 import FavoritesScreen from "./components/screens/private/favorites/favorites";
 import ArchivedScreen from "./components/screens/private/archived/archived";
 import TagsScreen from "./components/screens/private/tags/tags";
@@ -46,41 +45,39 @@ function App(): JSX.Element {
   return (
     <AuthProvider>
       <Provider store={store}>
-        <BookmarksProvider>
-          <ThemeProvider theme={theme}>
-            <Router>
-              <Switch>
-                <Route path="/login">
-                  <LoginScreen />
-                </Route>
-                <Route path="/signup">
-                  <SignUpScreen />
-                </Route>
-                <Route path="/my-list/favorites">
-                  <PrivateRoute screen={<FavoritesScreen />} />
-                </Route>
-                <Route path="/my-list/archived">
-                  <PrivateRoute screen={<ArchivedScreen />} />
-                </Route>
-                <Route path="/my-list/tags/:id">
-                  <PrivateRoute screen={<SingleTagScreen />} />
-                </Route>
-                <Route path="/my-list/tags">
-                  <PrivateRoute screen={<TagsScreen />} />
-                </Route>
-                <Route path="/my-list">
-                  <PrivateRoute screen={<MyListScreen />} />
-                </Route>
-                <Route path="/my-profile">
-                  <PrivateRoute screen={<MyProfileScreen />} />
-                </Route>
-                <Route path="/">
-                  <HomeScreen />
-                </Route>
-              </Switch>
-            </Router>
-          </ThemeProvider>
-        </BookmarksProvider>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Switch>
+              <Route path="/login">
+                <LoginScreen />
+              </Route>
+              <Route path="/signup">
+                <SignUpScreen />
+              </Route>
+              <Route path="/my-list/favorites">
+                <PrivateRoute screen={<FavoritesScreen />} />
+              </Route>
+              <Route path="/my-list/archived">
+                <PrivateRoute screen={<ArchivedScreen />} />
+              </Route>
+              <Route path="/my-list/tags/:id">
+                <PrivateRoute screen={<SingleTagScreen />} />
+              </Route>
+              <Route path="/my-list/tags">
+                <PrivateRoute screen={<TagsScreen />} />
+              </Route>
+              <Route path="/my-list">
+                <PrivateRoute screen={<MyListScreen />} />
+              </Route>
+              <Route path="/my-profile">
+                <PrivateRoute screen={<MyProfileScreen />} />
+              </Route>
+              <Route path="/">
+                <HomeScreen />
+              </Route>
+            </Switch>
+          </Router>
+        </ThemeProvider>
       </Provider>
     </AuthProvider>
   );
