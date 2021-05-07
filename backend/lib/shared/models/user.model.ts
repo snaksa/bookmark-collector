@@ -1,49 +1,71 @@
 import { Model } from "./base.model";
 
-
 export default class User implements Model {
-    static ENTITY_TYPE: string = 'user';
+  static ENTITY_TYPE: string = "user";
 
-    pk: string;
-    sk: string = 'USER';
-    entityType: string = 'user';
-    GSI1: string;
+  pk: string;
+  sk: string = "USER";
+  entityType: string = "user";
+  GSI1: string;
 
-    id: string;
-    status: number;
+  id: string;
+  status: number;
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
 
-    constructor(id: string, email: string, status: number) {
-        this.pk = `USER#${id}`;
-        this.GSI1 = email;
+  constructor(
+    id: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    status: number
+  ) {
+    this.pk = `USER#${id}`;
+    this.userId = id;
+    this.GSI1 = email;
+    this.email = email;
 
-        this.id = id;
-        this.status = status;
+    this.id = id;
+    this.status = status;
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  public toObject() {
+    return {
+      pk: this.pk,
+      sk: this.sk,
+      GSI1: this.GSI1,
+      status: this.status,
+      firstName: this.firstName,
+      lastName: this.lastName,
+    };
+  }
+
+  public toDynamoDbObject(removeKeys: boolean = false) {
+    let result = {};
+
+    if (!removeKeys) {
+      result = {
+        pk: this.pk,
+        sk: this.sk,
+      };
     }
 
-    public toObject() {
-        return {
-            pk: this.pk,
-            sk: this.sk,
-            GSI1: this.GSI1,
-            status: this.status,
-        };
-    }
+    return {
+      ...result,
+      entityType: User.ENTITY_TYPE,
+      GSI1: this.GSI1,
+      userStatus: this.status,
+      userId: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+    };
+  }
 
-    public toDynamoDbObject(removeKeys: boolean = false) {
-        let result = {};
-
-        if(!removeKeys) {
-            result = {
-                pk: this.pk,
-                sk: this.sk,
-            };
-        }
-
-        return {
-            ...result,
-            entityType: User.ENTITY_TYPE,
-            GSI1: this.GSI1,
-            status: this.status,
-        };
-    }
+  public static fromDynamoDb(o: User) {
+    return new User(o.userId, o.GSI1, o.firstName, o.lastName, o.status);
+  }
 }

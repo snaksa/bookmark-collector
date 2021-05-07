@@ -36,7 +36,8 @@ export default function RegisterForm({ onSubmit, isLoading }: PropTypes) {
     const data = {
       email: values.email,
       password: values.password,
-      // TODO: add first name and last name
+      firstName: values.firstName,
+      lastName: values.lastName,
     };
 
     onSubmit(data);
