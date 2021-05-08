@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Container,
@@ -8,6 +8,14 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initializedUserDetails,
+  initializeUserDetails,
+  updateUserDetails,
+} from "../../../../redux/user/user.actions";
+import useHttpGet from "../../../../hooks/useHttpGet";
+import useHttpPut from "../../../../hooks/useHttpPut";
 
 interface FormFields {
   firstName: string;
@@ -16,6 +24,21 @@ interface FormFields {
 }
 
 export default function MyProfileScreen(): JSX.Element {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: any) => state.user.details);
+
+  const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
+  const { execute: updateUser } = useHttpPut();
+
+  useEffect(() => {
+    if (!currentUser.initialized) {
+      dispatch(initializeUserDetails());
+      fetchUserDetails().then((data) => {
+        dispatch(initializedUserDetails(data));
+      });
+    }
+  }, []);
+
   const schema = () => {
     const shape = {
       email: Yup.string().email().required("Enter email"),
@@ -27,12 +50,13 @@ export default function MyProfileScreen(): JSX.Element {
   };
 
   const submit = (values: FormFields) => {
-    console.log(values);
-    // let data = {
-    //   email: values.email,
-    //   password: values.password,
-    //   // TODO: add first name and last name
-    // };
+    updateUser("auth/me", {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+    }).then((data: any) => {
+      dispatch(updateUserDetails(data));
+    });
   };
 
   return (
@@ -40,10 +64,11 @@ export default function MyProfileScreen(): JSX.Element {
       <Typography variant={"h4"}>My Profile</Typography>
       <Formik
         validationSchema={schema}
+        enableReinitialize={true}
         initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
+          firstName: currentUser.data.firstName,
+          lastName: currentUser.data.lastName,
+          email: currentUser.data.email,
         }}
         onSubmit={submit}
       >
