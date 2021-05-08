@@ -84,7 +84,6 @@ class RegisterLambdaHandler extends BaseHandler {
         new User(
           userSub,
           this.input.email,
-          this.input.email,
           this.input.firstName,
           this.input.lastName,
           1

@@ -37,6 +37,8 @@ export default class User implements Model {
     return {
       pk: this.pk,
       sk: this.sk,
+      id: this.id,
+      email: this.GSI1,
       GSI1: this.GSI1,
       status: this.status,
       firstName: this.firstName,

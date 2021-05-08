@@ -7,6 +7,7 @@ import { AwsResources } from "../../shared/enums/aws-resources";
 import { BaseStack } from "../base.stack";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { UpdateLambda } from "./requests/update/update-lambda";
+import { SingleLambda } from "./requests/single/single-lambda";
 
 export class UsersStack extends BaseStack {
   dbStore: ITable;
@@ -69,26 +70,36 @@ export class UsersStack extends BaseStack {
         )
       );
 
-    auth
-      .addResource("me", {
-        defaultCorsPreflightOptions: {
-          allowOrigins: Cors.ALL_ORIGINS,
-          allowMethods: Cors.ALL_METHODS,
-          allowHeaders: ["*"],
-          disableCache: true,
-        },
-      })
-      .addMethod(
-        ApiGatewayRequestMethods.PUT,
-        new LambdaIntegration(
-          new UpdateLambda(this, "update-lambda", {
-            dbStore: this.dbStore,
-            userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
-            cognitoUserPoolId: this.cognitoUserPoolId,
-            cognitoUserPoolArn: this.cognitoUserPoolArn,
-          })
-        ),
-        this.getAuthorization()
-      );
+    const me = auth.addResource("me", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
+        allowHeaders: ["*"],
+        disableCache: true,
+      },
+    });
+
+    me.addMethod(
+      ApiGatewayRequestMethods.GET,
+      new LambdaIntegration(
+        new SingleLambda(this, "single-lambda", {
+          dbStore: this.dbStore,
+        })
+      ),
+      this.getAuthorization()
+    );
+
+    me.addMethod(
+      ApiGatewayRequestMethods.PUT,
+      new LambdaIntegration(
+        new UpdateLambda(this, "update-lambda", {
+          dbStore: this.dbStore,
+          userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
+          cognitoUserPoolId: this.cognitoUserPoolId,
+          cognitoUserPoolArn: this.cognitoUserPoolArn,
+        })
+      ),
+      this.getAuthorization()
+    );
   }
 }

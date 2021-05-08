@@ -1,6 +1,5 @@
 import User from "../models/user.model";
 import { QueryBuilder } from "../services/query-builder";
-import Label from "../models/label.model";
 
 export class UserRepository {
   constructor(private dbStore: string, private userIndexByEmail: string = "") {}
