@@ -5,9 +5,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1, 0),
     marginBottom: theme.spacing(8),
     borderBottom: "1px solid #ccc",
+    boxShadow: "0px 2px 12px rgba(0, 0, 0, 0.08)",
   },
   urlTextField: {
     backgroundColor: "#FFF",
+  },
+  logo: {
+    height: "25px",
   },
   avatar: {
     cursor: "pointer",

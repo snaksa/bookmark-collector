@@ -82,95 +82,117 @@ export default function Header() {
       <Container maxWidth="lg">
         <Grid
           container
-          spacing={1}
           direction="row"
-          justify={"flex-end"}
+          justify={"space-between"}
           alignItems="center"
         >
-          {showNewUrl ? (
-            <>
-              <Grid item md={6}>
-                <TextField
-                  size="small"
-                  fullWidth={true}
-                  variant="outlined"
-                  placeholder="Save a URL https://..."
-                  className={classes.urlTextField}
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AddIcon />
-                      </InputAdornment>
-                    ),
+          <Grid item>
+            <img
+              className={classes.logo}
+              alt={"Logo"}
+              src={
+                "https://assets.getpocket.com/web-ui/assets/pocket-logo-light-mode.9a20614bbcbaf69b221df81a80daa73d.svg"
+              }
+            />
+          </Grid>
+          <Grid item>
+            <Grid
+              container
+              spacing={1}
+              direction="row"
+              justify={"flex-end"}
+              alignItems="center"
+            >
+              {showNewUrl ? (
+                <>
+                  <Grid item md={6}>
+                    <TextField
+                      size="small"
+                      fullWidth={true}
+                      variant="outlined"
+                      placeholder="Save a URL https://..."
+                      className={classes.urlTextField}
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AddIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="medium"
+                      onClick={handleNewUrl}
+                    >
+                      Add
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={() => setShowNewUrl(false)}>
+                      <ClearIcon />
+                    </IconButton>
+                  </Grid>
+                </>
+              ) : (
+                <Grid item>
+                  <IconButton onClick={() => setShowNewUrl(true)}>
+                    <AddIcon />
+                  </IconButton>
+                </Grid>
+              )}
+              <Grid item>
+                <Avatar onClick={handleClick} className={classes.avatar}>
+                  {currentUser.initialized
+                    ? `${currentUser.data.firstName[0]}${currentUser.data.lastName[0]}`
+                    : ""}
+                </Avatar>
+              </Grid>
+              <Grid item>
+                <Popover
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="medium"
-                  onClick={handleNewUrl}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
                 >
-                  Add
-                </Button>
-              </Grid>
-              <Grid item>
-                <IconButton onClick={() => setShowNewUrl(false)}>
-                  <ClearIcon />
-                </IconButton>
-              </Grid>
-            </>
-          ) : (
-            <Grid item>
-              <IconButton onClick={() => setShowNewUrl(true)}>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-          )}
-          <Avatar onClick={handleClick} className={classes.avatar}>
-            {currentUser.initialized
-              ? `${currentUser.data.firstName[0]}${currentUser.data.lastName[0]}`
-              : ""}
-          </Avatar>
-          <Popover
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <Grid container direction="column" className={classes.menu}>
-              <Grid
-                item
-                className={classes.menuItem}
-                onClick={handleViewProfileClick}
-              >
-                <div>Sinan</div>
-                <div className={classes.viewProfile}>View Profile</div>
-              </Grid>
-              <Grid item>
-                <Divider className={classes.divider} />
-              </Grid>
-              <Grid item className={classes.menuItem}>
-                Change Password
-              </Grid>
-              <Grid item>
-                <Divider className={classes.divider} />
-              </Grid>
-              <Grid item className={classes.menuItem} onClick={logout}>
-                Log Out
+                  <Grid container direction="column" className={classes.menu}>
+                    <Grid
+                      item
+                      className={classes.menuItem}
+                      onClick={handleViewProfileClick}
+                    >
+                      <div>Sinan</div>
+                      <div className={classes.viewProfile}>View Profile</div>
+                    </Grid>
+                    <Grid item>
+                      <Divider className={classes.divider} />
+                    </Grid>
+                    <Grid item className={classes.menuItem}>
+                      Change Password
+                    </Grid>
+                    <Grid item>
+                      <Divider className={classes.divider} />
+                    </Grid>
+                    <Grid item className={classes.menuItem} onClick={logout}>
+                      Log Out
+                    </Grid>
+                  </Grid>
+                </Popover>
               </Grid>
             </Grid>
-          </Popover>
+          </Grid>
         </Grid>
       </Container>
     </Container>
