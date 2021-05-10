@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import {
-  AccountCircleOutlined,
   FolderOutlined,
   HomeOutlined,
   LocalOfferOutlined,
@@ -34,13 +33,6 @@ export default function Sidebar() {
           to="/my-list/tags"
           icon={<LocalOfferOutlined />}
           title="Tags"
-        />
-      </Grid>
-      <Grid item>
-        <SidebarOption
-          to="/my-profile"
-          icon={<AccountCircleOutlined />}
-          title="My Profile"
         />
       </Grid>
     </Grid>
