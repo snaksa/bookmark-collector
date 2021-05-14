@@ -1,14 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import BookmarkView from "../bookmark-view/boomark-view";
 import useStyle from "./styles";
 import { Autocomplete } from "@material-ui/lab";
@@ -18,6 +9,7 @@ import {
   initializedLabels,
   initializeLabels,
 } from "../../../../redux/labels/labels.actions";
+import Dialog from "../../dialog/dialog";
 
 export default function BookmarksList({
   bookmarks,
@@ -30,10 +22,15 @@ export default function BookmarksList({
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (bookmarkId: string) => {
+    // TODO: fetch bookmark details
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const saveBookmark = () => {
+    setOpen(false);
+    console.log("save passed labels");
   };
 
   const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
@@ -66,32 +63,28 @@ export default function BookmarksList({
         ))}
       </Grid>
       <Dialog
-        fullWidth={true}
-        maxWidth="sm"
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
+        handleClose={handleClose}
+        title={"Add Tags"}
         open={open}
+        actions={[{ title: "Save", action: saveBookmark }]}
       >
-        <DialogTitle id="customized-dialog-title">Add Tags</DialogTitle>
-        <DialogContent dividers>
-          <Autocomplete
-            multiple
-            id="tags-outlined"
-            disabled={labels.isLoading}
-            options={labels.data}
-            getOptionLabel={(option: any) => option.title}
-            //defaultValue={[labels[1]]}
-            filterSelectedOptions
-            renderInput={(params) => (
-              <TextField {...params} variant="outlined" placeholder="Tags" />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save
-          </Button>
-        </DialogActions>
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          disabled={labels.isLoading}
+          options={labels.data}
+          getOptionLabel={(option: any) => option.title}
+          //defaultValue={[labels[1]]}
+          filterSelectedOptions={true}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              size="small"
+              placeholder="Tags"
+            />
+          )}
+        />
       </Dialog>
     </>
   );
