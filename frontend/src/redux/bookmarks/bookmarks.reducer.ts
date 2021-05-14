@@ -153,16 +153,19 @@ const reducer = (
       return {
         ...state,
         myList: {
+          ...state.myList,
           data: state.myList.data.map((item: any) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         favorites: {
+          ...state.favorites,
           data: state.favorites.data.map((item: any) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         archived: {
+          ...state.archived,
           data: state.archived.data.map((item: any) =>
             item.id === action.payload.id ? action.payload : item
           ),
