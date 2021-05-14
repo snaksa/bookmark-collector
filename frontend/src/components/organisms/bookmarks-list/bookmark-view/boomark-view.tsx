@@ -14,6 +14,7 @@ export default function BookmarkView({
   onDelete,
   onFavoriteUpdate,
   onArchivedUpdate,
+  onEditTags,
 }: any) {
   const classes = useStyles();
   return (
@@ -54,7 +55,7 @@ export default function BookmarkView({
         >
           {bookmark.isArchived ? <AddIcon /> : <MoveToInboxIcon />}
         </IconButton>
-        <IconButton>
+        <IconButton onClick={() => onEditTags(bookmark.id)}>
           <LocalOfferIcon />
         </IconButton>
         <IconButton onClick={() => onDelete(bookmark.id)}>
