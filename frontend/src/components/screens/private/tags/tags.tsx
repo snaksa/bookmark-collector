@@ -5,6 +5,7 @@ import {
   TextField,
   Grid,
   Chip,
+  Box,
 } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +14,11 @@ import {
   initializeLabels,
 } from "../../../../redux/labels/labels.actions";
 import { useHistory } from "react-router";
+import useStyle from "./styles";
 
 export default function TagsScreen() {
+  const classes = useStyle();
+
   const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
 
   const dispatch = useDispatch();
@@ -49,29 +53,31 @@ export default function TagsScreen() {
   return (
     <Container>
       <Typography variant={"h4"}>Tags</Typography>
-      <Grid container direction="column" spacing={2}>
-        <Grid item>
-          <TextField
-            fullWidth={true}
-            variant="outlined"
-            placeholder={
-              labels.isLoading ? "Loading tags..." : "Search for your tags"
-            }
-            onChange={onLabelSearchChange}
-            disabled={labels.isLoading}
-          />
-        </Grid>
-        <Grid item>
-          {searchedLabels.map((label: any) => (
-            <Chip
-              key={label.id}
-              size="small"
-              label={label.title}
-              onClick={() => onLabelClick(label.id)}
+      <Box className={classes.main}>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <TextField
+              fullWidth={true}
+              variant="outlined"
+              placeholder={
+                labels.isLoading ? "Loading tags..." : "Search for your tags"
+              }
+              onChange={onLabelSearchChange}
+              disabled={labels.isLoading}
             />
-          ))}
+          </Grid>
+          <Grid item>
+            {searchedLabels.map((label: any) => (
+              <Chip
+                key={label.id}
+                size="small"
+                label={label.title}
+                onClick={() => onLabelClick(label.id)}
+              />
+            ))}
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Container>
   );
 }

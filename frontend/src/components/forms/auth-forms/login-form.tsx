@@ -38,7 +38,7 @@ export default function LoginForm({ onSubmit, isLoading }: PropTypes) {
 
   return (
     <div className={classes.paper}>
-      <Avatar className={classes.avatar}>
+      <Avatar classes={{ root: classes.avatar }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
@@ -92,7 +92,7 @@ export default function LoginForm({ onSubmit, isLoading }: PropTypes) {
               type="submit"
               variant="contained"
               color="primary"
-              className={classes.submit}
+              classes={{ root: classes.submit }}
               disabled={isLoading}
             >
               Login

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
@@ -15,12 +15,16 @@ import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
 
 export default function SingleTagScreen() {
-  const { fetch: fetchLabelDetails } = useHttpGet("labels", {}, true);
   const { id } = useParams<{ id: string }>();
+
+  const { fetch: fetchLabelDetails } = useHttpGet("labels", {}, true);
 
   const dispatch = useDispatch();
   const labelDetails = useSelector((state: any) => state.labels.details);
-  console.log(labelDetails);
+
+  const updateFavoriteStatus = useFavoriteBookmarkUpdate();
+  const updateArchiveStatus = useArchiveBookmarkUpdate();
+  const deleteBookmark = useDeleteBookmark();
 
   useEffect(() => {
     dispatch(initializeLabelsDetails());
@@ -28,10 +32,6 @@ export default function SingleTagScreen() {
       dispatch(initializedLabelsDetails(data));
     });
   }, []);
-
-  const updateFavoriteStatus = useFavoriteBookmarkUpdate();
-  const updateArchiveStatus = useArchiveBookmarkUpdate();
-  const deleteBookmark = useDeleteBookmark();
 
   return (
     <Container>

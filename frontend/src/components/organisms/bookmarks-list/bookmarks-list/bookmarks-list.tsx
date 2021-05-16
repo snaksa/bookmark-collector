@@ -22,7 +22,10 @@ export default function BookmarksList({
   const classes = useStyle();
 
   const dispatch = useDispatch();
+  const labels = useSelector((state: any) => state.labels.list);
+
   const { fetch: fetchBookmark } = useHttpGet("bookmarks", {}, true);
+  const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
   const { execute: updateBookmarkRequest } = useHttpPut();
 
   const [open, setOpen] = React.useState(false);
@@ -51,10 +54,6 @@ export default function BookmarksList({
     );
   };
 
-  const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
-
-  const labels = useSelector((state: any) => state.labels.list);
-
   useEffect(() => {
     if (!labels || !labels.initialized) {
       dispatch(initializeLabels());
@@ -68,7 +67,7 @@ export default function BookmarksList({
     <>
       <Grid>
         {bookmarks.map((bookmark: any) => (
-          <Grid item key={bookmark.id} className={classes.listItem}>
+          <Grid item key={bookmark.id} classes={{ item: classes.listItem }}>
             <BookmarkView
               bookmark={bookmark}
               onDelete={onDelete}

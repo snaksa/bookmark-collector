@@ -34,9 +34,14 @@ export default function Header() {
 
   const [showNewUrl, setShowNewUrl] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
+  const [anchorEl, setAnchorEl] = React.useState<any>(null);
+
   const { execute: createBookmark } = useHttpPost("bookmarks");
 
+  const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
+
   const dispatch = useDispatch();
+  const currentUser = useSelector((state: any) => state.user.details);
 
   const logout = () => {
     onLogout();
@@ -52,8 +57,6 @@ export default function Header() {
     });
   };
 
-  const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
-  const currentUser = useSelector((state: any) => state.user.details);
   useEffect(() => {
     if (!currentUser.initialized) {
       dispatch(initializeUserDetails());
@@ -62,8 +65,6 @@ export default function Header() {
       });
     }
   }, []);
-
-  const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
   const handleClick = (event: React.MouseEvent) => {
     setAnchorEl(event.currentTarget);
@@ -78,7 +79,7 @@ export default function Header() {
   };
 
   return (
-    <Container maxWidth={false} className={classes.header}>
+    <Container maxWidth={false} classes={{ root: classes.header }}>
       <Container maxWidth="lg">
         <Grid
           container
@@ -86,7 +87,7 @@ export default function Header() {
           justify={"space-between"}
           alignItems="center"
         >
-          <Grid item>
+          <Grid item md={4}>
             <img
               className={classes.logo}
               alt={"Logo"}
@@ -95,7 +96,7 @@ export default function Header() {
               }
             />
           </Grid>
-          <Grid item>
+          <Grid item md={8}>
             <Grid
               container
               spacing={1}
@@ -105,13 +106,13 @@ export default function Header() {
             >
               {showNewUrl ? (
                 <>
-                  <Grid item md={6}>
+                  <Grid item md={8}>
                     <TextField
                       size="small"
                       fullWidth={true}
                       variant="outlined"
                       placeholder="Save a URL https://..."
-                      className={classes.urlTextField}
+                      classes={{ root: classes.urlTextField }}
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       InputProps={{
@@ -147,7 +148,10 @@ export default function Header() {
                 </Grid>
               )}
               <Grid item>
-                <Avatar onClick={handleClick} className={classes.avatar}>
+                <Avatar
+                  onClick={handleClick}
+                  classes={{ root: classes.avatar }}
+                >
                   {currentUser.initialized
                     ? `${currentUser.data.firstName[0]}${currentUser.data.lastName[0]}`
                     : ""}
@@ -167,7 +171,11 @@ export default function Header() {
                     horizontal: "right",
                   }}
                 >
-                  <Grid container direction="column" className={classes.menu}>
+                  <Grid
+                    container
+                    direction="column"
+                    classes={{ root: classes.menu }}
+                  >
                     <Grid
                       item
                       className={classes.menuItem}
@@ -177,15 +185,19 @@ export default function Header() {
                       <div className={classes.viewProfile}>View Profile</div>
                     </Grid>
                     <Grid item>
-                      <Divider className={classes.divider} />
+                      <Divider classes={{ root: classes.divider }} />
                     </Grid>
-                    <Grid item className={classes.menuItem}>
+                    <Grid item classes={{ item: classes.menuItem }}>
                       Change Password
                     </Grid>
                     <Grid item>
-                      <Divider className={classes.divider} />
+                      <Divider classes={{ root: classes.divider }} />
                     </Grid>
-                    <Grid item className={classes.menuItem} onClick={logout}>
+                    <Grid
+                      item
+                      classes={{ item: classes.menuItem }}
+                      onClick={logout}
+                    >
                       Log Out
                     </Grid>
                   </Grid>

@@ -1,15 +1,15 @@
 import React from "react";
 import { Box, Grid } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
-import Sidebar from "./sidebar/sidebar";
 import useStyle from "./styles";
 import Header from "../../organisms/header/header";
+import Sidebar from "../../organisms/sidebar/sidebar";
 
 export default function SidebarOption({ screen }: any) {
   const classes = useStyle();
 
   return (
-    <Box className={classes.main}>
+    <Box className={classes.root}>
       <Header />
       <Container maxWidth="lg">
         <Grid container direction="row" spacing={8}>

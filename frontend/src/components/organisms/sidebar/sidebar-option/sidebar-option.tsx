@@ -7,7 +7,6 @@ import { useHistory } from "react-router";
 export default function SidebarOption({ to, title, icon }: any) {
   const classes = useStyles();
   const history = useHistory();
-
   const location = useLocation();
   const isActive = location.pathname === to;
 
@@ -20,7 +19,7 @@ export default function SidebarOption({ to, title, icon }: any) {
       disableRipple={true}
       fullWidth={true}
       onClick={onClick}
-      className={classes.main + " " + (isActive ? classes.active : "")}
+      classes={{ root: `${classes.root} ${isActive ? classes.active : ""}` }}
     >
       <div className={classes.content}>
         <div className={classes.icon}>{icon}</div>

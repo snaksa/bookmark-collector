@@ -42,7 +42,7 @@ export default function BookmarkView({
           </Grid>
         </Grid>
       </Grid>
-      <Grid item md={3} lg={3} className={classes.actions}>
+      <Grid item md={3} lg={3} classes={{ item: classes.actions }}>
         <IconButton
           onClick={() => onFavoriteUpdate(bookmark.id, !bookmark.isFavorite)}
         >
