@@ -12,17 +12,18 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   initializedLabels,
   initializeLabels,
-} from "../../../../redux/labels/labels.actions";
+} from "../../../../redux/slices/labelsSlice";
 import { useHistory } from "react-router";
 import useStyle from "./styles";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 
 export default function TagsScreen() {
   const classes = useStyle();
 
   const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
 
-  const dispatch = useDispatch();
-  const labels = useSelector((state: any) => state.labels.list);
+  const dispatch = useAppDispatch();
+  const labels = useAppSelector((state) => state.labels.list);
 
   useEffect(() => {
     if (!labels || !labels.initialized) {

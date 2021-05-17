@@ -8,7 +8,7 @@ import {
   initializedLabelsDetails,
   initializeLabelsDetails,
   updateLabelsDetailsBookmark,
-} from "../../../../redux/labels/labels.actions";
+} from "../../../../redux/slices/labelsSlice";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
@@ -47,11 +47,15 @@ export default function SingleTagScreen() {
           }}
           onFavoriteUpdate={(bookmarkId: string, isFavorite: boolean) => {
             updateFavoriteStatus(bookmarkId, isFavorite);
-            dispatch(updateLabelsDetailsBookmark(bookmarkId, { isFavorite }));
+            dispatch(
+              updateLabelsDetailsBookmark({ bookmarkId, data: { isFavorite } })
+            );
           }}
           onArchivedUpdate={(bookmarkId: string, isArchived: boolean) => {
             updateArchiveStatus(bookmarkId, isArchived);
-            dispatch(updateLabelsDetailsBookmark(bookmarkId, { isArchived }));
+            dispatch(
+              updateLabelsDetailsBookmark({ bookmarkId, data: { isArchived } })
+            );
           }}
         />
       )}

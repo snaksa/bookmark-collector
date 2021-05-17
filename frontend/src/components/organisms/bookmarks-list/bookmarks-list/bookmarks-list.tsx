@@ -5,13 +5,14 @@ import useStyle from "./styles";
 import { Autocomplete } from "@material-ui/lab";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  initializedLabels,
-  initializeLabels,
-} from "../../../../redux/labels/labels.actions";
+
 import Dialog from "../../dialog/dialog";
 import useHttpPut from "../../../../hooks/useHttpPut";
 import { updateBookmark } from "../../../../redux/bookmarks/bookmarks.actions";
+import {
+  initializedLabels,
+  initializeLabels,
+} from "../../../../redux/slices/labelsSlice";
 
 export default function BookmarksList({
   bookmarks,
