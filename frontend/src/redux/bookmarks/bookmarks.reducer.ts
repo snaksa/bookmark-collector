@@ -1,3 +1,4 @@
+import { Bookmark } from "../../models/bookmark.model";
 import {
   BOOKMARKS_INITIALIZING,
   BOOKMARK_UPDATED,
@@ -14,7 +15,25 @@ import {
   BOOKMARK_ADD_NEW,
 } from "./bookmarks.types";
 
-const INITIAL_STATE = {
+interface State {
+  myList: {
+    isLoading: boolean;
+    initialized: boolean;
+    data: Bookmark[];
+  };
+  favorites: {
+    isLoading: boolean;
+    initialized: boolean;
+    data: Bookmark[];
+  };
+  archived: {
+    isLoading: boolean;
+    initialized: boolean;
+    data: Bookmark[];
+  };
+}
+
+const initialState: State = {
   myList: {
     isLoading: false,
     initialized: false,
@@ -33,9 +52,9 @@ const INITIAL_STATE = {
 };
 
 const reducer = (
-  state = INITIAL_STATE,
+  state = initialState,
   action: { type: string; payload: any }
-) => {
+): State => {
   switch (action.type) {
     case BOOKMARKS_INITIALIZING:
       return {
@@ -58,6 +77,7 @@ const reducer = (
       return {
         ...state,
         myList: {
+          ...state.myList,
           data: [...state.myList.data, action.payload],
         },
       };
@@ -66,7 +86,7 @@ const reducer = (
         ...state,
         myList: {
           ...state.myList,
-          data: state.myList.data.map((item: any) =>
+          data: state.myList.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
@@ -78,7 +98,7 @@ const reducer = (
         },
         archived: {
           ...state.archived,
-          data: state.archived.data.map((item: any) =>
+          data: state.archived.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
@@ -88,19 +108,19 @@ const reducer = (
         ...state,
         myList: {
           ...state.myList,
-          data: state.myList.data.map((item: any) =>
+          data: state.myList.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         favorites: {
           ...state.favorites,
           data: state.favorites.data.filter(
-            (item: any) => item.id !== action.payload.id
+            (item) => item.id !== action.payload.id
           ),
         },
         archived: {
           ...state.archived,
-          data: state.archived.data.map((item: any) =>
+          data: state.archived.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
@@ -112,12 +132,12 @@ const reducer = (
         myList: {
           ...state.myList,
           data: state.myList.data.filter(
-            (item: any) => item.id !== action.payload.id
+            (item) => item.id !== action.payload.id
           ),
         },
         favorites: {
           ...state.favorites,
-          data: state.favorites.data.map((item: any) =>
+          data: state.favorites.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
@@ -137,14 +157,14 @@ const reducer = (
         },
         favorites: {
           ...state.favorites,
-          data: state.favorites.data.map((item: any) =>
+          data: state.favorites.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         archived: {
           ...state.archived,
           data: state.archived.data.filter(
-            (item: any) => item.id !== action.payload.id
+            (item) => item.id !== action.payload.id
           ),
         },
       };
@@ -154,19 +174,19 @@ const reducer = (
         ...state,
         myList: {
           ...state.myList,
-          data: state.myList.data.map((item: any) =>
+          data: state.myList.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         favorites: {
           ...state.favorites,
-          data: state.favorites.data.map((item: any) =>
+          data: state.favorites.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
         archived: {
           ...state.archived,
-          data: state.archived.data.map((item: any) =>
+          data: state.archived.data.map((item) =>
             item.id === action.payload.id ? action.payload : item
           ),
         },
@@ -176,20 +196,18 @@ const reducer = (
         ...state,
         myList: {
           ...state.myList,
-          data: state.myList.data.filter(
-            (item: any) => item.id !== action.payload
-          ),
+          data: state.myList.data.filter((item) => item.id !== action.payload),
         },
         favorites: {
           ...state.favorites,
           data: state.favorites.data.filter(
-            (item: any) => item.id !== action.payload
+            (item) => item.id !== action.payload
           ),
         },
         archived: {
           ...state.archived,
           data: state.archived.data.filter(
-            (item: any) => item.id !== action.payload
+            (item) => item.id !== action.payload
           ),
         },
       };

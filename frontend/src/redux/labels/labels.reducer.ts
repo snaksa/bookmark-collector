@@ -1,3 +1,6 @@
+import { boolean } from "yup/lib/locale";
+import { Bookmark } from "../../models/bookmark.model";
+import { Label } from "../../models/label.model";
 import {
   LABELS_DETAILS_DELETE_BOOKMARK,
   LABELS_DETAILS_INITIALIZED,
@@ -7,7 +10,23 @@ import {
   LABELS_INITIALIZING,
 } from "./labels.types";
 
-const INITIAL_STATE = {
+interface State {
+  list: {
+    isLoading: boolean;
+    initialized: boolean;
+    data: Label[];
+  };
+  details: {
+    isLoading: boolean;
+    data: {
+      title: string;
+      color: string;
+      bookmarks: Bookmark[];
+    };
+  };
+}
+
+const initialState: State = {
   list: {
     isLoading: false,
     initialized: false,
@@ -16,15 +35,17 @@ const INITIAL_STATE = {
   details: {
     isLoading: false,
     data: {
+      title: "",
+      color: "",
       bookmarks: [],
     },
   },
 };
 
 const reducer = (
-  state = INITIAL_STATE,
+  state = initialState,
   action: { type: string; payload: any }
-) => {
+): State => {
   switch (action.type) {
     case LABELS_INITIALIZING:
       return {
@@ -67,7 +88,7 @@ const reducer = (
           isLoading: false,
           data: {
             ...state.details.data,
-            bookmarks: state.details.data.bookmarks.map((bookmark: any) =>
+            bookmarks: state.details.data.bookmarks.map((bookmark) =>
               bookmark.id === action.payload.bookmarkId
                 ? { ...bookmark, ...action.payload.data }
                 : bookmark
@@ -83,7 +104,7 @@ const reducer = (
           data: {
             ...state.details.data,
             bookmarks: state.details.data.bookmarks.filter(
-              (bookmark: any) => bookmark.id !== action.payload
+              (bookmark) => bookmark.id !== action.payload
             ),
           },
         },
