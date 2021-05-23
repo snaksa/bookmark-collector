@@ -8,6 +8,15 @@ import {
   LocalOfferOutlined as LocalOfferIcon,
   Add as AddIcon,
 } from "@material-ui/icons";
+import { Bookmark } from "../../../../models/bookmark.model";
+
+interface BookmarkViewProps {
+  bookmark: Bookmark;
+  onDelete: (bookmarkId: string) => void;
+  onFavoriteUpdate: (bookmarkId: string, isFavorite: boolean) => void;
+  onArchivedUpdate: (bookmarkId: string, isArchived: boolean) => void;
+  onEditTags: (bookmarkId: string) => void;
+}
 
 export default function BookmarkView({
   bookmark,
@@ -15,7 +24,7 @@ export default function BookmarkView({
   onFavoriteUpdate,
   onArchivedUpdate,
   onEditTags,
-}: any) {
+}: BookmarkViewProps): JSX.Element {
   const classes = useStyles();
   return (
     <Grid container direction="row">
@@ -33,7 +42,7 @@ export default function BookmarkView({
           </Grid>
           <Grid item>
             <Grid container direction="row" spacing={2}>
-              {bookmark.labels.map((label: any) => (
+              {bookmark.labels.map((label) => (
                 <Grid item key={label.id}>
                   <Chip key={label.id} size="small" label={label.title} />
                 </Grid>

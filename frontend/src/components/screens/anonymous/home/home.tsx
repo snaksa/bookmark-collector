@@ -1,9 +1,8 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
-import Container from "@material-ui/core/Container";
+import { Container, Grid } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 
-export default function HomeScreen() {
+export default function HomeScreen(): JSX.Element {
   return (
     <Container>
       <Grid container>

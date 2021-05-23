@@ -9,12 +9,16 @@ import RegisterForm, {
 } from "../../../forms/auth-forms/register-form";
 import useHttpPost from "../../../../hooks/useHttpPost";
 
-export default function SignUpScreen() {
+interface RegisterResponse {
+  id: string;
+}
+
+export default function SignUpScreen(): JSX.Element {
   const history = useHistory();
   const { error, isLoading, execute: register } = useHttpPost(`auth/register`);
 
   const onSubmit = (data: FormFields) => {
-    register(data).then((responseData: any) => {
+    register(data).then((responseData: RegisterResponse) => {
       if (responseData) {
         history.push("/login");
       }

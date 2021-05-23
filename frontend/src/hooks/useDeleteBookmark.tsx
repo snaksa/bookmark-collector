@@ -1,15 +1,15 @@
-import { useDispatch } from "react-redux";
 import { deleteBookmark } from "../redux/slices/bookmarks.slice";
 import useHttpDelete from "./useHttpDelete";
+import { useAppDispatch } from "./redux-hooks";
 
-type DeleteBookmarkType = (bookmark: any) => void;
+type DeleteBookmarkResponse = (bookmarkId: string) => void;
 
-export default function useDeleteBookmark(): DeleteBookmarkType {
+export default function useDeleteBookmark(): DeleteBookmarkResponse {
   const { deleteAction } = useHttpDelete();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (bookmarkId: string) => {
-    deleteAction(`bookmarks/${bookmarkId}`).then((response) => {
+    deleteAction(`bookmarks/${bookmarkId}`).then(() => {
       dispatch(deleteBookmark(bookmarkId));
     });
   };

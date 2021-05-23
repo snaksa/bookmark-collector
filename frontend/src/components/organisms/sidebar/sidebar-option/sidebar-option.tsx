@@ -4,7 +4,17 @@ import { useLocation } from "react-router-dom";
 import useStyles from "./styles";
 import { useHistory } from "react-router";
 
-export default function SidebarOption({ to, title, icon }: any) {
+interface SidebarOptionProps {
+  to: string;
+  title: string;
+  icon: JSX.Element;
+}
+
+export default function SidebarOption({
+  to,
+  title,
+  icon,
+}: SidebarOptionProps): JSX.Element {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();

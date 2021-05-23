@@ -8,7 +8,7 @@ import {
 } from "@material-ui/icons";
 import SidebarOption from "./sidebar-option/sidebar-option";
 
-export default function Sidebar() {
+export default function Sidebar(): JSX.Element {
   return (
     <Grid container direction="column" spacing={1}>
       <Grid item>

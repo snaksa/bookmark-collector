@@ -4,9 +4,10 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./styles";
+import { StringSchema } from "yup";
 
 interface PropTypes {
-  onSubmit: any;
+  onSubmit: (data: { email: string; password: string }) => void;
   isLoading: boolean;
 }
 
@@ -15,11 +16,14 @@ export interface FormFields {
   password: string;
 }
 
-export default function LoginForm({ onSubmit, isLoading }: PropTypes) {
+export default function LoginForm({
+  onSubmit,
+  isLoading,
+}: PropTypes): JSX.Element {
   const classes = useStyles();
 
   const schema = () => {
-    const shape: any = {
+    const shape: { email: StringSchema; password: StringSchema } = {
       email: Yup.string().email().required("Enter email"),
       password: Yup.string().required("Enter password"),
     };

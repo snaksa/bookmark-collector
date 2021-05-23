@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Box, Container, Typography } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
@@ -10,10 +9,11 @@ import {
 } from "../../../../redux/slices/bookmarks.slice";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 
-export default function MyListScreen() {
-  const dispatch = useDispatch();
-  const myList = useSelector((state: any) => state.bookmarks.myList);
+export default function MyListScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const myList = useAppSelector((state) => state.bookmarks.myList);
 
   const { fetch: fetchBookmarks } = useHttpGet(
     "bookmarks",

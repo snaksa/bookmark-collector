@@ -6,20 +6,20 @@ import {
   initializeArchivedBookmarks,
   initializedArchivedBookmarks,
 } from "../../../../redux/slices/bookmarks.slice";
-import { useDispatch, useSelector } from "react-redux";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 
-export default function ArchivedScreen() {
+export default function ArchivedScreen(): JSX.Element {
   const { fetch: fetchBookmarks } = useHttpGet(
     "bookmarks",
     { archived: 1 },
     true
   );
 
-  const dispatch = useDispatch();
-  const archived = useSelector((state: any) => state.bookmarks.archived);
+  const dispatch = useAppDispatch();
+  const archived = useAppSelector((state) => state.bookmarks.archived);
 
   useEffect(() => {
     if (!archived.data.length || !archived.initialized) {

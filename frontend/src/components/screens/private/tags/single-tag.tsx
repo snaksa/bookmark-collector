@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
-import { useDispatch, useSelector } from "react-redux";
 import {
   deleteLabelsDetailsBookmark,
   initializedLabelsDetails,
@@ -13,14 +12,15 @@ import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/book
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 
-export default function SingleTagScreen() {
+export default function SingleTagScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
 
   const { fetch: fetchLabelDetails } = useHttpGet("labels", {}, true);
 
-  const dispatch = useDispatch();
-  const labelDetails = useSelector((state: any) => state.labels.details);
+  const dispatch = useAppDispatch();
+  const labelDetails = useAppSelector((state) => state.labels.details);
 
   const updateFavoriteStatus = useFavoriteBookmarkUpdate();
   const updateArchiveStatus = useArchiveBookmarkUpdate();

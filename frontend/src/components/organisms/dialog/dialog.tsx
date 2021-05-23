@@ -8,13 +8,21 @@ import {
 } from "@material-ui/core";
 import useStyles from "./styles";
 
+interface DialogProps {
+  handleClose: (event: Record<string, unknown>, reason: string) => void;
+  actions: { title: string; action: () => void }[];
+  children: React.ReactNode;
+  title: string;
+  open: boolean;
+}
+
 export default function Dialog({
   handleClose,
   actions,
   children,
   title,
   open,
-}: any) {
+}: DialogProps): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -29,7 +37,7 @@ export default function Dialog({
       <DialogTitle id="customized-dialog-title">{title}</DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions classes={{ spacing: classes.actions }}>
-        {actions.map((button: any) => (
+        {actions.map((button) => (
           <Button
             key={button.title}
             autoFocus

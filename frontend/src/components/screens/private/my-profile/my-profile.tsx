@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
 import {
   initializedUserDetails,
   initializeUserDetails,
@@ -18,6 +17,8 @@ import {
 import useHttpGet from "../../../../hooks/useHttpGet";
 import useHttpPut from "../../../../hooks/useHttpPut";
 import useStyle from "./styles";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
+import { User } from "../../../../models/user.model";
 
 interface FormFields {
   firstName: string;
@@ -28,8 +29,8 @@ interface FormFields {
 export default function MyProfileScreen(): JSX.Element {
   const classes = useStyle();
 
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.user.details);
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.user.details);
 
   const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
   const { execute: updateUser } = useHttpPut();
@@ -58,7 +59,7 @@ export default function MyProfileScreen(): JSX.Element {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
-    }).then((data: any) => {
+    }).then((data: User) => {
       dispatch(updateUserDetails(data));
     });
   };

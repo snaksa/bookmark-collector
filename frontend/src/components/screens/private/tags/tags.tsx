@@ -16,7 +16,7 @@ import { useHistory } from "react-router";
 import useStyle from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 
-export default function TagsScreen() {
+export default function TagsScreen(): JSX.Element {
   const classes = useStyle();
 
   const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
@@ -41,9 +41,9 @@ export default function TagsScreen() {
 
   const [searchedLabels, setSearchedLabels] = useState(labels.data.slice(0, 5));
 
-  const onLabelSearchChange = (event: any) => {
+  const onLabelSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchKey = event.target.value.toLowerCase();
-    const filteredLabels = labels.data.filter((label: any) =>
+    const filteredLabels = labels.data.filter((label) =>
       label.title.toLowerCase().includes(searchKey)
     );
 
@@ -67,7 +67,7 @@ export default function TagsScreen() {
             />
           </Grid>
           <Grid item>
-            {searchedLabels.map((label: any) => (
+            {searchedLabels.map((label) => (
               <Chip
                 key={label.id}
                 size="small"

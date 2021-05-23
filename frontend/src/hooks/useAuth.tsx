@@ -1,26 +1,26 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export interface AuthContextProps {
   authData: string | null;
-  onLogin: any;
-  onLogout: any;
+  onLogin: (token: string) => void;
+  onLogout: () => void;
   isAuthenticated: boolean;
 }
 
 const initialProps: AuthContextProps = {
   authData: "",
   onLogin: () => {
-    console.log("uninitialized");
+    throw "not implemented";
   },
   onLogout: () => {
-    console.log("uninitialized");
+    throw "not implemented";
   },
   isAuthenticated: false,
 };
 
 export const AuthContext = createContext<AuthContextProps>(initialProps);
 
-const AuthProvider = (props: any) => {
+const AuthProvider = (props: { children: ReactNode }): JSX.Element => {
   const [authData, setAuthData] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -47,6 +47,6 @@ const AuthProvider = (props: any) => {
   return <AuthContext.Provider value={authDataValue} {...props} />;
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextProps => useContext(AuthContext);
 
 export default AuthProvider;

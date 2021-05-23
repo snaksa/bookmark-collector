@@ -5,7 +5,13 @@ import useStyle from "./styles";
 import Header from "../../organisms/header/header";
 import Sidebar from "../../organisms/sidebar/sidebar";
 
-export default function SidebarOption({ screen }: any) {
+interface SidebarOptionProps {
+  screen: JSX.Element;
+}
+
+export default function SidebarOption({
+  screen,
+}: SidebarOptionProps): JSX.Element {
   const classes = useStyle();
 
   return (

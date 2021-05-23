@@ -1,18 +1,18 @@
-import { useDispatch } from "react-redux";
 import useHttpPut from "./useHttpPut";
 import {
   addToFavoritesBookmark,
   removeFromFavoritesBookmark,
 } from "../redux/slices/bookmarks.slice";
+import { useAppDispatch } from "./redux-hooks";
 
-type FavoriteBookmarkUpdateType = (
+type FavoriteBookmarkUpdateResponse = (
   bookmarkId: string,
   isFavorite: boolean
 ) => void;
 
-export default function useFavoriteBookmarkUpdate(): FavoriteBookmarkUpdateType {
+export default function useFavoriteBookmarkUpdate(): FavoriteBookmarkUpdateResponse {
   const { execute: updateBookmarkRequest } = useHttpPut();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (bookmarkId: string, isFavorite: boolean) => {
     updateBookmarkRequest(`bookmarks/${bookmarkId}`, {

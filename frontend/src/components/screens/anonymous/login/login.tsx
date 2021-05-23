@@ -8,14 +8,20 @@ import LoginForm, { FormFields } from "../../../forms/auth-forms/login-form";
 import { useAuth } from "../../../../hooks/useAuth";
 import useHttpPost from "../../../../hooks/useHttpPost";
 
-export default function LoginScreen() {
+interface LoginResponse {
+  tokens: {
+    IdToken: string;
+  };
+}
+
+export default function LoginScreen(): JSX.Element {
   const history = useHistory();
   const { onLogin } = useAuth();
 
   const { error, isLoading, execute: login } = useHttpPost(`auth/login`);
 
   const onSubmit = (data: FormFields) => {
-    login(data).then((responseData: any) => {
+    login(data).then((responseData: LoginResponse) => {
       if (responseData) {
         onLogin(responseData.tokens.IdToken);
         history.push("/my-list");

@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   Grid,
   IconButton,
   InputAdornment,
-  Menu,
-  MenuItem,
   Popover,
   TextField,
 } from "@material-ui/core";
@@ -18,15 +15,15 @@ import useStyles from "./styles";
 import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
 import useHttpPost from "../../../hooks/useHttpPost";
-import { useDispatch, useSelector } from "react-redux";
 import { addNewBookmark } from "../../../redux/slices/bookmarks.slice";
 import {
   initializedUserDetails,
   initializeUserDetails,
 } from "../../../redux/slices/users.slice";
 import useHttpGet from "../../../hooks/useHttpGet";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
 
-export default function Header() {
+export default function Header(): JSX.Element {
   const classes = useStyles();
 
   const { onLogout } = useAuth();
@@ -34,14 +31,16 @@ export default function Header() {
 
   const [showNewUrl, setShowNewUrl] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
-  const [anchorEl, setAnchorEl] = React.useState<any>(null);
+  const [anchorEl, setAnchorEl] = React.useState<
+    null | Element | ((element: Element) => Element)
+  >(null);
 
   const { execute: createBookmark } = useHttpPost("bookmarks");
 
   const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
 
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.user.details);
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.user.details);
 
   const logout = () => {
     onLogout();
