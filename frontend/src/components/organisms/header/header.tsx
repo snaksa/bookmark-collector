@@ -19,11 +19,11 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
 import useHttpPost from "../../../hooks/useHttpPost";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewBookmark } from "../../../redux/bookmarks/bookmarks.actions";
+import { addNewBookmark } from "../../../redux/slices/bookmarks.slice";
 import {
   initializedUserDetails,
   initializeUserDetails,
-} from "../../../redux/user/user.actions";
+} from "../../../redux/slices/users.slice";
 import useHttpGet from "../../../hooks/useHttpGet";
 
 export default function Header() {

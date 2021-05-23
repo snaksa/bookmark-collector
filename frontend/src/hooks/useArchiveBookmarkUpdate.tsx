@@ -3,7 +3,7 @@ import useHttpPut from "./useHttpPut";
 import {
   addToArchivedBookmark,
   removeFromArchivedBookmark,
-} from "../redux/bookmarks/bookmarks.actions";
+} from "../redux/slices/bookmarks.slice";
 
 type ArchiveBookmarkUpdateType = (
   bookmarkId: string,

@@ -8,11 +8,10 @@ import {
   Box,
 } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
-import { useDispatch, useSelector } from "react-redux";
 import {
   initializedLabels,
   initializeLabels,
-} from "../../../../redux/slices/labelsSlice";
+} from "../../../../redux/slices/labels.slice";
 import { useHistory } from "react-router";
 import useStyle from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   initializedFavoriteBookmarks,
   initializeFavoriteBookmarks,
-} from "../../../../redux/bookmarks/bookmarks.actions";
+} from "../../../../redux/slices/bookmarks.slice";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
@@ -22,7 +22,7 @@ export default function FavoritesScreen() {
   );
 
   useEffect(() => {
-    if (!favorites || !favorites.initialized) {
+    if (!favorites.data.length || !favorites.initialized) {
       dispatch(initializeFavoriteBookmarks());
       fetchBookmarks().then((data) => {
         dispatch(initializedFavoriteBookmarks(data));

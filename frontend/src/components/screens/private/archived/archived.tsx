@@ -5,7 +5,7 @@ import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/book
 import {
   initializeArchivedBookmarks,
   initializedArchivedBookmarks,
-} from "../../../../redux/bookmarks/bookmarks.actions";
+} from "../../../../redux/slices/bookmarks.slice";
 import { useDispatch, useSelector } from "react-redux";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
@@ -22,7 +22,7 @@ export default function ArchivedScreen() {
   const archived = useSelector((state: any) => state.bookmarks.archived);
 
   useEffect(() => {
-    if (!archived || !archived.initialized) {
+    if (!archived.data.length || !archived.initialized) {
       dispatch(initializeArchivedBookmarks());
       fetchBookmarks().then((data) => {
         dispatch(initializedArchivedBookmarks(data));

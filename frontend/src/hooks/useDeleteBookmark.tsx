@@ -1,10 +1,5 @@
 import { useDispatch } from "react-redux";
-import useHttpPut from "./useHttpPut";
-import {
-  addToArchivedBookmark,
-  deleteBookmark,
-  removeFromArchivedBookmark,
-} from "../redux/bookmarks/bookmarks.actions";
+import { deleteBookmark } from "../redux/slices/bookmarks.slice";
 import useHttpDelete from "./useHttpDelete";
 
 type DeleteBookmarkType = (bookmark: any) => void;

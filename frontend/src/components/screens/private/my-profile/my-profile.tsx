@@ -14,7 +14,7 @@ import {
   initializedUserDetails,
   initializeUserDetails,
   updateUserDetails,
-} from "../../../../redux/user/user.actions";
+} from "../../../../redux/slices/users.slice";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import useHttpPut from "../../../../hooks/useHttpPut";
 import useStyle from "./styles";

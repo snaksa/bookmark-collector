@@ -8,11 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Dialog from "../../dialog/dialog";
 import useHttpPut from "../../../../hooks/useHttpPut";
-import { updateBookmark } from "../../../../redux/bookmarks/bookmarks.actions";
+import { updateBookmark } from "../../../../redux/slices/bookmarks.slice";
 import {
   initializedLabels,
   initializeLabels,
-} from "../../../../redux/slices/labelsSlice";
+} from "../../../../redux/slices/labels.slice";
 
 export default function BookmarksList({
   bookmarks,

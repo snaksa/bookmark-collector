@@ -7,7 +7,7 @@ import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpda
 import {
   initializeBookmarks,
   initializedBookmarks,
-} from "../../../../redux/bookmarks/bookmarks.actions";
+} from "../../../../redux/slices/bookmarks.slice";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
 
@@ -22,7 +22,7 @@ export default function MyListScreen() {
   );
 
   useEffect(() => {
-    if (!myList || !myList.initialized) {
+    if (!myList.data.length || !myList.initialized) {
       dispatch(initializeBookmarks());
       fetchBookmarks().then((data) => {
         dispatch(initializedBookmarks(data));

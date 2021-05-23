@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
-import bookmarksReducer from "./bookmarks/bookmarks.reducer";
-import labelsReducer from "./slices/labelsSlice";
-import userReducer from "./user/user.reducer";
+import bookmarksReducer from "./slices/bookmarks.slice";
+import labelsReducer from "./slices/labels.slice";
+import userReducer from "./slices/users.slice";
 
 const rootReducer = combineReducers({
   bookmarks: bookmarksReducer,

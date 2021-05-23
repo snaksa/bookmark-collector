@@ -8,7 +8,7 @@ import {
   initializedLabelsDetails,
   initializeLabelsDetails,
   updateLabelsDetailsBookmark,
-} from "../../../../redux/slices/labelsSlice";
+} from "../../../../redux/slices/labels.slice";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";

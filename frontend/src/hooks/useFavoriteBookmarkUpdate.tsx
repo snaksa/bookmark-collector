@@ -3,7 +3,7 @@ import useHttpPut from "./useHttpPut";
 import {
   addToFavoritesBookmark,
   removeFromFavoritesBookmark,
-} from "../redux/bookmarks/bookmarks.actions";
+} from "../redux/slices/bookmarks.slice";
 
 type FavoriteBookmarkUpdateType = (
   bookmarkId: string,
