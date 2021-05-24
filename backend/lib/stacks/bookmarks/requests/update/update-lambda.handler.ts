@@ -83,9 +83,8 @@ class UpdateLambdaHandler extends BaseHandler {
 
     if (this.input.labelIds) {
       const newLabelIds = this.input.labelIds;
-      const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-        this.bookmarkId
-      );
+      const bookmarkLabels =
+        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
       const oldBookmarkLabels = bookmarkLabels.map(
         (bl: BookmarkLabel) => bl.labelId
       );
@@ -132,9 +131,8 @@ class UpdateLambdaHandler extends BaseHandler {
 
     // if labels are not passed include them to the object
     if (!this.input.labelIds) {
-      const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-        this.bookmarkId
-      );
+      const bookmarkLabels =
+        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
       bookmarkLabels.forEach((label) =>
         bookmark.addLabel(
           new Label(label.labelId, this.userId, label.title, label.color)

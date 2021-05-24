@@ -2,85 +2,83 @@ import { ApiGatewayResponseCodes } from "./enums/api-gateway-response-codes";
 import { LoggerHelper as Logger } from "./helpers/logger-helper";
 
 export interface Response {
-    statusCode: number;
-    body: object;
+  statusCode: number;
+  body: object;
 }
 
 export default abstract class BaseHandler {
+  protected parseEvent(event: any): void {
+    return;
+  }
 
-    protected parseEvent(event: any): void {
-        return;
-    }
+  protected validate(): boolean {
+    return true;
+  }
 
-    protected validate(): boolean {
-        return true;
-    }
+  protected authorize(): boolean {
+    return true;
+  }
 
-    protected authorize(): boolean {
-        return true;
-    }
+  protected format(data: Response) {
+    return {
+      statusCode: data.statusCode ?? ApiGatewayResponseCodes.OK,
+      body: JSON.stringify(data.body) ?? {},
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE",
+      },
+    };
+  }
 
-    protected format(data: Response) {
+  protected formatError(message: string, code: number = 400) {
+    return {
+      statusCode: code,
+      body: JSON.stringify({ message }),
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE",
+      },
+    };
+  }
+
+  protected async run(): Promise<Response> {
+    throw new Error("Not implemented");
+  }
+
+  public create() {
+    return async (event: any) => {
+      Logger.info(event);
+
+      this.parseEvent(event);
+
+      if (!this.validate()) {
+        Logger.error("Input parameters not valid");
+        Logger.error(event);
         return {
-            statusCode: data.statusCode ?? ApiGatewayResponseCodes.OK,
-            body: JSON.stringify(data.body) ?? {},
-            headers: {
-                "Access-Control-Allow-Headers" : "Content-Type",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
-            }
+          statusCode: ApiGatewayResponseCodes.BAD_REQUEST,
+          body: JSON.stringify({ message: "Input parameters not valid" }),
         };
-    }
+      }
 
-    protected formatError(message: string, code: number = 400) {
+      if (!this.authorize()) {
+        Logger.error("Unauthorized access");
         return {
-            statusCode: code,
-            body: JSON.stringify({ message }),
-            headers: {
-                "Access-Control-Allow-Headers" : "Content-Type",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,DELETE"
-            }
+          statusCode: ApiGatewayResponseCodes.UNAUTHORIZED,
+          body: JSON.stringify({ message: "Unauthorized access" }),
         };
-    }
+      }
 
-    protected async run(): Promise<Response> {
-        throw new Error("Not implemented");
-    }
-
-    public create() {
-        return async (event: any) => {
-            Logger.info(event);
-
-            this.parseEvent(event);
-
-            if (!this.validate()) {
-                Logger.error('Input parameters not valid');
-                Logger.error(event);
-                return {
-                    statusCode: ApiGatewayResponseCodes.BAD_REQUEST,
-                    body: JSON.stringify({ message: 'Input parameters not valid' })
-                };
-            }
-
-            if (!this.authorize()) {
-                Logger.error('Unauthorized access');
-                return {
-                    statusCode: ApiGatewayResponseCodes.UNAUTHORIZED,
-                    body: JSON.stringify({ message: 'Unauthorized access' })
-                };
-            }
-
-            try {
-                const result: Response = await this.run();
-                Logger.info('Successful execution');
-                Logger.info(result);
-                return this.format(result);
-            }
-            catch (err) {
-                Logger.error(err.message);
-                return this.formatError(err.message);
-            }
-        };
-    }
+      try {
+        const result: Response = await this.run();
+        Logger.info("Successful execution");
+        Logger.info(result);
+        return this.format(result);
+      } catch (err) {
+        Logger.error(err.message);
+        return this.formatError(err.message);
+      }
+    };
+  }
 }

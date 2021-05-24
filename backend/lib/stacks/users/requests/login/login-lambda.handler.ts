@@ -1,58 +1,62 @@
-import * as AWS from 'aws-sdk';
-import BaseHandler, { Response } from '../../../../shared/base-handler';
-import { ApiGatewayResponseCodes } from '../../../../shared/enums/api-gateway-response-codes';
-import { Validator } from '../../../../shared/validators/validator';
+import * as AWS from "aws-sdk";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
+import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
+import { Validator } from "../../../../shared/validators/validator";
 
 interface LoginEventData {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 interface Env {
-    cognitoClientId: string;
+  cognitoClientId: string;
 }
 
 class LoginHandler extends BaseHandler {
-    private input: LoginEventData;
+  private input: LoginEventData;
 
-    private env: Env = {
-        cognitoClientId: process.env.cognitoClientId ?? '',
+  private env: Env = {
+    cognitoClientId: process.env.cognitoClientId ?? "",
+  };
+
+  parseEvent(event: any) {
+    this.input = JSON.parse(event.body) as LoginEventData;
+  }
+
+  validate() {
+    return (
+      Validator.notEmpty(this.input.email) &&
+      Validator.notEmpty(this.input.password)
+    );
+  }
+
+  async run(): Promise<Response> {
+    const authenticationData = {
+      AuthFlow: "USER_PASSWORD_AUTH",
+      ClientId: this.env.cognitoClientId,
+      AuthParameters: {
+        USERNAME: this.input.email,
+        PASSWORD: this.input.password,
+      },
     };
 
-    parseEvent(event: any) {
-        this.input = JSON.parse(event.body) as LoginEventData;
+    let authenticationDetails;
+
+    try {
+      const cognitoidentity = new AWS.CognitoIdentityServiceProvider();
+      authenticationDetails = await cognitoidentity
+        .initiateAuth(authenticationData)
+        .promise();
+    } catch (err) {
+      console.log(err);
+      throw Error("Wrong credentials");
     }
 
-    validate() {
-        return Validator.notEmpty(this.input.email) && Validator.notEmpty(this.input.password);
-    }
-
-    async run(): Promise<Response> {
-        const authenticationData = {
-            AuthFlow: "USER_PASSWORD_AUTH",
-            ClientId: this.env.cognitoClientId,
-            AuthParameters: {
-                "USERNAME": this.input.email,
-                "PASSWORD": this.input.password
-            }
-        };
-
-        let authenticationDetails;
-
-        try {
-            const cognitoidentity = new AWS.CognitoIdentityServiceProvider();
-            authenticationDetails = await cognitoidentity.initiateAuth(authenticationData).promise();
-        }
-        catch (err) {
-            console.log(err);
-            throw Error('Wrong credentials');
-        }
-
-        return {
-            statusCode: ApiGatewayResponseCodes.OK,
-            body: { tokens: authenticationDetails.AuthenticationResult },
-        };
-    }
+    return {
+      statusCode: ApiGatewayResponseCodes.OK,
+      body: { tokens: authenticationDetails.AuthenticationResult },
+    };
+  }
 }
 
 export const handler = new LoginHandler().create();

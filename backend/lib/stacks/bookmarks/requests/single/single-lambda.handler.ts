@@ -50,9 +50,8 @@ class SingleLambdaHandler extends BaseHandler {
       };
     }
 
-    const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-      this.bookmarkId
-    );
+    const bookmarkLabels =
+      await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
 
     bookmarkLabels.forEach((label) =>
       bookmark.addLabel(
