@@ -9,7 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "prettier": "prettier --write 'lib/**/*.ts'"
+    "prettier": "prettier --write 'lib/**/*.ts'",
+    "eslint": "eslint 'lib/**/*.ts'"
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.87.1",
