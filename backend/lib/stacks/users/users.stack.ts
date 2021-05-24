@@ -8,6 +8,7 @@ import { BaseStack } from "../base.stack";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { UpdateLambda } from "./requests/update/update-lambda";
 import { SingleLambda } from "./requests/single/single-lambda";
+import { ChangePasswordLambda } from "./requests/change-password/change-password-lambda";
 
 export class UsersStack extends BaseStack {
   dbStore: ITable;
@@ -98,6 +99,23 @@ export class UsersStack extends BaseStack {
           cognitoUserPoolId: this.cognitoUserPoolId,
           cognitoUserPoolArn: this.cognitoUserPoolArn,
         })
+      ),
+      this.getAuthorization()
+    );
+
+    const userPassword = me.addResource("change-password", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
+        allowHeaders: ["*"],
+        disableCache: true,
+      },
+    });
+
+    userPassword.addMethod(
+      ApiGatewayRequestMethods.PUT,
+      new LambdaIntegration(
+        new ChangePasswordLambda(this, "change-password-lambda")
       ),
       this.getAuthorization()
     );
