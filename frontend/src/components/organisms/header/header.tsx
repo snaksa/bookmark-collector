@@ -44,6 +44,7 @@ export default function Header(): JSX.Element {
 
   const logout = () => {
     onLogout();
+    dispatch({ type: "app/logout" });
     history.push("/login");
   };
 

@@ -15,6 +15,7 @@ import {
 import { useHistory } from "react-router";
 import useStyle from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
+import { Label } from "../../../../models/label.model";
 
 export default function TagsScreen(): JSX.Element {
   const classes = useStyle();
@@ -39,7 +40,9 @@ export default function TagsScreen(): JSX.Element {
     history.push(`/my-list/tags/${labelId}`);
   };
 
-  const [searchedLabels, setSearchedLabels] = useState(labels.data.slice(0, 5));
+  const [searchedLabels, setSearchedLabels] = useState<Label[]>(
+    labels.data.slice(0, 5)
+  );
 
   const onLabelSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchKey = event.target.value.toLowerCase();
