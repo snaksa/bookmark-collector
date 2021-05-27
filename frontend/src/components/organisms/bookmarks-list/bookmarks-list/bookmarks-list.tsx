@@ -39,6 +39,7 @@ export default function BookmarksList({
   const { execute: updateBookmarkRequest } = useHttpPut();
 
   const [open, setOpen] = React.useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [bookmarkId, setBookmarkId] = React.useState("");
   const [bookmarkLabels, setBookmarkLabels] = React.useState<Label[]>([]);
   const [selectedLabels, setSelectedLabels] = React.useState<Label[]>([]);
@@ -54,6 +55,15 @@ export default function BookmarksList({
   const handleClose = () => {
     setOpen(false);
   };
+
+  const openDeleteModal = (bookmarkId: string) => {
+    setBookmarkId(bookmarkId);
+    setOpenDeleteDialog(true);
+  };
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
+
   const saveBookmark = () => {
     setOpen(false);
     const labelIds = selectedLabels.map((label) => label.id);
@@ -62,6 +72,11 @@ export default function BookmarksList({
         dispatch(updateBookmark(data));
       }
     );
+  };
+
+  const deleteBookmark = () => {
+    setOpenDeleteDialog(false);
+    onDelete(bookmarkId);
   };
 
   useEffect(() => {
@@ -80,7 +95,7 @@ export default function BookmarksList({
           <Grid item key={bookmark.id} classes={{ item: classes.listItem }}>
             <BookmarkView
               bookmark={bookmark}
-              onDelete={onDelete}
+              onDelete={openDeleteModal}
               onFavoriteUpdate={onFavoriteUpdate}
               onArchivedUpdate={onArchivedUpdate}
               onEditTags={handleClickOpen}
@@ -115,6 +130,14 @@ export default function BookmarksList({
             />
           )}
         />
+      </Dialog>
+      <Dialog
+        handleClose={handleDeleteDialogClose}
+        title={"Delete Item"}
+        open={openDeleteDialog}
+        actions={[{ title: "Delete", action: deleteBookmark }]}
+      >
+        Are you sure you want to delete this item? This cannot be undone.
       </Dialog>
     </>
   );

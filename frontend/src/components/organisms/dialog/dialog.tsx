@@ -10,7 +10,8 @@ import useStyles from "./styles";
 
 interface DialogProps {
   handleClose: (event: Record<string, unknown>, reason: string) => void;
-  actions: { title: string; action: () => void }[];
+  // eslint-disable-next-line
+  actions: { title: string; action: (...args: any[]) => void }[];
   children: React.ReactNode;
   title: string;
   open: boolean;
