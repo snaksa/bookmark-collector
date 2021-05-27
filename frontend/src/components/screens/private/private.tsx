@@ -9,7 +9,7 @@ interface SidebarOptionProps {
   screen: JSX.Element;
 }
 
-export default function SidebarOption({
+export default function PrivateRoute({
   screen,
 }: SidebarOptionProps): JSX.Element {
   const classes = useStyle();

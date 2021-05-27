@@ -78,6 +78,11 @@ export default function Header(): JSX.Element {
     handleClose();
   };
 
+  const handleChangePasswordClick = () => {
+    history.push("/change-password");
+    handleClose();
+  };
+
   return (
     <Container maxWidth={false} classes={{ root: classes.header }}>
       <Container maxWidth="lg">
@@ -187,7 +192,11 @@ export default function Header(): JSX.Element {
                     <Grid item>
                       <Divider classes={{ root: classes.divider }} />
                     </Grid>
-                    <Grid item classes={{ item: classes.menuItem }}>
+                    <Grid
+                      item
+                      classes={{ item: classes.menuItem }}
+                      onClick={handleChangePasswordClick}
+                    >
                       Change Password
                     </Grid>
                     <Grid item>
