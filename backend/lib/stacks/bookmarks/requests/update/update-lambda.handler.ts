@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
@@ -9,6 +10,7 @@ import Label from "../../../../shared/models/label.model";
 interface UpdateEventData {
   url: string;
   labelIds: string[];
+  newLabels: string[];
   isFavorite: boolean;
   isArchived: boolean;
 }
@@ -85,6 +87,7 @@ class UpdateLambdaHandler extends BaseHandler {
       const newLabelIds = this.input.labelIds;
       const bookmarkLabels =
         await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
+
       const oldBookmarkLabels = bookmarkLabels.map(
         (bl: BookmarkLabel) => bl.labelId
       );
@@ -128,6 +131,34 @@ class UpdateLambdaHandler extends BaseHandler {
     }
 
     await this.bookmarkRepository.update(bookmark);
+
+    if (this.input.newLabels) {
+      const created: Promise<boolean>[] = [];
+      for(let i = 0; i < this.input.newLabels.length; i++ ) {
+        const label = new Label(uuidv4(), this.userId, this.input.newLabels[i], 'grey');
+
+        const success = await this.labelRepository.save(label);
+
+        if(success) {
+          const bookmarkLabel = new BookmarkLabel(
+            label.labelId,
+            bookmark.bookmarkId,
+            this.userId,
+            label.title,
+            label.color,
+            bookmark.bookmarkUrl,
+            bookmark.isFavorite,
+            bookmark.isArchived
+          );
+
+          created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
+
+          bookmark.addLabel(label);
+        }
+      }
+
+      await Promise.all(created);
+    }
 
     // if labels are not passed include them to the object
     if (!this.input.labelIds) {

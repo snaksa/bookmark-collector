@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Grid, TextField } from "@material-ui/core";
 import BookmarkView from "../bookmark-view/boomark-view";
 import useStyle from "./styles";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import useHttpGet from "../../../../hooks/useHttpGet";
 
 import Dialog from "../../dialog/dialog";
@@ -66,12 +66,20 @@ export default function BookmarksList({
 
   const saveBookmark = () => {
     setOpen(false);
-    const labelIds = selectedLabels.map((label) => label.id);
-    updateBookmarkRequest(`bookmarks/${bookmarkId}`, { labelIds }).then(
-      (data) => {
-        dispatch(updateBookmark(data));
-      }
-    );
+    const labelIds = selectedLabels
+      .filter((label) => !label.id.startsWith("new_"))
+      .map((label) => label.id);
+
+    const newLabels = selectedLabels
+      .filter((label) => label.id.startsWith("new_"))
+      .map((label) => label.title);
+
+    updateBookmarkRequest(`bookmarks/${bookmarkId}`, {
+      labelIds,
+      newLabels,
+    }).then((data) => {
+      dispatch(updateBookmark(data));
+    });
   };
 
   const deleteBookmark = () => {
@@ -87,6 +95,8 @@ export default function BookmarksList({
       });
     }
   }, []);
+
+  const filter = createFilterOptions<Label>();
 
   return (
     <>
@@ -111,13 +121,34 @@ export default function BookmarksList({
       >
         <Autocomplete
           multiple
-          onChange={(event, value) => {
-            setSelectedLabels(value);
+          onChange={(event, value: Label[]) => {
+            const vals: Label[] = value
+              .map((v) => {
+                if (v.id === "new") {
+                  v.id = `new_${Date.now()}`;
+
+                  const labelExists = selectedLabels.find(
+                    (label) =>
+                      label.title.toLowerCase() === v.title.toLowerCase()
+                  );
+
+                  if (labelExists) {
+                    v.id = "";
+                  }
+                }
+
+                return v;
+              })
+              .filter((v) => v.id);
+
+            setSelectedLabels(vals);
           }}
           id="tags-outlined"
           disabled={labels.isLoading}
           options={labels.data}
-          getOptionLabel={(option) => option.title}
+          getOptionLabel={(option) =>
+            option.id !== "new" ? option.title : `Add "${option.title}"`
+          }
           defaultValue={bookmarkLabels}
           filterSelectedOptions={true}
           getOptionSelected={(option, value) => option.id === value.id}
@@ -129,6 +160,21 @@ export default function BookmarksList({
               placeholder="Tags"
             />
           )}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+
+            // Suggest the creation of a new value
+            if (params.inputValue !== "" && !filtered.length) {
+              filtered.push({
+                id: "new",
+                color: "red",
+                bookmarks: [],
+                title: params.inputValue,
+              });
+            }
+
+            return filtered;
+          }}
         />
       </Dialog>
       <Dialog
