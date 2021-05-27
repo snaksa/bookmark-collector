@@ -2,16 +2,34 @@ import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-re
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
+import { UserRepository } from "../../../../shared/repositories/user.repository";
 
 interface UpdateEventData {
   oldPassword: string;
   newPassword: string;
-  accessToken: string;
+}
+
+interface Env {
+  dbStore: string;
+  userPoolId: string;
 }
 
 class ChangePasswordLambdaHandler extends BaseHandler {
+  private userRepository: UserRepository;
+
   private userId: string;
   private input: UpdateEventData;
+
+  private env: Env = {
+    dbStore: process.env.dbStore ?? "",
+    userPoolId: process.env.userPoolId ?? ""
+  };
+
+  constructor() {
+    super();
+
+    this.userRepository = new UserRepository(this.env.dbStore);
+  }
 
   parseEvent(event: any) {
     this.input = JSON.parse(event.body) as UpdateEventData;
@@ -30,15 +48,24 @@ class ChangePasswordLambdaHandler extends BaseHandler {
   }
 
   async run(): Promise<Response> {
+    const user = await this.userRepository.findOne(this.userId);
+    if (!user) {
+      return {
+        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
+        body: {},
+      };
+    }
+
     //update email attribute in Cognito
     const cognitoidentity = new CognitoIdentityServiceProvider();
 
     // change user password
     const changePasswordResponse = await cognitoidentity
-      .changePassword({
-        PreviousPassword: this.input.oldPassword,
-        ProposedPassword: this.input.newPassword,
-        AccessToken: this.input.accessToken,
+      .adminSetUserPassword({
+        Username: user.email,
+        Password: this.input.newPassword,
+        UserPoolId: this.env.userPoolId,
+        Permanent: true,
       })
       .promise();
 

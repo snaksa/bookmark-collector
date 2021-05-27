@@ -115,7 +115,11 @@ export class UsersStack extends BaseStack {
     userPassword.addMethod(
       ApiGatewayRequestMethods.PUT,
       new LambdaIntegration(
-        new ChangePasswordLambda(this, "change-password-lambda")
+        new ChangePasswordLambda(this, "change-password-lambda", {
+          dbStore: this.dbStore,
+          cognitoUserPoolId: this.cognitoUserPoolId,
+          cognitoUserPoolArn: this.cognitoUserPoolArn
+        })
       ),
       this.getAuthorization()
     );
