@@ -56,7 +56,8 @@ class ChangePasswordLambdaHandler extends BaseHandler {
       };
     }
 
-    //update email attribute in Cognito
+    // TODO: check if the old password is correct
+
     const cognitoidentity = new CognitoIdentityServiceProvider();
 
     // change user password
