@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import fetch from "node-fetch";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
@@ -77,6 +78,9 @@ class CreateLambdaHandler extends BaseHandler {
 
       await Promise.all(bookmarkLabels);
     }
+
+    const response = await fetch(bookmark.bookmarkUrl);
+    console.log(response);
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
