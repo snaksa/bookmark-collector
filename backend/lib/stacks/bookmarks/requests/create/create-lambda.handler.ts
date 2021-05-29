@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import fetch from "node-fetch";
+import cheerio from "cheerio";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
@@ -79,8 +80,13 @@ class CreateLambdaHandler extends BaseHandler {
       await Promise.all(bookmarkLabels);
     }
 
+    // TODO: move to SQS
     const response = await fetch(bookmark.bookmarkUrl);
-    console.log(response);
+    const text = await response.text();
+
+    const $ = cheerio.load(text);
+    const title = $("title").text();
+    console.log("title", title); // working
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
