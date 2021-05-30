@@ -50,7 +50,37 @@ class CreateLambdaHandler extends BaseHandler {
   }
 
   async run(): Promise<Response> {
-    const bookmark = new Bookmark(uuidv4(), this.userId, this.input.url);
+    let url = this.input.url;
+    if (url.indexOf("http") !== 0) {
+      url = `http://${url}`;
+    }
+
+    const response = await fetch(url);
+    const text = await response.text();
+
+    const $ = cheerio.load(text);
+    const ogTitleElement = $('meta[property="og:title"]');
+    let title = $("title").text();
+
+    if (ogTitleElement) {
+      title = ogTitleElement.attr("content") ?? title;
+    }
+
+    let image = "";
+    const ogImageElement = $('meta[property="og:image"]');
+    if (ogImageElement) {
+      image = ogImageElement.attr("content") ?? image;
+    }
+
+    const bookmark = new Bookmark(
+      uuidv4(),
+      this.userId,
+      url,
+      false,
+      false,
+      title,
+      image
+    );
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {
@@ -72,21 +102,17 @@ class CreateLambdaHandler extends BaseHandler {
           this.userId,
           label.title,
           label.color,
-          bookmark.bookmarkUrl
+          bookmark.bookmarkUrl,
+          bookmark.isFavorite,
+          bookmark.isArchived,
+          bookmark.bookmarkTitle,
+          bookmark.bookmarkImage
         );
         bookmarkLabels.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
       });
 
       await Promise.all(bookmarkLabels);
     }
-
-    // TODO: move to SQS
-    const response = await fetch(bookmark.bookmarkUrl);
-    const text = await response.text();
-
-    const $ = cheerio.load(text);
-    const title = $("title").text();
-    console.log("title", title); // working
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,

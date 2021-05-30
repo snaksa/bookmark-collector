@@ -52,7 +52,9 @@ class SingleLambdaHandler extends BaseHandler {
           this.userId,
           labelBookmark.bookmarkUrl,
           labelBookmark.isFavorite,
-          labelBookmark.isArchived
+          labelBookmark.isArchived,
+          labelBookmark.bookmarkTitle,
+          labelBookmark.bookmarkImage
         )
     );
     label.setBookmarks(bookmarks);

@@ -2,7 +2,7 @@ import { Model } from "./base.model";
 import Label from "./label.model";
 
 export default class Bookmark implements Model {
-  static ENTITY_TYPE: string = "bookmark";
+  static ENTITY_TYPE = "bookmark";
 
   pk: string;
   sk: string;
@@ -14,6 +14,8 @@ export default class Bookmark implements Model {
   isArchived: boolean;
   userId: string;
   bookmarkUrl: string;
+  bookmarkTitle: string;
+  bookmarkImage: string;
 
   labels: Label[];
 
@@ -21,8 +23,10 @@ export default class Bookmark implements Model {
     id: string,
     userId: string,
     bookmarkUrl: string,
-    isFavorite: boolean = false,
-    isArchived: boolean = false
+    isFavorite = false,
+    isArchived = false,
+    title = "",
+    image = ""
   ) {
     this.pk = `USER#${userId}`;
     this.sk = `BOOKMARK#${id}`;
@@ -33,6 +37,9 @@ export default class Bookmark implements Model {
     this.bookmarkUrl = bookmarkUrl;
     this.isFavorite = isFavorite;
     this.isArchived = isArchived;
+
+    this.bookmarkTitle = title;
+    this.bookmarkImage = image;
 
     this.labels = [];
   }
@@ -49,13 +56,15 @@ export default class Bookmark implements Model {
     return {
       id: this.bookmarkId,
       url: this.bookmarkUrl,
+      title: this.bookmarkTitle,
+      image: this.bookmarkImage,
       labels: this.labels.map((label: Label) => label.toObject()),
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
     };
   }
 
-  public toDynamoDbObject(removeKeys: boolean = false): Partial<Bookmark> {
+  public toDynamoDbObject(removeKeys = false): Partial<Bookmark> {
     let result = {};
 
     if (!removeKeys) {
@@ -70,6 +79,8 @@ export default class Bookmark implements Model {
       bookmarkId: this.bookmarkId,
       userId: this.userId,
       bookmarkUrl: this.bookmarkUrl,
+      bookmarkTitle: this.bookmarkTitle,
+      bookmarkImage: this.bookmarkImage,
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
       GSI1: this.GSI1,
@@ -83,7 +94,9 @@ export default class Bookmark implements Model {
       o.userId,
       o.bookmarkUrl,
       o.isFavorite,
-      o.isArchived
+      o.isArchived,
+      o.bookmarkTitle,
+      o.bookmarkImage
     );
   }
 }

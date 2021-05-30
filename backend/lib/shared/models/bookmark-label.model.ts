@@ -12,6 +12,8 @@ export default class BookmarkLabel implements Model {
   bookmarkId: string;
   userId: string;
   bookmarkUrl: string;
+  bookmarkTitle: string;
+  bookmarkImage: string;
   isFavorite: boolean;
   isArchived: boolean;
   title: string;
@@ -21,11 +23,13 @@ export default class BookmarkLabel implements Model {
     labelId: string,
     bookmarkId: string,
     userId: string,
-    title: string = "",
-    color: string = "",
-    bookmarkUrl: string = "",
-    isFavorite: boolean = false,
-    isArchived: boolean = false
+    title = "",
+    color = "",
+    bookmarkUrl = "",
+    isFavorite = false,
+    isArchived = false,
+    bookmarkTitle = "",
+    bookmarkImage = ""
   ) {
     this.pk = `LABEL#${labelId}`;
     this.sk = `BOOKMARK#${bookmarkId}`;
@@ -39,6 +43,8 @@ export default class BookmarkLabel implements Model {
     this.bookmarkUrl = bookmarkUrl;
     this.isFavorite = isFavorite;
     this.isArchived = isArchived;
+    this.bookmarkTitle = bookmarkTitle;
+    this.bookmarkImage = bookmarkImage;
   }
 
   public toObject() {
@@ -46,6 +52,8 @@ export default class BookmarkLabel implements Model {
       labelId: this.labelId,
       bookmarkId: this.bookmarkId,
       bookmarkUrl: this.bookmarkUrl,
+      bookmarkTitle: this.bookmarkTitle,
+      bookmarkImage: this.bookmarkImage,
       title: this.title,
       color: this.color,
     };
@@ -69,6 +77,8 @@ export default class BookmarkLabel implements Model {
       title: this.title,
       color: this.color,
       bookmarkUrl: this.bookmarkUrl,
+      bookmarkTitle: this.bookmarkTitle,
+      bookmarkImage: this.bookmarkImage,
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
       GSI1: this.GSI1,
@@ -85,7 +95,9 @@ export default class BookmarkLabel implements Model {
       o.color,
       o.bookmarkUrl,
       o.isFavorite,
-      o.isArchived
+      o.isArchived,
+      o.bookmarkTitle,
+      o.bookmarkImage
     );
   }
 }

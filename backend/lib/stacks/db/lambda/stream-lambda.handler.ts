@@ -92,10 +92,9 @@ class StreamLambdaHandler extends BaseHandler {
   }
 
   async updateBookmarkLabelsByBookmark(bookmark: Bookmark) {
-    const bookmarkLabels =
-      await this.bookmarkRepository.findBookmarkLabelRecords(
-        bookmark.bookmarkId
-      );
+    const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
+      bookmark.bookmarkId
+    );
 
     const updated: Promise<BookmarkLabel>[] = [];
     for (let i = 0; i < bookmarkLabels.length; i++) {
@@ -103,6 +102,8 @@ class StreamLambdaHandler extends BaseHandler {
       bl.bookmarkUrl = bookmark.bookmarkUrl;
       bl.isFavorite = bookmark.isFavorite;
       bl.isArchived = bookmark.isArchived;
+      bl.bookmarkTitle = bookmark.bookmarkTitle;
+      bl.bookmarkImage = bookmark.bookmarkImage;
 
       updated.push(this.labelRepository.updateBookmarks(bl));
     }

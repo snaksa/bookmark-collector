@@ -1,4 +1,4 @@
-import { Construct } from "@aws-cdk/core";
+import { Construct, Duration } from "@aws-cdk/core";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { ITable } from "@aws-cdk/aws-dynamodb";
 import * as path from "path";
@@ -14,6 +14,7 @@ export class CreateLambda extends NodejsFunction {
       environment: {
         dbStore: props.dbStore.tableName,
       },
+      timeout: Duration.seconds(10), // TODO: remove when moved to SQS
     });
 
     props.dbStore.grantReadWriteData(this);
