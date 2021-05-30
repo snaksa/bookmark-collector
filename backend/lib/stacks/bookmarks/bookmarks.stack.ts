@@ -1,5 +1,6 @@
-import { StackProps, Construct } from "@aws-cdk/core";
+import { StackProps, Construct, Duration } from "@aws-cdk/core";
 import { Cors, LambdaIntegration } from "@aws-cdk/aws-apigateway";
+import { Queue } from "@aws-cdk/aws-sqs";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { CreateLambda } from "./requests/create/create-lambda";
@@ -8,6 +9,7 @@ import { ListLambda } from "./requests/list/list-lambda";
 import { BaseStack } from "../base.stack";
 import { UpdateLambda } from "./requests/update/update-lambda";
 import { SingleLambda } from "./requests/single/single-lambda";
+import { MetadataFetcherLambda } from "./lambda/metadata-fetcher/metadata-fetcher-lambda";
 
 export class BookmarksStack extends BaseStack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -17,6 +19,16 @@ export class BookmarksStack extends BaseStack {
     this.loadApi();
     this.loadAuth();
     this.loadAuthorizer();
+
+    const queue = new Queue(this, "MyQueue", {
+      visibilityTimeout: Duration.seconds(30),
+      receiveMessageWaitTime: Duration.seconds(20),
+    });
+
+    new MetadataFetcherLambda(this, "fetch-metadata", {
+      dbStore: this.dbStore,
+      queue: queue,
+    });
 
     const bookmarks = this.api.root.addResource("bookmarks", {
       defaultCorsPreflightOptions: {
@@ -32,6 +44,7 @@ export class BookmarksStack extends BaseStack {
       new LambdaIntegration(
         new CreateLambda(this, "create-lambda", {
           dbStore: this.dbStore,
+          queue: queue,
         })
       ),
       this.getAuthorization()

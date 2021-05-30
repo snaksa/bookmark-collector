@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import fetch from "node-fetch";
 import cheerio from "cheerio";
+import { SQS } from "aws-sdk";
+
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
@@ -16,6 +18,7 @@ interface CreateEventData {
 
 interface Env {
   dbStore: string;
+  queueUrl: string;
 }
 
 class CreateLambdaHandler extends BaseHandler {
@@ -27,6 +30,7 @@ class CreateLambdaHandler extends BaseHandler {
 
   private env: Env = {
     dbStore: process.env.dbStore ?? "",
+    queueUrl: process.env.queueUrl ?? "",
   };
 
   constructor() {
@@ -55,32 +59,7 @@ class CreateLambdaHandler extends BaseHandler {
       url = `http://${url}`;
     }
 
-    const response = await fetch(url);
-    const text = await response.text();
-
-    const $ = cheerio.load(text);
-    const ogTitleElement = $('meta[property="og:title"]');
-    let title = $("title").text();
-
-    if (ogTitleElement) {
-      title = ogTitleElement.attr("content") ?? title;
-    }
-
-    let image = "";
-    const ogImageElement = $('meta[property="og:image"]');
-    if (ogImageElement) {
-      image = ogImageElement.attr("content") ?? image;
-    }
-
-    const bookmark = new Bookmark(
-      uuidv4(),
-      this.userId,
-      url,
-      false,
-      false,
-      title,
-      image
-    );
+    const bookmark = new Bookmark(uuidv4(), this.userId, url, false, false);
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {
@@ -113,6 +92,24 @@ class CreateLambdaHandler extends BaseHandler {
 
       await Promise.all(bookmarkLabels);
     }
+
+    const sqs = new SQS({ apiVersion: "2012-11-05" });
+    await sqs
+      .sendMessage({
+        MessageAttributes: {
+          bookmarkId: {
+            DataType: "String",
+            StringValue: bookmark.bookmarkId,
+          },
+          userId: {
+            DataType: "String",
+            StringValue: bookmark.userId,
+          },
+        },
+        MessageBody: "Fetch metadata",
+        QueueUrl: this.env.queueUrl,
+      })
+      .promise();
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
