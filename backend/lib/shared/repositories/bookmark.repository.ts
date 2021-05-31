@@ -131,7 +131,9 @@ export class BookmarkRepository {
           record.userId,
           record.bookmarkUrl,
           record.isFavorite,
-          record.isArchived
+          record.isArchived,
+          record.bookmarkTitle,
+          record.bookmarkImage
         );
       }
 

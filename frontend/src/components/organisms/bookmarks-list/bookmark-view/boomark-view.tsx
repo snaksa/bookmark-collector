@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip, Grid, IconButton } from "@material-ui/core";
+import { Box, Chip, Grid, IconButton, Typography } from "@material-ui/core";
 import useStyles from "./styles";
 import {
   DeleteOutlined as DeleteIcon,
@@ -26,28 +26,42 @@ export default function BookmarkView({
   onEditTags,
 }: BookmarkViewProps): JSX.Element {
   const classes = useStyles();
+
+  const url = new URL(bookmark.url);
+
   return (
-    <Grid container direction="row">
-      <Grid item md={9} lg={9}>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
+    <Grid container direction="row" spacing={2}>
+      <Grid item md={1} lg={1}>
+        {bookmark.image ? (
+          <img
+            src={bookmark.image}
+            alt={"Bookmark image"}
+            className={classes.image}
+          />
+        ) : (
+          <Box className={classes.noImage}></Box>
+        )}
+      </Grid>
+      <Grid item md={8} lg={8}>
+        <Grid container direction="column" spacing={1}>
+          <Grid item md={12}>
             <a
               rel="noreferrer"
               href={bookmark.url}
               target="_blank"
-              className={classes.title}
+              className={classes.link}
             >
-              {bookmark.url}
+              <Typography noWrap className={classes.title}>
+                {bookmark.title ? bookmark.title : bookmark.url}
+              </Typography>
             </a>
           </Grid>
           <Grid item>
-            <Grid container direction="row" spacing={2}>
-              {bookmark.labels.map((label) => (
-                <Grid item key={label.id}>
-                  <Chip key={label.id} size="small" label={label.title} />
-                </Grid>
-              ))}
-            </Grid>
+            <Typography noWrap className={classes.host}>
+              <a href={bookmark.url} className={classes.link}>
+                {url.host}
+              </a>
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
