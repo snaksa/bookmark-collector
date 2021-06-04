@@ -4,6 +4,7 @@ import BaseHandler, {
   Response,
 } from "../../../../shared/base-handler";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface Env {
   dbStore: string;
@@ -35,10 +36,7 @@ class SingleLambdaHandler extends BaseHandler {
   async run(): Promise<Response> {
     const user = await this.userRepository.findOne(this.userId);
     if (!user) {
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+      throw new NotFoundException(`User with ID "${this.userId}" not found`);
     }
 
     return {

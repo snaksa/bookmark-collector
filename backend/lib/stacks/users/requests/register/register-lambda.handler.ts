@@ -7,6 +7,7 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
+import { GenericException } from "../../../../shared/exceptions/generic-exception";
 
 interface RegisterEventData {
   firstName: string;
@@ -93,7 +94,7 @@ class RegisterLambdaHandler extends BaseHandler {
       );
 
       return {
-        statusCode: ApiGatewayResponseCodes.OK,
+        statusCode: ApiGatewayResponseCodes.CREATED,
         body: {
           data: {
             id: userSub,
@@ -101,7 +102,7 @@ class RegisterLambdaHandler extends BaseHandler {
         },
       };
     } catch (err) {
-      throw Error("Couldn't create user");
+      throw new GenericException();
     }
   }
 }

@@ -5,6 +5,7 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { Validator } from "../../../../shared/validators/validator";
+import { WrongCredentialsException } from "../../../../shared/exceptions/wrong-credentials-exception";
 
 interface LoginEventData {
   email: string;
@@ -51,8 +52,7 @@ class LoginHandler extends BaseHandler {
         .initiateAuth(authenticationData)
         .promise();
     } catch (err) {
-      console.log(err);
-      throw Error("Wrong credentials");
+      throw new WrongCredentialsException();
     }
 
     return {

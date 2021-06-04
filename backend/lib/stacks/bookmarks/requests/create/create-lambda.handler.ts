@@ -114,7 +114,7 @@ class CreateLambdaHandler extends BaseHandler {
       .promise();
 
     return {
-      statusCode: ApiGatewayResponseCodes.OK,
+      statusCode: ApiGatewayResponseCodes.CREATED,
       body: {
         data: bookmark.toObject(),
       },

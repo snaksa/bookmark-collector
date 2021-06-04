@@ -7,6 +7,8 @@ import BaseHandler, {
 import { Validator } from "../../../../shared/validators/validator";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
+import { GenericException } from "../../../../shared/exceptions/generic-exception";
 
 interface CreateEventData {
   label: string;
@@ -60,11 +62,11 @@ class CreateLambdaHandler extends BaseHandler {
     const save = await this.labelRepository.save(label);
 
     if (!save) {
-      throw new Error("Could not save label");
+      throw new GenericException();
     }
 
     return {
-      statusCode: ApiGatewayResponseCodes.OK,
+      statusCode: ApiGatewayResponseCodes.CREATED,
       body: {
         data: label.toObject(),
       },

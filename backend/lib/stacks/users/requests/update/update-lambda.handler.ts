@@ -7,6 +7,8 @@ import User from "../../../../shared/models/user.model";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 import { Validator } from "../../../../shared/validators/validator";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
+import { UserAlreadyExistsException } from "../../../../shared/exceptions/user-already-exists-exception";
 
 interface Env {
   dbStore: string;
@@ -61,10 +63,7 @@ class UpdateLambdaHandler extends BaseHandler {
   async run(): Promise<Response> {
     const user: User | null = await this.userRepository.findOne(this.userId);
     if (!user) {
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+      throw new NotFoundException(`User with ID "${this.userId}" not found`);
     }
 
     if (this.input.email && this.input.email !== user.email) {
@@ -74,7 +73,7 @@ class UpdateLambdaHandler extends BaseHandler {
       );
 
       if (userExistsInDb) {
-        throw new Error("User with this email already exists");
+        throw new UserAlreadyExistsException();
       }
 
       //update email attribute in Cognito

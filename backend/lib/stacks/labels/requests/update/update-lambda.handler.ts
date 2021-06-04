@@ -5,6 +5,7 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface UpdateEventData {
   label: string;
@@ -53,14 +54,11 @@ class UpdateLambdaHandler extends BaseHandler {
   async run(): Promise<Response> {
     const label = await this.labelRepository.findOne(this.labelId, this.userId);
 
-    if (!label)
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+    if (!label) {
+      throw new NotFoundException(`Label with ID "${this.labelId}" not found`);
+    }
 
     if (this.input.label) label.title = this.input.label;
-
     if (this.input.color) label.color = this.input.color;
 
     await this.labelRepository.update(label);

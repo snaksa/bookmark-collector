@@ -76,8 +76,6 @@ export default abstract class BaseHandler {
         return ApiGatewayResponseCodes.NOT_FOUND;
       case ExceptionCodes.UNAUTHORIZED:
         return ApiGatewayResponseCodes.UNAUTHORIZED;
-      case ExceptionCodes.INVALID_INPUT_PARAMETERS:
-        return ApiGatewayResponseCodes.BAD_REQUEST;
       default:
         return ApiGatewayResponseCodes.BAD_REQUEST;
     }

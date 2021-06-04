@@ -6,6 +6,7 @@ import BaseHandler, {
 import { Validator } from "../../../../shared/validators/validator";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface UpdateEventData {
   oldPassword: string;
@@ -53,10 +54,7 @@ class ChangePasswordLambdaHandler extends BaseHandler {
   async run(): Promise<Response> {
     const user = await this.userRepository.findOne(this.userId);
     if (!user) {
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+      throw new NotFoundException(`User with ID "${this.userId}" not found`);
     }
 
     // TODO: check if the old password is correct

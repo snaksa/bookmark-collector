@@ -9,6 +9,7 @@ import { BookmarkRepository } from "../../../../shared/repositories/bookmark.rep
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Label from "../../../../shared/models/label.model";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface UpdateEventData {
   url: string;
@@ -72,16 +73,15 @@ class UpdateLambdaHandler extends BaseHandler {
       this.userId
     );
 
-    if (!bookmark)
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+    if (!bookmark) {
+      throw new NotFoundException(
+        `Bookmark with ID "${this.bookmarkId}" not found`
+      );
+    }
 
     if (this.input.url) bookmark.bookmarkUrl = this.input.url;
 
     if ("isFavorite" in this.input) bookmark.isFavorite = this.input.isFavorite;
-
     if ("isArchived" in this.input) bookmark.isArchived = this.input.isArchived;
 
     if (this.input.url) bookmark.bookmarkUrl = this.input.url;

@@ -5,6 +5,7 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Bookmark from "../../../../shared/models/bookmark.model";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface Env {
   dbStore: string;
@@ -37,11 +38,9 @@ class SingleLambdaHandler extends BaseHandler {
 
   async run(): Promise<Response> {
     const label = await this.labelRepository.findOne(this.labelId, this.userId);
+
     if (!label) {
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+      throw new NotFoundException(`Label with ID "${this.labelId}" not found`);
     }
 
     const labelBookmarks = await this.labelRepository.findBookmarks(
