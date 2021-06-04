@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
@@ -7,19 +7,29 @@ import Copyright from "../../../organisms/copyright";
 import RegisterForm, {
   FormFields,
 } from "../../../forms/auth-forms/register-form";
-import useHttpPost from "../../../../hooks/useHttpPost";
-
-interface RegisterResponse {
-  id: string;
-}
+import UserService from "../../../../services/user.service";
 
 export default function SignUpScreen(): JSX.Element {
   const history = useHistory();
-  const { error, isLoading, execute: register } = useHttpPost(`auth/register`);
 
-  const onSubmit = (data: FormFields) => {
-    register(data).then((responseData: RegisterResponse) => {
-      if (responseData) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const onSubmit = (values: FormFields) => {
+    setIsLoading(true);
+    setError("");
+    const params = {
+      email: values.email,
+      password: values.password,
+      firstName: values.firstName,
+      lastName: values.lastName,
+    };
+
+    UserService.register(params).then(({ data, error }) => {
+      setIsLoading(false);
+      if (error) {
+        setError(error.message);
+      } else if (data && data.id) {
         history.push("/login");
       }
     });
@@ -29,7 +39,7 @@ export default function SignUpScreen(): JSX.Element {
     <Container maxWidth="xs">
       <CssBaseline />
       <RegisterForm onSubmit={onSubmit} isLoading={isLoading} />
-      <Box>{error?.message}</Box>
+      <Box>{error}</Box>
       <Box mt={5}>
         <Copyright />
       </Box>

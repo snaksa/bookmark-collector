@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
@@ -6,24 +6,26 @@ import Container from "@material-ui/core/Container";
 import Copyright from "../../../organisms/copyright";
 import LoginForm, { FormFields } from "../../../forms/auth-forms/login-form";
 import { useAuth } from "../../../../hooks/useAuth";
-import useHttpPost from "../../../../hooks/useHttpPost";
-
-interface LoginResponse {
-  tokens: {
-    IdToken: string;
-  };
-}
+import UserService from "../../../../services/user.service";
 
 export default function LoginScreen(): JSX.Element {
   const history = useHistory();
   const { onLogin } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
-  const { error, isLoading, execute: login } = useHttpPost(`auth/login`);
+  const onSubmit = (values: FormFields) => {
+    setIsLoading(true);
+    setError("");
 
-  const onSubmit = (data: FormFields) => {
-    login(data).then((responseData: LoginResponse) => {
-      if (responseData) {
-        onLogin(responseData.tokens.IdToken);
+    const params = { email: values.email, password: values.password };
+    UserService.login(params).then(({ data, error }) => {
+      setIsLoading(false);
+
+      if (error) {
+        setError(error.message);
+      } else if (data) {
+        onLogin(data.tokens.IdToken);
         history.push("/my-list");
       }
     });
@@ -33,7 +35,7 @@ export default function LoginScreen(): JSX.Element {
     <Container maxWidth="xs">
       <CssBaseline />
       <LoginForm onSubmit={onSubmit} isLoading={isLoading} />
-      <Box>{error?.message}</Box>
+      <Box>{error}</Box>
       <Box mt={5}>
         <Copyright />
       </Box>
