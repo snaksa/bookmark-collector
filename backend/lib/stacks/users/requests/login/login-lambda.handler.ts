@@ -1,5 +1,8 @@
 import * as AWS from "aws-sdk";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { Validator } from "../../../../shared/validators/validator";
 
@@ -19,7 +22,7 @@ class LoginHandler extends BaseHandler {
     cognitoClientId: process.env.cognitoClientId ?? "",
   };
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as LoginEventData;
   }
 
@@ -43,8 +46,8 @@ class LoginHandler extends BaseHandler {
     let authenticationDetails;
 
     try {
-      const cognitoidentity = new AWS.CognitoIdentityServiceProvider();
-      authenticationDetails = await cognitoidentity
+      const cognitoIdentity = new AWS.CognitoIdentityServiceProvider();
+      authenticationDetails = await cognitoIdentity
         .initiateAuth(authenticationData)
         .promise();
     } catch (err) {
@@ -54,7 +57,9 @@ class LoginHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: { tokens: authenticationDetails.AuthenticationResult },
+      body: {
+        data: { tokens: authenticationDetails.AuthenticationResult },
+      },
     };
   }
 }

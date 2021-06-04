@@ -1,5 +1,5 @@
 import { AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
-import { Construct, Stack, StackProps } from "@aws-cdk/core";
+import { Construct, StackProps } from "@aws-cdk/core";
 import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { StartingPosition } from "@aws-cdk/aws-lambda";
 import { DynamoDbHelper } from "../../shared/helpers/dynamodbdb-helper";

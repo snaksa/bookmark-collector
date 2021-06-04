@@ -1,10 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
-import { QueryBuilder } from "../../../../shared/services/query-builder";
-import Label from "../../../../shared/models/label.model";
-import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 
 interface UpdateEventData {
@@ -33,7 +32,7 @@ class UpdateLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as UpdateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
     this.labelId = event.pathParameters.id;
@@ -48,7 +47,7 @@ class UpdateLambdaHandler extends BaseHandler {
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {

@@ -1,5 +1,5 @@
 export interface Model {
   entityType: string;
-  toObject(): object;
-  toDynamoDbObject(removeKeys?: boolean): object;
+  toObject(): Record<string, unknown>;
+  toDynamoDbObject(removeKeys?: boolean): Record<string, unknown>;
 }

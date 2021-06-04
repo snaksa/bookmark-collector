@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Bookmark from "../../../../shared/models/bookmark.model";
 
@@ -23,7 +26,7 @@ class SingleLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
     this.labelId = event.pathParameters.id;
   }

@@ -1,8 +1,11 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Bookmark from "../../../../shared/models/bookmark.model";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import Label from "../../../../shared/models/label.model";
+import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 
 interface Env {
   dbStore: string;
@@ -28,7 +31,7 @@ class SingleLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
     this.bookmarkId = event.pathParameters.id;
   }
@@ -44,10 +47,9 @@ class SingleLambdaHandler extends BaseHandler {
     );
 
     if (!bookmark) {
-      return {
-        statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: {},
-      };
+      throw new NotFoundException(
+        `Bookmark with ID "${this.bookmarkId}" not found`
+      );
     }
 
     const bookmarkLabels =
@@ -61,7 +63,9 @@ class SingleLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: bookmark.toObject(),
+      body: {
+        data: bookmark.toObject(),
+      },
     };
   }
 }

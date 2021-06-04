@@ -1,6 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
@@ -43,7 +46,7 @@ class UpdateLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as UpdateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
     this.bookmarkId = event.pathParameters.id;
@@ -85,9 +88,8 @@ class UpdateLambdaHandler extends BaseHandler {
 
     if (this.input.labelIds) {
       const newLabelIds = this.input.labelIds;
-      const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-        this.bookmarkId
-      );
+      const bookmarkLabels =
+        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
 
       const oldBookmarkLabels = bookmarkLabels.map(
         (bl: BookmarkLabel) => bl.labelId
@@ -139,7 +141,7 @@ class UpdateLambdaHandler extends BaseHandler {
       const created: Promise<boolean>[] = [];
       for (let i = 0; i < this.input.newLabels.length; i++) {
         const label = new Label(
-          uuidv4(),
+          uuid_v4(),
           this.userId,
           this.input.newLabels[i],
           "grey"
@@ -172,9 +174,8 @@ class UpdateLambdaHandler extends BaseHandler {
 
     // if labels are not passed include them to the object
     if (!this.input.labelIds) {
-      const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-        this.bookmarkId
-      );
+      const bookmarkLabels =
+        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
       bookmarkLabels.forEach((label) =>
         bookmark.addLabel(
           new Label(label.labelId, this.userId, label.title, label.color)

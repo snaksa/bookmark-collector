@@ -6,7 +6,7 @@ import {
   RestApi,
 } from "@aws-cdk/aws-apigateway";
 import { AwsResources } from "../../shared/enums/aws-resources";
-import { SsmHelper } from "../../shared/helpers/ssm-helper";
+import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
 
 export class ApiGatewayStack extends BaseStack {

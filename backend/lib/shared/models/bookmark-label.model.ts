@@ -59,7 +59,7 @@ export default class BookmarkLabel implements Model {
     };
   }
 
-  public toDynamoDbObject(removeKeys: boolean = false): Partial<BookmarkLabel> {
+  public toDynamoDbObject(removeKeys = false): Partial<BookmarkLabel> {
     let result = {};
 
     if (!removeKeys) {
@@ -86,7 +86,7 @@ export default class BookmarkLabel implements Model {
     };
   }
 
-  public static fromDynamoDb(o: BookmarkLabel) {
+  public static fromDynamoDb(o: BookmarkLabel): BookmarkLabel {
     return new BookmarkLabel(
       o.labelId,
       o.bookmarkId,

@@ -1,4 +1,8 @@
-import { AuthorizationType, IRestApi } from "@aws-cdk/aws-apigateway";
+import {
+  AuthorizationType,
+  IRestApi,
+  MethodOptions,
+} from "@aws-cdk/aws-apigateway";
 import { ITable } from "@aws-cdk/aws-dynamodb";
 import { Construct, Stack, StackProps } from "@aws-cdk/core";
 import { AwsResources } from "../shared/enums/aws-resources";
@@ -18,14 +22,14 @@ export class BaseStack extends Stack {
     super(scope, id, props);
   }
 
-  loadTables() {
+  loadTables(): void {
     this.dbStore = DynamoDbHelper.getTable(this, AwsResources.DB_STORE_TABLE, [
       AwsResources.DB_STORE_TABLE_REVERSED,
       AwsResources.DB_STORE_TABLE_GSI1,
     ]);
   }
 
-  loadApi() {
+  loadApi(): void {
     const restApiId = SsmHelper.getParameter(this, AwsResources.REST_API_ID);
     const restApiRootResourceId = SsmHelper.getParameter(
       this,
@@ -39,7 +43,7 @@ export class BaseStack extends Stack {
     );
   }
 
-  loadAuth() {
+  loadAuth(): void {
     this.cognitoClientId = SsmHelper.getParameter(
       this,
       AwsResources.COGNITO_CLIENT_ID
@@ -54,14 +58,14 @@ export class BaseStack extends Stack {
     );
   }
 
-  loadAuthorizer() {
+  loadAuthorizer(): void {
     this.authorizerRef = SsmHelper.getParameter(
       this,
       AwsResources.REST_API_COGNITO_AUTHORIZER
     );
   }
 
-  getAuthorization() {
+  getAuthorization(): MethodOptions {
     return {
       authorizationType: AuthorizationType.COGNITO,
       authorizer: { authorizerId: this.authorizerRef },

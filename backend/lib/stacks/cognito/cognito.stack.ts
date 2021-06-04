@@ -1,7 +1,7 @@
 import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
 import { StackProps, Construct } from "@aws-cdk/core";
 import { AwsResources } from "../../shared/enums/aws-resources";
-import { SsmHelper } from "../../shared/helpers/ssm-helper";
+import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
 import { CognitoConfirmationLambda } from "./lambda/cognito-confirmation-lambda";
 

@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
@@ -22,7 +25,7 @@ class ChangePasswordLambdaHandler extends BaseHandler {
 
   private env: Env = {
     dbStore: process.env.dbStore ?? "",
-    userPoolId: process.env.userPoolId ?? ""
+    userPoolId: process.env.userPoolId ?? "",
   };
 
   constructor() {
@@ -31,7 +34,7 @@ class ChangePasswordLambdaHandler extends BaseHandler {
     this.userRepository = new UserRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as UpdateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
   }
@@ -58,10 +61,10 @@ class ChangePasswordLambdaHandler extends BaseHandler {
 
     // TODO: check if the old password is correct
 
-    const cognitoidentity = new CognitoIdentityServiceProvider();
+    const cognitoIdentity = new CognitoIdentityServiceProvider();
 
     // change user password
-    const changePasswordResponse = await cognitoidentity
+    await cognitoIdentity
       .adminSetUserPassword({
         Username: user.email,
         Password: this.input.newPassword,

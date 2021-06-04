@@ -1,8 +1,10 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
-import { v4 as uuidv4 } from "uuid";
 import User from "../../../../shared/models/user.model";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 
@@ -38,7 +40,7 @@ class RegisterLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as RegisterEventData;
   }
 
@@ -72,9 +74,9 @@ class RegisterLambdaHandler extends BaseHandler {
     };
 
     try {
-      const cognitoidentity = new CognitoIdentityServiceProvider();
+      const cognitoIdentity = new CognitoIdentityServiceProvider();
       // add user to Cognito
-      const signUpResponse = await cognitoidentity
+      const signUpResponse = await cognitoIdentity
         .signUp(registerData)
         .promise();
 
@@ -92,7 +94,11 @@ class RegisterLambdaHandler extends BaseHandler {
 
       return {
         statusCode: ApiGatewayResponseCodes.OK,
-        body: { id: userSub },
+        body: {
+          data: {
+            id: userSub,
+          },
+        },
       };
     } catch (err) {
       throw Error("Couldn't create user");

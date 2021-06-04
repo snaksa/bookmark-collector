@@ -21,7 +21,7 @@ export class LabelRepository {
     return Label.fromDynamoDb(updated);
   }
 
-  async deleteById(labelId: string, userId: string) {
+  async deleteById(labelId: string, userId: string): Promise<Label> {
     return new QueryBuilder<Label>()
       .table(this.dbStore)
       .where({

@@ -58,9 +58,7 @@ export class BookmarkRepository {
   }
 
   async findBookmarkRecords(
-    bookmarkId: string,
-    onlyFavorites: boolean = false,
-    onlyArchived: boolean = false
+    bookmarkId: string
   ): Promise<(Bookmark | BookmarkLabel)[]> {
     const query = new QueryBuilder<Bookmark | BookmarkLabel>()
       .table(this.dbStore)
@@ -89,9 +87,9 @@ export class BookmarkRepository {
 
   async findAll(
     userId: string,
-    onlyFavorites: boolean = false,
-    onlyArchived: boolean = false,
-    excludeArchived: boolean = false
+    onlyFavorites = false,
+    onlyArchived = false,
+    excludeArchived = false
   ): Promise<Bookmark[]> {
     const query = new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
@@ -123,7 +121,7 @@ export class BookmarkRepository {
 
     const records: BookmarkLabel[] = await query.all();
 
-    let bookmarks: { [key: string]: Bookmark } = {};
+    const bookmarks: { [key: string]: Bookmark } = {};
     records.forEach((record: BookmarkLabel) => {
       if (!(record.bookmarkId in bookmarks)) {
         bookmarks[record.bookmarkId] = new Bookmark(

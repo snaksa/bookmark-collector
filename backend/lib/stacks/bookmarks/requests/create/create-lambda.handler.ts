@@ -1,15 +1,17 @@
-import { v4 as uuidv4 } from "uuid";
-import fetch from "node-fetch";
-import cheerio from "cheerio";
+import { v4 as uuid_v4 } from "uuid";
 import { SQS } from "aws-sdk";
 
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { GenericException } from "../../../../shared/exceptions/generic-exception";
 
 interface CreateEventData {
   url: string;
@@ -40,7 +42,7 @@ class CreateLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as CreateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
   }
@@ -50,20 +52,20 @@ class CreateLambdaHandler extends BaseHandler {
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {
     let url = this.input.url;
     if (url.indexOf("http") !== 0) {
-      url = `http://${url}`;
+      url = `https://${url}`;
     }
 
-    const bookmark = new Bookmark(uuidv4(), this.userId, url, false, false);
+    const bookmark = new Bookmark(uuid_v4(), this.userId, url, false, false);
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {
-      throw new Error("Could not save bookmark");
+      throw new GenericException();
     }
 
     if (this.input.labelIds) {
@@ -113,7 +115,9 @@ class CreateLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: bookmark.toObject(),
+      body: {
+        data: bookmark.toObject(),
+      },
     };
   }
 }

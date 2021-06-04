@@ -44,11 +44,11 @@ export default class Bookmark implements Model {
     this.labels = [];
   }
 
-  public addLabel(label: Label) {
+  public addLabel(label: Label): void {
     this.labels.push(label);
   }
 
-  public removeLabel(labelId: string) {
+  public removeLabel(labelId: string): void {
     this.labels = this.labels.filter((label) => label.labelId !== labelId);
   }
 
@@ -88,7 +88,7 @@ export default class Bookmark implements Model {
     };
   }
 
-  public static fromDynamoDb(o: Bookmark) {
+  public static fromDynamoDb(o: Bookmark): Bookmark {
     return new Bookmark(
       o.bookmarkId,
       o.userId,

@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import User from "../../../../shared/models/user.model";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 import { Validator } from "../../../../shared/validators/validator";
@@ -38,7 +41,7 @@ class UpdateLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as UpdateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
   }
@@ -52,7 +55,7 @@ class UpdateLambdaHandler extends BaseHandler {
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {
@@ -75,9 +78,9 @@ class UpdateLambdaHandler extends BaseHandler {
       }
 
       //update email attribute in Cognito
-      const cognitoidentity = new CognitoIdentityServiceProvider();
+      const cognitoIdentity = new CognitoIdentityServiceProvider();
       // add user to Cognito
-      const signUpResponse = await cognitoidentity
+      await cognitoIdentity
         .adminUpdateUserAttributes({
           Username: user.email,
           UserPoolId: this.env.cognitoUserPoolId,
@@ -106,7 +109,9 @@ class UpdateLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: user.toObject(),
+      body: {
+        data: user.toObject(),
+      },
     };
   }
 }

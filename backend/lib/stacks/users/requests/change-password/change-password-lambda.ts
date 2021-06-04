@@ -23,7 +23,7 @@ export class ChangePasswordLambda extends NodejsFunction {
     props.dbStore.grantReadData(this);
 
     this.role?.attachInlinePolicy(
-      new Policy(this, "user-pool-channge-user-password-policy", {
+      new Policy(this, "user-pool-change-user-password-policy", {
         statements: [
           new PolicyStatement({
             actions: ["cognito-idp:AdminSetUserPassword"],

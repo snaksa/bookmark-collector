@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 
@@ -22,12 +25,12 @@ class ListLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {
@@ -35,7 +38,11 @@ class ListLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: labels.map((label: Label) => Label.fromDynamoDb(label).toObject()),
+      body: {
+        data: labels.map((label: Label) =>
+          Label.fromDynamoDb(label).toObject()
+        ),
+      },
     };
   }
 }

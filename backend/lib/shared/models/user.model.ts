@@ -1,11 +1,11 @@
 import { Model } from "./base.model";
 
 export default class User implements Model {
-  static ENTITY_TYPE: string = "user";
+  static ENTITY_TYPE = "user";
 
   pk: string;
-  sk: string = "USER";
-  entityType: string = "user";
+  sk = "USER";
+  entityType = "user";
   GSI1: string;
 
   id: string;
@@ -46,7 +46,7 @@ export default class User implements Model {
     };
   }
 
-  public toDynamoDbObject(removeKeys: boolean = false) {
+  public toDynamoDbObject(removeKeys = false) {
     let result = {};
 
     if (!removeKeys) {
@@ -67,7 +67,7 @@ export default class User implements Model {
     };
   }
 
-  public static fromDynamoDb(o: User) {
+  public static fromDynamoDb(o: User): User {
     return new User(o.userId, o.GSI1, o.firstName, o.lastName, o.status);
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Chip, Grid, IconButton, Typography } from "@material-ui/core";
+import { Box, Grid, IconButton, Typography } from "@material-ui/core";
 import useStyles from "./styles";
 import {
   DeleteOutlined as DeleteIcon,
@@ -39,7 +39,7 @@ export default function BookmarkView({
             className={classes.image}
           />
         ) : (
-          <Box className={classes.noImage}></Box>
+          <Box className={classes.noImage} />
         )}
       </Grid>
       <Grid item md={8} lg={8}>

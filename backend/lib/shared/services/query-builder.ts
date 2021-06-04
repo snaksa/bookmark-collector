@@ -5,7 +5,7 @@ export class QueryBuilder<T extends Model> {
   db: DynamoDbHelper;
 
   // table to be queried
-  tableName: string = "";
+  tableName = "";
 
   // index to be queried
   indexName?: string = "";
@@ -14,10 +14,10 @@ export class QueryBuilder<T extends Model> {
   fields?: string[] = [];
 
   // conditions to be applied
-  conditions: object = {};
+  conditions: Record<string, unknown> = {};
 
   // filter expression to be applied
-  filterExpression: object = {};
+  filterExpression: Record<string, unknown> = {};
 
   // sortKey condition to begin with
   beginsWith: string;
@@ -59,7 +59,7 @@ export class QueryBuilder<T extends Model> {
     return this;
   }
 
-  where(conditions: { [index: string]: any }): QueryBuilder<T> {
+  where(conditions: Record<string, unknown>): QueryBuilder<T> {
     if (!Object.entries(conditions).length) {
       throw Error("Conditions not provided");
     }
@@ -69,7 +69,7 @@ export class QueryBuilder<T extends Model> {
     return this;
   }
 
-  filter(filterExpression: { [index: string]: any }): QueryBuilder<T> {
+  filter(filterExpression: Record<string, unknown>): QueryBuilder<T> {
     this.filterExpression = filterExpression;
 
     return this;
@@ -77,7 +77,7 @@ export class QueryBuilder<T extends Model> {
 
   sortKeyBeginsWith(
     beginsWith: string,
-    fieldBeginsWith: string = "sk"
+    fieldBeginsWith = "sk"
   ): QueryBuilder<T> {
     this.beginsWith = beginsWith;
     this.fieldBeginsWith = fieldBeginsWith;
@@ -129,7 +129,7 @@ export class QueryBuilder<T extends Model> {
     );
 
     const conditionExpression: string[] = [];
-    let conditionExpressionAttributes: object = {};
+    let conditionExpressionAttributes: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(this.conditions)) {
       conditionExpression.push(`${key} = :${key}`);
       conditionExpressionAttributes = {
@@ -210,7 +210,7 @@ export class QueryBuilder<T extends Model> {
     );
 
     const updateExpression: string[] = [];
-    let updateExpressionAttributes: object = {};
+    let updateExpressionAttributes: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(item)) {
       updateExpression.push(`${key} = :${key}`);
       updateExpressionAttributes = {
@@ -219,7 +219,7 @@ export class QueryBuilder<T extends Model> {
       };
     }
 
-    let params = {
+    const params = {
       TableName: this.tableName,
       Key: this.conditions,
       UpdateExpression: `set ${updateExpression.join(", ")}`,

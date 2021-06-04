@@ -26,11 +26,11 @@ export default class Label implements Model {
     this.color = color;
   }
 
-  public setBookmarks(bookmarks: Bookmark[]) {
+  public setBookmarks(bookmarks: Bookmark[]): void {
     this.bookmarks = bookmarks;
   }
 
-  public toObject(includeBookmarks: boolean = false) {
+  public toObject(includeBookmarks = false) {
     const label: any = {
       id: this.labelId,
       title: this.title,
@@ -44,7 +44,7 @@ export default class Label implements Model {
     return label;
   }
 
-  public toDynamoDbObject(removeKeys: boolean = false): Partial<Label> {
+  public toDynamoDbObject(removeKeys = false): Partial<Label> {
     let result = {};
 
     if (!removeKeys) {
@@ -64,7 +64,7 @@ export default class Label implements Model {
     };
   }
 
-  public static fromDynamoDb(o: Label) {
+  public static fromDynamoDb(o: Label): Label {
     return new Label(o.labelId, o.userId, o.title, o.color);
   }
 }

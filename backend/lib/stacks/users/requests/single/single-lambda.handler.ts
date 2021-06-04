@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 
 interface Env {
@@ -21,7 +24,7 @@ class SingleLambdaHandler extends BaseHandler {
     this.userRepository = new UserRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
   }
 
@@ -40,7 +43,9 @@ class SingleLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: user.toObject(),
+      body: {
+        data: user.toObject(),
+      },
     };
   }
 }

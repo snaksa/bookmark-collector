@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 
@@ -28,17 +31,17 @@ class DeleteLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
     this.bookmarkId = event.pathParameters.id;
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {
-    let bookmarks = await this.bookmarkRepository.findBookmarkRecords(
+    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(
       this.bookmarkId
     );
 

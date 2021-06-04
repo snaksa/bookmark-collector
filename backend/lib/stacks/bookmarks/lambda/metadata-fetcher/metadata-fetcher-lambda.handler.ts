@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import fetch from "node-fetch";
 import cheerio from "cheerio";
@@ -8,10 +11,23 @@ interface Env {
   dbStore: string;
 }
 
+interface RecordType {
+  messageAttributes: {
+    bookmarkId: {
+      stringValue: string;
+    };
+    userId: {
+      stringValue: string;
+    };
+  };
+}
+
+interface MetadataFetcherLambdaRequestEvent extends RequestEventType {
+  Records: RecordType[];
+}
+
 class MetadataFetcherLambdaHandler extends BaseHandler {
   private bookmarkRepository: BookmarkRepository;
-  private userId: string;
-  private bookmarkId: string;
   private records: { bookmarkId: string; userId: string }[] = [];
 
   private env: Env = {
@@ -24,9 +40,9 @@ class MetadataFetcherLambdaHandler extends BaseHandler {
     this.bookmarkRepository = new BookmarkRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: MetadataFetcherLambdaRequestEvent) {
     this.records = [];
-    event.Records.forEach((record: any) => {
+    event.Records.forEach((record: RecordType) => {
       const attributes = record.messageAttributes;
       this.records.push({
         bookmarkId: attributes.bookmarkId.stringValue,

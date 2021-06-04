@@ -1,6 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import { Validator } from "../../../../shared/validators/validator";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
@@ -30,7 +33,7 @@ class CreateLambdaHandler extends BaseHandler {
     this.labelRepository = new LabelRepository(this.env.dbStore);
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.input = JSON.parse(event.body) as CreateEventData;
     this.userId = event.requestContext.authorizer.claims.sub;
   }
@@ -44,12 +47,12 @@ class CreateLambdaHandler extends BaseHandler {
   }
 
   authorize(): boolean {
-    return this.userId ? true : false;
+    return !!this.userId;
   }
 
   async run(): Promise<Response> {
     const label = new Label(
-      uuidv4(),
+      uuid_v4(),
       this.userId,
       this.input.label,
       this.input.color
@@ -62,7 +65,9 @@ class CreateLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: label.toObject(),
+      body: {
+        data: label.toObject(),
+      },
     };
   }
 }

@@ -1,5 +1,8 @@
 import { DynamoDB } from "aws-sdk";
-import BaseHandler, { Response } from "../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../shared/enums/api-gateway-response-codes";
 import { StreamEventTypes } from "../../../shared/enums/stream-event-types";
 import { Model } from "../../../shared/models/base.model";
@@ -8,6 +11,7 @@ import Bookmark from "../../../shared/models/bookmark.model";
 import Label from "../../../shared/models/label.model";
 import { BookmarkRepository } from "../../../shared/repositories/bookmark.repository";
 import { LabelRepository } from "../../../shared/repositories/label.repository";
+import { AttributeMap } from "aws-sdk/clients/dynamodb";
 
 interface StreamEvent {
   type: string;
@@ -17,6 +21,18 @@ interface StreamEvent {
 interface Env {
   dbStore: string;
   reversedDbStore: string;
+}
+
+interface RecordType {
+  eventName: string;
+  dynamodb: {
+    OldImage: AttributeMap;
+    NewImage: AttributeMap;
+  };
+}
+
+interface StreamLambdaEventType extends RequestEventType {
+  Records: RecordType[];
 }
 
 class StreamLambdaHandler extends BaseHandler {
@@ -40,9 +56,9 @@ class StreamLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: StreamLambdaEventType) {
     this.records = [];
-    event.Records.map((record: any) => {
+    event.Records.map((record) => {
       const object = this.getObject(
         record.eventName === StreamEventTypes.REMOVE
           ? record.dynamodb.OldImage
@@ -59,8 +75,8 @@ class StreamLambdaHandler extends BaseHandler {
     });
   }
 
-  getObject(object: any): Model | null {
-    let unmarshalledObject = DynamoDB.Converter.unmarshall(object);
+  getObject(object: AttributeMap): Model | null {
+    const unmarshalledObject = DynamoDB.Converter.unmarshall(object);
 
     switch (unmarshalledObject.entityType) {
       case Label.ENTITY_TYPE:
@@ -92,9 +108,10 @@ class StreamLambdaHandler extends BaseHandler {
   }
 
   async updateBookmarkLabelsByBookmark(bookmark: Bookmark) {
-    const bookmarkLabels = await this.bookmarkRepository.findBookmarkLabelRecords(
-      bookmark.bookmarkId
-    );
+    const bookmarkLabels =
+      await this.bookmarkRepository.findBookmarkLabelRecords(
+        bookmark.bookmarkId
+      );
 
     const updated: Promise<BookmarkLabel>[] = [];
     for (let i = 0; i < bookmarkLabels.length; i++) {

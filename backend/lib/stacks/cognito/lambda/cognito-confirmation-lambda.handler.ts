@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 export const handler = (event: any, context: any) => {
   event.response.autoConfirmUser = true;
   event.response.autoVerifyEmail = true;

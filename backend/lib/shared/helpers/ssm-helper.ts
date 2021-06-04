@@ -2,7 +2,7 @@ import { Construct, Stack } from "@aws-cdk/core";
 import { StringParameter } from "@aws-cdk/aws-ssm";
 
 export class SsmHelper {
-  static prefix: string = "BookmarkCollectorParameters";
+  static prefix = "BookmarkCollectorParameters";
 
   static getParameter(stack: Stack, resource: string): string {
     return StringParameter.fromStringParameterName(

@@ -118,7 +118,7 @@ export class UsersStack extends BaseStack {
         new ChangePasswordLambda(this, "change-password-lambda", {
           dbStore: this.dbStore,
           cognitoUserPoolId: this.cognitoUserPoolId,
-          cognitoUserPoolArn: this.cognitoUserPoolArn
+          cognitoUserPoolArn: this.cognitoUserPoolArn,
         })
       ),
       this.getAuthorization()

@@ -1,5 +1,8 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response } from "../../../../shared/base-handler";
+import BaseHandler, {
+  RequestEventType,
+  Response,
+} from "../../../../shared/base-handler";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 
@@ -33,7 +36,7 @@ class ListLambdaHandler extends BaseHandler {
     );
   }
 
-  parseEvent(event: any) {
+  parseEvent(event: RequestEventType) {
     this.userId = event.requestContext.authorizer.claims.sub;
 
     this.favorites = false;
@@ -62,7 +65,9 @@ class ListLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: result.map((bookmark: Bookmark) => bookmark.toObject()),
+      body: {
+        data: result.map((bookmark: Bookmark) => bookmark.toObject()),
+      },
     };
   }
 }

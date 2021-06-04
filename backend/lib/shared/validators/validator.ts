@@ -7,6 +7,7 @@ export class Validator {
     return Boolean(input && input.length);
   }
 
+  // eslint-disable-next-line
   public static notNull(input?: any): boolean {
     return input !== null;
   }
