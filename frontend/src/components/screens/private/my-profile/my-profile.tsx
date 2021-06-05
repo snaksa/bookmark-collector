@@ -10,8 +10,7 @@ import {
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import {
-  initializedUserDetails,
-  initializeUserDetails,
+  fetchDetails,
   updateUserDetails,
 } from "../../../../redux/slices/users.slice";
 import useHttpGet from "../../../../hooks/useHttpGet";
@@ -37,10 +36,7 @@ export default function MyProfileScreen(): JSX.Element {
 
   useEffect(() => {
     if (!currentUser.initialized) {
-      dispatch(initializeUserDetails());
-      fetchUserDetails().then((data) => {
-        dispatch(initializedUserDetails(data));
-      });
+      dispatch(fetchDetails());
     }
   }, []);
 

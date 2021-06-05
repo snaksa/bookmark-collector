@@ -26,6 +26,15 @@ type RegisterResponseType = ResponseType & {
   };
 };
 
+type DetailsResponseType = ResponseType & {
+  data?: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+};
+
 export default class UserService {
   public static async login(
     data: LoginRequestParams
@@ -40,5 +49,8 @@ export default class UserService {
       "auth/register",
       data
     );
+  }
+  public static async details(): Promise<DetailsResponseType> {
+    return await new HttpService<DetailsResponseType>().get("auth/me");
   }
 }

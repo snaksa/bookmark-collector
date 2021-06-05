@@ -16,11 +16,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
 import useHttpPost from "../../../hooks/useHttpPost";
 import { addNewBookmark } from "../../../redux/slices/bookmarks.slice";
-import {
-  initializedUserDetails,
-  initializeUserDetails,
-} from "../../../redux/slices/users.slice";
-import useHttpGet from "../../../hooks/useHttpGet";
+import { fetchDetails } from "../../../redux/slices/users.slice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
 
 export default function Header(): JSX.Element {
@@ -36,8 +32,6 @@ export default function Header(): JSX.Element {
   >(null);
 
   const { execute: createBookmark } = useHttpPost("bookmarks");
-
-  const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
 
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector((state) => state.user.details);
@@ -59,10 +53,7 @@ export default function Header(): JSX.Element {
 
   useEffect(() => {
     if (!currentUser.initialized) {
-      dispatch(initializeUserDetails());
-      fetchUserDetails().then((data) => {
-        dispatch(initializedUserDetails(data));
-      });
+      dispatch(fetchDetails());
     }
   }, []);
 
