@@ -36,7 +36,7 @@ export const fetchDetails = createAsyncThunk<
   void,
   { rejectValue: ErrorType }
 >("users/fetchDetails", async (_, { rejectWithValue }) => {
-  const response = await UserService.details();
+  const response = await UserService.getCurrentUserDetails();
   if (response.error) {
     return rejectWithValue(response.error as ErrorType);
   }

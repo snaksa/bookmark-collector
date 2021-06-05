@@ -50,7 +50,7 @@ export default class UserService {
       data
     );
   }
-  public static async details(): Promise<DetailsResponseType> {
+  public static async getCurrentUserDetails(): Promise<DetailsResponseType> {
     return await new HttpService<DetailsResponseType>().get("auth/me");
   }
 }
