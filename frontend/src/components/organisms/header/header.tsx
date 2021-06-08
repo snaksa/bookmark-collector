@@ -14,10 +14,9 @@ import { Add as AddIcon, Clear as ClearIcon } from "@material-ui/icons";
 import useStyles from "./styles";
 import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
-import useHttpPost from "../../../hooks/useHttpPost";
-import { addNewBookmark } from "../../../redux/slices/bookmarks.slice";
 import { fetchDetails } from "../../../redux/slices/users.slice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
+import { createBookmark } from "../../../redux/slices/bookmarks.slice";
 
 export default function Header(): JSX.Element {
   const classes = useStyles();
@@ -31,8 +30,6 @@ export default function Header(): JSX.Element {
     null | Element | ((element: Element) => Element)
   >(null);
 
-  const { execute: createBookmark } = useHttpPost("bookmarks");
-
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector((state) => state.user.details);
 
@@ -43,11 +40,8 @@ export default function Header(): JSX.Element {
   };
 
   const handleNewUrl = () => {
-    createBookmark({
-      url: url,
-    }).then((data) => {
+    dispatch(createBookmark(url)).then(() => {
       setShowNewUrl(false);
-      dispatch(addNewBookmark(data));
     });
   };
 

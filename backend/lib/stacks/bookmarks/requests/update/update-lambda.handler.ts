@@ -185,7 +185,9 @@ class UpdateLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: bookmark.toObject(),
+      body: {
+        data: bookmark.toObject(),
+      },
     };
   }
 }

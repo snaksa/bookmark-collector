@@ -12,6 +12,21 @@ export type ResponseType = {
 };
 
 export default class HttpService<T> {
+  public async get(
+    url: string,
+    params: Record<string, unknown> = {}
+  ): Promise<T> {
+    try {
+      const response = await axios.get<T>(`${config.apiBaseUrl}${url}`, {
+        params: params,
+      });
+
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+
   public async post(url: string, data: Record<string, unknown>): Promise<T> {
     try {
       const response = await axios.post<T>(`${config.apiBaseUrl}${url}`, data);
@@ -22,14 +37,9 @@ export default class HttpService<T> {
     }
   }
 
-  public async get(
-    url: string,
-    params: Record<string, unknown> = {}
-  ): Promise<T> {
+  public async put(url: string, data: Record<string, unknown>): Promise<T> {
     try {
-      const response = await axios.get<T>(`${config.apiBaseUrl}${url}`, {
-        params: params,
-      });
+      const response = await axios.put<T>(`${config.apiBaseUrl}${url}`, data);
 
       return response.data;
     } catch (error) {
