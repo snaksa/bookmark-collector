@@ -57,21 +57,6 @@ const initialState: BookmarksState = {
   },
 };
 
-export const removeBookmarkFromArchived = createAsyncThunk<
-  Bookmark,
-  string,
-  { rejectValue: ErrorType }
->("bookmarks/removeBookmarkFromArchived", async (id, { rejectWithValue }) => {
-  const response = await BookmarkService.updateBookmark(id, {
-    isArchived: false,
-  });
-  if (response.error) {
-    return rejectWithValue(response.error as ErrorType);
-  }
-
-  return response.data as Bookmark;
-});
-
 export const bookmarksSlice = createSlice({
   name: "bookmarks",
   initialState,
