@@ -45,7 +45,7 @@ export const fetchDetails = createAsyncThunk<
 });
 
 export const usersSlice = createSlice({
-  name: "labels",
+  name: "users",
   initialState,
   reducers: {
     updateUserDetails: (state, action: PayloadAction<User>) => {

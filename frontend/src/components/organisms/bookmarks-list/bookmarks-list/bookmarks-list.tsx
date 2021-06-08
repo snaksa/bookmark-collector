@@ -7,7 +7,7 @@ import useHttpGet from "../../../../hooks/useHttpGet";
 
 import Dialog from "../../dialog/dialog";
 import useHttpPut from "../../../../hooks/useHttpPut";
-import { updateBookmark } from "../../../../redux/slices/bookmarks.slice";
+import { updateBookmark } from "../../../../redux/slices/bookmarks/thunks";
 import {
   initializedLabels,
   initializeLabels,

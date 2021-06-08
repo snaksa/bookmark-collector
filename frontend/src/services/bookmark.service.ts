@@ -39,4 +39,22 @@ export default class BookmarkService {
       data
     );
   }
+
+  public static async updateLabels(
+    id: string,
+    labelIds: string[],
+    newLabels: string[]
+  ): Promise<BookmarkResponseType> {
+    return await new HttpService<BookmarkResponseType>().put(
+      `bookmarks/${id}`,
+      {
+        labelIds,
+        newLabels,
+      }
+    );
+  }
+
+  public static async deleteBookmark(id: string): Promise<ResponseType> {
+    return await new HttpService<ResponseType>().delete(`bookmarks/${id}`);
+  }
 }

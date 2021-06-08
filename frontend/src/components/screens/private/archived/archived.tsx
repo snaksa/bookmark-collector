@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Container, Typography } from "@material-ui/core";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
-import { fetchCurrentUserArchivedBookmarks } from "../../../../redux/slices/bookmarks.slice";
+import { fetchArchived } from "../../../../redux/slices/bookmarks/thunks";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
@@ -13,7 +13,7 @@ export default function ArchivedScreen(): JSX.Element {
 
   useEffect(() => {
     if (!archived.data.length || !archived.initialized) {
-      dispatch(fetchCurrentUserArchivedBookmarks());
+      dispatch(fetchArchived());
     }
   }, []);
 

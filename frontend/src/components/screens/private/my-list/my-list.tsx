@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box, Container, Typography } from "@material-ui/core";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
-import { fetchCurrentUserBookmarks } from "../../../../redux/slices/bookmarks.slice";
+import { fetchMyList } from "../../../../redux/slices/bookmarks/thunks/fetchMyList.thunk";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
@@ -13,7 +13,7 @@ export default function MyListScreen(): JSX.Element {
 
   useEffect(() => {
     if (!myList.data.length || !myList.initialized) {
-      dispatch(fetchCurrentUserBookmarks());
+      dispatch(fetchMyList());
     }
   }, []);
 

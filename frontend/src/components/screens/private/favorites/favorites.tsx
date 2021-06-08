@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Container, Typography } from "@material-ui/core";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
-import { fetchCurrentUserFavoriteBookmarks } from "../../../../redux/slices/bookmarks.slice";
+import { fetchFavorites } from "../../../../redux/slices/bookmarks/thunks";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
@@ -13,7 +13,7 @@ export default function FavoritesScreen(): JSX.Element {
 
   useEffect(() => {
     if (!favorites.data.length || !favorites.initialized) {
-      dispatch(fetchCurrentUserFavoriteBookmarks());
+      dispatch(fetchFavorites());
     }
   }, []);
 

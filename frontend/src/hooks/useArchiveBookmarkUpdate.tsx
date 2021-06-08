@@ -1,9 +1,8 @@
-import useHttpPut from "./useHttpPut";
-import {
-  addToArchivedBookmark,
-  removeFromArchivedBookmark,
-} from "../redux/slices/bookmarks.slice";
 import { useAppDispatch } from "./redux-hooks";
+import {
+  addBookmarkToArchived,
+  removeBookmarkFromArchived,
+} from "../redux/slices/bookmarks/thunks";
 
 type ArchiveBookmarkUpdateType = (
   bookmarkId: string,
@@ -11,18 +10,13 @@ type ArchiveBookmarkUpdateType = (
 ) => void;
 
 export default function useArchiveBookmarkUpdate(): ArchiveBookmarkUpdateType {
-  const { execute: updateBookmarkRequest } = useHttpPut();
   const dispatch = useAppDispatch();
 
   return (bookmarkId: string, isArchived: boolean) => {
-    updateBookmarkRequest(`bookmarks/${bookmarkId}`, {
-      isArchived: isArchived,
-    }).then((data) => {
-      if (isArchived) {
-        dispatch(addToArchivedBookmark(data));
-      } else {
-        dispatch(removeFromArchivedBookmark(data));
-      }
-    });
+    if (isArchived) {
+      dispatch(addBookmarkToArchived(bookmarkId));
+    } else {
+      dispatch(removeBookmarkFromArchived(bookmarkId));
+    }
   };
 }

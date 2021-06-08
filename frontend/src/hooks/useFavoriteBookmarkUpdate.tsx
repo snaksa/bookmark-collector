@@ -1,8 +1,8 @@
+import { useAppDispatch } from "./redux-hooks";
 import {
   addBookmarkToFavorites,
   removeBookmarkFromFavorites,
-} from "../redux/slices/bookmarks.slice";
-import { useAppDispatch } from "./redux-hooks";
+} from "../redux/slices/bookmarks/thunks";
 
 type FavoriteBookmarkUpdateResponse = (
   bookmarkId: string,

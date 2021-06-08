@@ -46,4 +46,14 @@ export default class HttpService<T> {
       return error.response.data;
     }
   }
+
+  public async delete(url: string): Promise<T> {
+    try {
+      const response = await axios.delete<T>(`${config.apiBaseUrl}${url}`);
+
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
 }

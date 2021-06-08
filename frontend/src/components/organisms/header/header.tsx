@@ -16,7 +16,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
 import { fetchDetails } from "../../../redux/slices/users.slice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
-import { createBookmark } from "../../../redux/slices/bookmarks.slice";
+import { createBookmark } from "../../../redux/slices/bookmarks/thunks";
 
 export default function Header(): JSX.Element {
   const classes = useStyles();
