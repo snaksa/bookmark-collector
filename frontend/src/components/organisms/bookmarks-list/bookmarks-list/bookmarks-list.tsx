@@ -8,13 +8,10 @@ import useHttpGet from "../../../../hooks/useHttpGet";
 import Dialog from "../../dialog/dialog";
 import useHttpPut from "../../../../hooks/useHttpPut";
 import { updateBookmark } from "../../../../redux/slices/bookmarks/thunks";
-import {
-  initializedLabels,
-  initializeLabels,
-} from "../../../../redux/slices/labels.slice";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 import { Bookmark } from "../../../../models/bookmark.model";
 import { Label } from "../../../../models/label.model";
+import { fetchLabels } from "../../../../redux/slices/labels/thunks/fetchLabels.thunk";
 
 interface BookmarkListProps {
   bookmarks: Bookmark[];
@@ -35,7 +32,6 @@ export default function BookmarksList({
   const labels = useAppSelector((state) => state.labels.list);
 
   const { fetch: fetchBookmark } = useHttpGet("bookmarks", {}, true);
-  const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
   const { execute: updateBookmarkRequest } = useHttpPut();
 
   const [open, setOpen] = React.useState(false);
@@ -89,10 +85,7 @@ export default function BookmarksList({
 
   useEffect(() => {
     if (!labels || !labels.initialized) {
-      dispatch(initializeLabels());
-      fetchLabels().then((data) => {
-        dispatch(initializedLabels(data));
-      });
+      dispatch(fetchLabels());
     }
   }, []);
 

@@ -25,7 +25,7 @@ export const addBookmarkToFavorites = createAsyncThunk<
 
 export const addBookmarkToFavoritesReducer = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     addBookmarkToFavorites.fulfilled,
     (state, action: PayloadAction<Bookmark>) => {

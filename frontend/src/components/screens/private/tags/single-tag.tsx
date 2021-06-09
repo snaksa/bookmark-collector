@@ -4,20 +4,17 @@ import { Container, Typography } from "@material-ui/core";
 import useHttpGet from "../../../../hooks/useHttpGet";
 import {
   deleteLabelsDetailsBookmark,
-  initializedLabelsDetails,
-  initializeLabelsDetails,
   updateLabelsDetailsBookmark,
-} from "../../../../redux/slices/labels.slice";
+} from "../../../../redux/slices/labels/labels.slice";
 import BookmarksList from "../../../organisms/bookmarks-list/bookmarks-list/bookmarks-list";
 import useFavoriteBookmarkUpdate from "../../../../hooks/useFavoriteBookmarkUpdate";
 import useArchiveBookmarkUpdate from "../../../../hooks/useArchiveBookmarkUpdate";
 import useDeleteBookmark from "../../../../hooks/useDeleteBookmark";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
+import { fetchLabelDetails } from "../../../../redux/slices/labels/thunks/fetchLabelDetails.thunk";
 
 export default function SingleTagScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
-
-  const { fetch: fetchLabelDetails } = useHttpGet("labels", {}, true);
 
   const dispatch = useAppDispatch();
   const labelDetails = useAppSelector((state) => state.labels.details);
@@ -27,10 +24,7 @@ export default function SingleTagScreen(): JSX.Element {
   const deleteBookmark = useDeleteBookmark();
 
   useEffect(() => {
-    dispatch(initializeLabelsDetails());
-    fetchLabelDetails(`labels/${id}`).then((data) => {
-      dispatch(initializedLabelsDetails(data));
-    });
+    dispatch(fetchLabelDetails(id));
   }, []);
 
   return (

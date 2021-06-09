@@ -14,9 +14,9 @@ import { Add as AddIcon, Clear as ClearIcon } from "@material-ui/icons";
 import useStyles from "./styles";
 import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router";
-import { fetchDetails } from "../../../redux/slices/users.slice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
 import { createBookmark } from "../../../redux/slices/bookmarks/thunks";
+import { fetchUserDetails } from "../../../redux/slices/users/thunks/fetchUserDetails.thunk";
 
 export default function Header(): JSX.Element {
   const classes = useStyles();
@@ -47,7 +47,7 @@ export default function Header(): JSX.Element {
 
   useEffect(() => {
     if (!currentUser.initialized) {
-      dispatch(fetchDetails());
+      dispatch(fetchUserDetails());
     }
   }, []);
 

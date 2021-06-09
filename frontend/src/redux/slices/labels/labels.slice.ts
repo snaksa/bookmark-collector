@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Bookmark } from "../../models/bookmark.model";
-import { Label } from "../../models/label.model";
+import { Bookmark } from "../../../models/bookmark.model";
+import { Label } from "../../../models/label.model";
+import { fetchLabelsReducers, fetchLabelDetailsReducers } from "./thunks";
 
-interface LabelsState {
+export interface LabelsState {
   list: {
     isLoading: boolean;
     initialized: boolean;
@@ -38,21 +39,6 @@ export const labelsSlice = createSlice({
   name: "labels",
   initialState,
   reducers: {
-    initializeLabels: (state) => {
-      state.list.isLoading = true;
-    },
-    initializedLabels: (state, action: PayloadAction<Label[]>) => {
-      state.list.isLoading = false;
-      state.list.initialized = true;
-      state.list.data = action.payload;
-    },
-    initializeLabelsDetails: (state) => {
-      state.details.isLoading = true;
-    },
-    initializedLabelsDetails: (state, action: PayloadAction<Label>) => {
-      state.details.isLoading = false;
-      state.details.data = action.payload;
-    },
     updateLabelsDetailsBookmark: (
       state,
       action: PayloadAction<{ bookmarkId: string; data: Partial<Bookmark> }>
@@ -70,13 +56,13 @@ export const labelsSlice = createSlice({
       );
     },
   },
+  extraReducers: (builder) => {
+    fetchLabelsReducers(builder);
+    fetchLabelDetailsReducers(builder);
+  },
 });
 
 export const {
-  initializeLabels,
-  initializedLabels,
-  initializeLabelsDetails,
-  initializedLabelsDetails,
   deleteLabelsDetailsBookmark,
   updateLabelsDetailsBookmark,
 } = labelsSlice.actions;

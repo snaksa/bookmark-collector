@@ -25,7 +25,7 @@ export const removeBookmarkFromFavorites = createAsyncThunk<
 
 export const removeBookmarkFromFavoritesReducer = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     removeBookmarkFromFavorites.fulfilled,
     (state, action: PayloadAction<Bookmark>) => {

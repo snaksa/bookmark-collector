@@ -23,7 +23,7 @@ export const fetchMyList = createAsyncThunk<
 
 export const fetchMyListReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(fetchMyList.pending, (state) => {
     state.myList.isLoading = true;
   });

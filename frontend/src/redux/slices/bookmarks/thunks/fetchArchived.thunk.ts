@@ -23,7 +23,7 @@ export const fetchArchived = createAsyncThunk<
 
 export const fetchArchivedReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(fetchArchived.pending, (state) => {
     state.archived.isLoading = true;
   });

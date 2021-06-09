@@ -1,7 +1,5 @@
 import { Bookmark } from "../../../models/bookmark.model";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ErrorType } from "../../../services/http.service";
-import BookmarkService from "../../../services/bookmark.service";
+import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchMyListReducers,
   fetchFavoritesReducers,

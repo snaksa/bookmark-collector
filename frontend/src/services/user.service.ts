@@ -54,4 +54,12 @@ export default class UserService {
   public static async getCurrentUserDetails(): Promise<DetailsResponseType> {
     return await new HttpService<DetailsResponseType>().get("auth/me");
   }
+
+  public static async updateUserDetails(data: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<DetailsResponseType> {
+    return await new HttpService<DetailsResponseType>().put("auth/me", data);
+  }
 }

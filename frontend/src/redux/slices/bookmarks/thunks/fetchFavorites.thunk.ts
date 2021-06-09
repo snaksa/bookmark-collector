@@ -23,7 +23,7 @@ export const fetchFavorites = createAsyncThunk<
 
 export const fetchFavoritesReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(fetchFavorites.pending, (state) => {
     state.favorites.isLoading = true;
   });

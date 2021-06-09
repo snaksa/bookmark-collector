@@ -23,7 +23,7 @@ export const createBookmark = createAsyncThunk<
 
 export const createBookmarkReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     createBookmark.fulfilled,
     (state, action: PayloadAction<Bookmark>) => {

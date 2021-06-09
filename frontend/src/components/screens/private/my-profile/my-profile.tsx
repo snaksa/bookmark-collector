@@ -9,15 +9,12 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
-import {
-  fetchDetails,
-  updateUserDetails,
-} from "../../../../redux/slices/users.slice";
-import useHttpGet from "../../../../hooks/useHttpGet";
-import useHttpPut from "../../../../hooks/useHttpPut";
 import useStyle from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
-import { User } from "../../../../models/user.model";
+import {
+  fetchUserDetails,
+  updateUserDetails,
+} from "../../../../redux/slices/users/thunks";
 
 interface FormFields {
   firstName: string;
@@ -31,12 +28,9 @@ export default function MyProfileScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector((state) => state.user.details);
 
-  const { fetch: fetchUserDetails } = useHttpGet(`auth/me`, {}, true);
-  const { execute: updateUser } = useHttpPut();
-
   useEffect(() => {
     if (!currentUser.initialized) {
-      dispatch(fetchDetails());
+      dispatch(fetchUserDetails());
     }
   }, []);
 
@@ -51,13 +45,13 @@ export default function MyProfileScreen(): JSX.Element {
   };
 
   const submit = (values: FormFields) => {
-    updateUser("auth/me", {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-    }).then((data: User) => {
-      dispatch(updateUserDetails(data));
-    });
+    dispatch(
+      updateUserDetails({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+      })
+    );
   };
 
   return (

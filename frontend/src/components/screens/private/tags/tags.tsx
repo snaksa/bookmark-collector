@@ -7,31 +7,21 @@ import {
   Chip,
   Box,
 } from "@material-ui/core";
-import useHttpGet from "../../../../hooks/useHttpGet";
-import {
-  initializedLabels,
-  initializeLabels,
-} from "../../../../redux/slices/labels.slice";
 import { useHistory } from "react-router";
 import useStyle from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
 import { Label } from "../../../../models/label.model";
+import { fetchLabels } from "../../../../redux/slices/labels/thunks/fetchLabels.thunk";
 
 export default function TagsScreen(): JSX.Element {
   const classes = useStyle();
-
-  const { fetch: fetchLabels } = useHttpGet("labels", {}, true);
 
   const dispatch = useAppDispatch();
   const labels = useAppSelector((state) => state.labels.list);
 
   useEffect(() => {
     if (!labels || !labels.initialized) {
-      dispatch(initializeLabels());
-      fetchLabels().then((data) => {
-        setSearchedLabels(data.slice(0, 5));
-        dispatch(initializedLabels(data));
-      });
+      dispatch(fetchLabels());
     }
   }, []);
 

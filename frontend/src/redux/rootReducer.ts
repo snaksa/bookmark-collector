@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import bookmarksReducer from "./slices/bookmarks/bookmarks.slice";
-import labelsReducer from "./slices/labels.slice";
-import userReducer from "./slices/users.slice";
+import labelsReducer from "./slices/labels/labels.slice";
+import userReducer from "./slices/users/users.slice";
 import { AnyAction } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({

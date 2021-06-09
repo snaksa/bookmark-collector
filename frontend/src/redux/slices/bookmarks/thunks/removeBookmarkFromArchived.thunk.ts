@@ -25,7 +25,7 @@ export const removeBookmarkFromArchived = createAsyncThunk<
 
 export const removeBookmarkFromArchivedReducer = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     removeBookmarkFromArchived.fulfilled,
     (state, action: PayloadAction<Bookmark>) => {

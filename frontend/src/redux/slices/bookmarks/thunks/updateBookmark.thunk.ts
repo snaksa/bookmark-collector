@@ -26,7 +26,7 @@ export const updateBookmark = createAsyncThunk<
 });
 export const updateBookmarkReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     updateBookmark.fulfilled,
     (state, action: PayloadAction<Bookmark>) => {

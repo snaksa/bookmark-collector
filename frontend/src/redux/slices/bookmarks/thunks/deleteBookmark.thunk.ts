@@ -22,7 +22,7 @@ export const deleteBookmark = createAsyncThunk<
 
 export const deleteBookmarkReducers = (
   builder: ActionReducerMapBuilder<BookmarksState>
-) => {
+): void => {
   builder.addCase(
     deleteBookmark.fulfilled,
     (state, action: PayloadAction<string>) => {
