@@ -7,14 +7,17 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const fetchFavorites = createAsyncThunk<
   Bookmark[],
   void,
-  { rejectValue: ErrorType }
->("bookmarks/fetchFavorites", async (_, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/fetchFavorites", async (_, { rejectWithValue, dispatch }) => {
   const response = await BookmarkService.getCurrentUserList(false, true);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -38,10 +41,4 @@ export const fetchFavoritesReducers = (
       };
     }
   );
-  builder.addCase(fetchFavorites.rejected, (state, action) => {
-    state.favorites = {
-      ...state.favorites,
-      error: action.payload ? action.payload.message : "Something went wrong",
-    };
-  });
 };

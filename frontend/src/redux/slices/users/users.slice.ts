@@ -5,7 +5,6 @@ export interface UsersState {
   details: {
     isLoading: boolean;
     initialized: boolean;
-    error: string;
     data: {
       id: string;
       email: string;
@@ -19,7 +18,6 @@ const initialState: UsersState = {
   details: {
     isLoading: false,
     initialized: false,
-    error: "",
     data: {
       id: "",
       email: "",

@@ -7,14 +7,17 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const fetchMyList = createAsyncThunk<
   Bookmark[],
   void,
-  { rejectValue: ErrorType }
->("bookmarks/fetchMyList", async (_, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/fetchMyList", async (_, { rejectWithValue, dispatch }) => {
   const response = await BookmarkService.getCurrentUserList(true);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -39,11 +42,4 @@ export const fetchMyListReducers = (
       };
     }
   );
-
-  builder.addCase(fetchMyList.rejected, (state, action) => {
-    state.myList = {
-      ...state.myList,
-      error: action.payload ? action.payload.message : "Something went wrong",
-    };
-  });
 };

@@ -7,21 +7,27 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const addBookmarkToFavorites = createAsyncThunk<
   Bookmark,
   string,
-  { rejectValue: ErrorType }
->("bookmarks/addBookmarkToFavorites", async (id, { rejectWithValue }) => {
-  const response = await BookmarkService.updateBookmark(id, {
-    isFavorite: true,
-  });
-  if (response.error) {
-    return rejectWithValue(response.error as ErrorType);
-  }
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>(
+  "bookmarks/addBookmarkToFavorites",
+  async (id, { rejectWithValue, dispatch }) => {
+    const response = await BookmarkService.updateBookmark(id, {
+      isFavorite: true,
+    });
+    if (response.error) {
+      dispatch(notificationError(response.error.message));
+      return rejectWithValue(response.error as ErrorType);
+    }
 
-  return response.data as Bookmark;
-});
+    return response.data as Bookmark;
+  }
+);
 
 export const addBookmarkToFavoritesReducer = (
   builder: ActionReducerMapBuilder<BookmarksState>
@@ -42,7 +48,4 @@ export const addBookmarkToFavoritesReducer = (
       );
     }
   );
-  builder.addCase(addBookmarkToFavorites.rejected, (state, action) => {
-    console.log("error");
-  });
 };

@@ -7,14 +7,17 @@ import { ErrorType } from "../../../../services/http.service";
 import { LabelsState } from "../labels.slice";
 import { Label } from "../../../../models/label.model";
 import LabelService from "../../../../services/label.service";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const fetchLabels = createAsyncThunk<
   Label[],
   void,
-  { rejectValue: ErrorType }
->("bookmarks/fetchLabels", async (_, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/fetchLabels", async (_, { rejectWithValue, dispatch }) => {
   const response = await LabelService.getLabels();
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -39,8 +42,4 @@ export const fetchLabelsReducers = (
       };
     }
   );
-
-  builder.addCase(fetchLabels.rejected, (state, action) => {
-    console.log("error");
-  });
 };

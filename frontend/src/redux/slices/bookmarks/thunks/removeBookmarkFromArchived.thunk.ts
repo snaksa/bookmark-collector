@@ -7,21 +7,27 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const removeBookmarkFromArchived = createAsyncThunk<
   Bookmark,
   string,
-  { rejectValue: ErrorType }
->("bookmarks/removeBookmarkFromArchived", async (id, { rejectWithValue }) => {
-  const response = await BookmarkService.updateBookmark(id, {
-    isArchived: false,
-  });
-  if (response.error) {
-    return rejectWithValue(response.error as ErrorType);
-  }
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>(
+  "bookmarks/removeBookmarkFromArchived",
+  async (id, { rejectWithValue, dispatch }) => {
+    const response = await BookmarkService.updateBookmark(id, {
+      isArchived: false,
+    });
+    if (response.error) {
+      dispatch(notificationError(response.error.message));
+      return rejectWithValue(response.error as ErrorType);
+    }
 
-  return response.data as Bookmark;
-});
+    return response.data as Bookmark;
+  }
+);
 
 export const removeBookmarkFromArchivedReducer = (
   builder: ActionReducerMapBuilder<BookmarksState>
@@ -40,7 +46,4 @@ export const removeBookmarkFromArchivedReducer = (
       );
     }
   );
-  builder.addCase(removeBookmarkFromArchived.rejected, (state, action) => {
-    console.log("error");
-  });
 };

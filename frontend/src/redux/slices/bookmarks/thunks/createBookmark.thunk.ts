@@ -7,14 +7,17 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const createBookmark = createAsyncThunk<
   Bookmark,
   string,
-  { rejectValue: ErrorType }
->("bookmarks/createBookmark", async (url, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/createBookmark", async (url, { rejectWithValue, dispatch }) => {
   const response = await BookmarkService.createBookmark(url);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -30,7 +33,4 @@ export const createBookmarkReducers = (
       state.myList.data = [...state.myList.data, action.payload];
     }
   );
-  builder.addCase(createBookmark.rejected, (state, action) => {
-    console.log("error");
-  });
 };

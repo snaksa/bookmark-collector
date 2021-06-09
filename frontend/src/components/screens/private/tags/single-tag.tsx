@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@material-ui/core";
-import useHttpGet from "../../../../hooks/useHttpGet";
 import {
   deleteLabelsDetailsBookmark,
   updateLabelsDetailsBookmark,

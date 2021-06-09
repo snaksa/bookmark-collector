@@ -6,14 +6,17 @@ import {
 import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const deleteBookmark = createAsyncThunk<
   string,
   string,
-  { rejectValue: ErrorType }
->("bookmarks/deleteBookmark", async (id, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/deleteBookmark", async (id, { rejectWithValue, dispatch }) => {
   const response = await BookmarkService.deleteBookmark(id);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -39,7 +42,4 @@ export const deleteBookmarkReducers = (
       );
     }
   );
-  builder.addCase(deleteBookmark.rejected, (state, action) => {
-    console.log("error");
-  });
 };

@@ -16,6 +16,7 @@ import store from "./redux/store";
 import SingleTagScreen from "./components/screens/private/tags/single-tag";
 import MyProfileScreen from "./components/screens/private/my-profile/my-profile";
 import ChangePasswordScreen from "./components/screens/private/change-password/change-password";
+import NotificationProvider from "./hooks/useNotifications";
 
 axios.interceptors.request.use(function (config) {
   // add Authorization header if token is available
@@ -47,40 +48,42 @@ function App(): JSX.Element {
     <AuthProvider>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Router>
-            <Switch>
-              <Route path="/login">
-                <LoginScreen />
-              </Route>
-              <Route path="/signup">
-                <SignUpScreen />
-              </Route>
-              <Route path="/my-list/favorites">
-                <PrivateRoute screen={<FavoritesScreen />} />
-              </Route>
-              <Route path="/my-list/archived">
-                <PrivateRoute screen={<ArchivedScreen />} />
-              </Route>
-              <Route path="/my-list/tags/:id">
-                <PrivateRoute screen={<SingleTagScreen />} />
-              </Route>
-              <Route path="/my-list/tags">
-                <PrivateRoute screen={<TagsScreen />} />
-              </Route>
-              <Route path="/my-list">
-                <PrivateRoute screen={<MyListScreen />} />
-              </Route>
-              <Route path="/my-profile">
-                <PrivateRoute screen={<MyProfileScreen />} />
-              </Route>
-              <Route path="/change-password">
-                <PrivateRoute screen={<ChangePasswordScreen />} />
-              </Route>
-              <Route path="/">
-                <HomeScreen />
-              </Route>
-            </Switch>
-          </Router>
+          <NotificationProvider>
+            <Router>
+              <Switch>
+                <Route path="/login">
+                  <LoginScreen />
+                </Route>
+                <Route path="/signup">
+                  <SignUpScreen />
+                </Route>
+                <Route path="/my-list/favorites">
+                  <PrivateRoute screen={<FavoritesScreen />} />
+                </Route>
+                <Route path="/my-list/archived">
+                  <PrivateRoute screen={<ArchivedScreen />} />
+                </Route>
+                <Route path="/my-list/tags/:id">
+                  <PrivateRoute screen={<SingleTagScreen />} />
+                </Route>
+                <Route path="/my-list/tags">
+                  <PrivateRoute screen={<TagsScreen />} />
+                </Route>
+                <Route path="/my-list">
+                  <PrivateRoute screen={<MyListScreen />} />
+                </Route>
+                <Route path="/my-profile">
+                  <PrivateRoute screen={<MyProfileScreen />} />
+                </Route>
+                <Route path="/change-password">
+                  <PrivateRoute screen={<ChangePasswordScreen />} />
+                </Route>
+                <Route path="/">
+                  <HomeScreen />
+                </Route>
+              </Switch>
+            </Router>
+          </NotificationProvider>
         </ThemeProvider>
       </Provider>
     </AuthProvider>

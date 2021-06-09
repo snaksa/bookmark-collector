@@ -7,6 +7,8 @@ import { ErrorType } from "../../../../services/http.service";
 import { UsersState } from "../users.slice";
 import { User } from "../../../../models/user.model";
 import UserService from "../../../../services/user.service";
+import { notificationError } from "../../notifications/notifications.slice";
+import { AppDispatch } from "../../../store";
 
 type UpdateUserDetailsType = {
   email: string;
@@ -17,10 +19,11 @@ type UpdateUserDetailsType = {
 export const updateUserDetails = createAsyncThunk<
   User,
   UpdateUserDetailsType,
-  { rejectValue: ErrorType }
->("users/updateUserDetails", async (data, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("users/updateUserDetails", async (data, { rejectWithValue, dispatch }) => {
   const response = await UserService.updateUserDetails(data);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -39,8 +42,4 @@ export const updateUserDetailsReducers = (
       };
     }
   );
-
-  builder.addCase(updateUserDetails.rejected, (state, action) => {
-    console.log("error");
-  });
 };

@@ -7,14 +7,17 @@ import { ErrorType } from "../../../../services/http.service";
 import { LabelsState } from "../labels.slice";
 import { Label } from "../../../../models/label.model";
 import LabelService from "../../../../services/label.service";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const fetchLabelDetails = createAsyncThunk<
   Label,
   string,
-  { rejectValue: ErrorType }
->("bookmarks/fetchLabelDetails", async (id, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/fetchLabelDetails", async (id, { rejectWithValue, dispatch }) => {
   const response = await LabelService.getLabelDetails(id);
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 

@@ -7,18 +7,21 @@ import { ErrorType } from "../../../../services/http.service";
 import BookmarkService from "../../../../services/bookmark.service";
 import { BookmarksState } from "../bookmarks.slice";
 import { Bookmark } from "../../../../models/bookmark.model";
+import { AppDispatch } from "../../../store";
+import { notificationError } from "../../notifications/notifications.slice";
 
 export const updateBookmark = createAsyncThunk<
   Bookmark,
   { id: string; labelIds: string[]; newLabels: string[] },
-  { rejectValue: ErrorType }
->("bookmarks/updateBookmark", async (data, { rejectWithValue }) => {
+  { rejectValue: ErrorType; dispatch: AppDispatch }
+>("bookmarks/updateBookmark", async (data, { rejectWithValue, dispatch }) => {
   const response = await BookmarkService.updateLabels(
     data.id,
     data.labelIds,
     data.newLabels
   );
   if (response.error) {
+    dispatch(notificationError(response.error.message));
     return rejectWithValue(response.error as ErrorType);
   }
 
@@ -43,7 +46,4 @@ export const updateBookmarkReducers = (
       );
     }
   );
-  builder.addCase(updateBookmark.rejected, (state, action) => {
-    console.log("error");
-  });
 };
