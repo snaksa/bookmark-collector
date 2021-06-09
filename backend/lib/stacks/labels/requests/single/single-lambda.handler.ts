@@ -63,7 +63,9 @@ class SingleLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: label.toObject(true),
+      body: {
+        data: label.toObject(true),
+      },
     };
   }
 }

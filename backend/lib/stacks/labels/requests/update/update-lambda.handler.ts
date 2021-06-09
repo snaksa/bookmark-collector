@@ -65,7 +65,9 @@ class UpdateLambdaHandler extends BaseHandler {
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
-      body: label.toObject(),
+      body: {
+        data: label.toObject(),
+      },
     };
   }
 }

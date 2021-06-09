@@ -58,7 +58,9 @@ class LoginHandler extends BaseHandler {
     return {
       statusCode: ApiGatewayResponseCodes.OK,
       body: {
-        data: { tokens: authenticationDetails.AuthenticationResult },
+        data: {
+          tokens: authenticationDetails.AuthenticationResult,
+        },
       },
     };
   }
