@@ -1,3 +1,4 @@
+export * from "./fetchBookmarkDetails.thunk";
 export * from "./fetchMyList.thunk";
 export * from "./fetchFavorites.thunk";
 export * from "./fetchArchived.thunk";

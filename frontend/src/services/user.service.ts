@@ -62,4 +62,14 @@ export default class UserService {
   }): Promise<DetailsResponseType> {
     return await new HttpService<DetailsResponseType>().put("auth/me", data);
   }
+
+  public static async changePassword(
+    oldPassword: string,
+    newPassword: string
+  ): Promise<DetailsResponseType> {
+    return await new HttpService<DetailsResponseType>().put(
+      "auth/me/change-password",
+      { oldPassword, newPassword }
+    );
+  }
 }

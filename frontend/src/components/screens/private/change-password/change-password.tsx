@@ -9,8 +9,9 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
-import useHttpPut from "../../../../hooks/useHttpPut";
 import useStyle from "./styles";
+import { useAppDispatch } from "../../../../hooks/redux-hooks";
+import { changeUserPassword } from "../../../../redux/slices/users/thunks";
 
 interface FormFields {
   oldPassword: string;
@@ -19,8 +20,7 @@ interface FormFields {
 
 export default function ChangePasswordScreen(): JSX.Element {
   const classes = useStyle();
-
-  const { execute: changePassword } = useHttpPut();
+  const dispatch = useAppDispatch();
 
   const schema = () => {
     const shape = {
@@ -32,12 +32,12 @@ export default function ChangePasswordScreen(): JSX.Element {
   };
 
   const submit = (values: FormFields) => {
-    changePassword("auth/me/change-password", {
-      oldPassword: values.oldPassword,
-      newPassword: values.newPassword,
-    }).then((data: Record<string, string>) => {
-      console.log("success", data);
-    });
+    dispatch(
+      changeUserPassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      })
+    );
   };
 
   return (

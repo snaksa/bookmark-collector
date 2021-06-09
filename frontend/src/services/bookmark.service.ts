@@ -22,6 +22,12 @@ export default class BookmarkService {
     });
   }
 
+  public static async getBookmarkDetails(
+    id: string
+  ): Promise<BookmarkResponseType> {
+    return await new HttpService<BookmarkResponseType>().get(`bookmarks/${id}`);
+  }
+
   public static async createBookmark(
     url: string
   ): Promise<BookmarkResponseType> {

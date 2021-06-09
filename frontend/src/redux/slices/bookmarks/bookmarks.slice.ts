@@ -1,6 +1,7 @@
 import { Bookmark } from "../../../models/bookmark.model";
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  fetchBookmarkDetailsReducers,
   fetchMyListReducers,
   fetchFavoritesReducers,
   fetchArchivedReducers,
@@ -14,6 +15,10 @@ import {
 } from "./thunks";
 
 export interface BookmarksState {
+  details: {
+    isLoading: boolean;
+    data: Bookmark | null;
+  };
   myList: {
     isLoading: boolean;
     initialized: boolean;
@@ -32,6 +37,10 @@ export interface BookmarksState {
 }
 
 const initialState: BookmarksState = {
+  details: {
+    isLoading: false,
+    data: null,
+  },
   myList: {
     isLoading: false,
     initialized: false,
@@ -54,6 +63,7 @@ export const bookmarksSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    fetchBookmarkDetailsReducers(builder);
     fetchMyListReducers(builder);
     fetchFavoritesReducers(builder);
     fetchArchivedReducers(builder);

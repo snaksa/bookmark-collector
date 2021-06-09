@@ -3,15 +3,13 @@ import { Grid, TextField } from "@material-ui/core";
 import BookmarkView from "../bookmark-view/boomark-view";
 import useStyle from "./styles";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
-import useHttpGet from "../../../../hooks/useHttpGet";
-
 import Dialog from "../../dialog/dialog";
-import useHttpPut from "../../../../hooks/useHttpPut";
 import { updateBookmark } from "../../../../redux/slices/bookmarks/thunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
-import { Bookmark } from "../../../../models/bookmark.model";
 import { Label } from "../../../../models/label.model";
 import { fetchLabels } from "../../../../redux/slices/labels/thunks/fetchLabels.thunk";
+import { fetchBookmarkDetails } from "../../../../redux/slices/bookmarks/thunks/fetchBookmarkDetails.thunk";
+import { Bookmark } from "../../../../models/bookmark.model";
 
 interface BookmarkListProps {
   bookmarks: Bookmark[];
@@ -31,9 +29,6 @@ export default function BookmarksList({
   const dispatch = useAppDispatch();
   const labels = useAppSelector((state) => state.labels.list);
 
-  const { fetch: fetchBookmark } = useHttpGet("bookmarks", {}, true);
-  const { execute: updateBookmarkRequest } = useHttpPut();
-
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [bookmarkId, setBookmarkId] = React.useState("");
@@ -42,10 +37,12 @@ export default function BookmarksList({
 
   const handleClickOpen = (bookmarkId: string) => {
     setBookmarkId(bookmarkId);
-    fetchBookmark(`bookmarks/${bookmarkId}`).then((data: Bookmark) => {
-      setBookmarkLabels(data.labels);
-      setSelectedLabels(data.labels);
-      setOpen(true);
+    dispatch(fetchBookmarkDetails(bookmarkId)).then((data) => {
+      if (fetchBookmarkDetails.fulfilled.match(data)) {
+        setBookmarkLabels(data.payload.labels);
+        setSelectedLabels(data.payload.labels);
+        setOpen(true);
+      }
     });
   };
   const handleClose = () => {
@@ -70,12 +67,13 @@ export default function BookmarksList({
       .filter((label) => label.id.startsWith("new_"))
       .map((label) => label.title);
 
-    updateBookmarkRequest(`bookmarks/${bookmarkId}`, {
-      labelIds,
-      newLabels,
-    }).then((data) => {
-      dispatch(updateBookmark(data));
-    });
+    dispatch(
+      updateBookmark({
+        id: bookmarkId,
+        labelIds,
+        newLabels,
+      })
+    );
   };
 
   const deleteBookmark = () => {
