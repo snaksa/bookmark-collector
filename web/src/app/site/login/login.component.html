@@ -8,6 +8,6 @@
     <input id="password" type="password" formControlName="password">
   </div>
   <div>
-    <button type="submit">Login</button>
+    <button type="submit" [disabled]="!loginFormGroup.valid">Login</button>
   </div>
 </form>
