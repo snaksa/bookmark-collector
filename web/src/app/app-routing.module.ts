@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 const routes: Routes = [
   {
@@ -7,9 +8,15 @@ const routes: Routes = [
     loadChildren: () => import('./site/site.module').then((m) => m.SiteModule),
   },
   {
-    path: '',
+    path: 'my-profile',
     loadChildren: () =>
       import('./users/users.module').then((m) => m.UsersModule),
+  },
+  {
+    path: 'bookmarks',
+    canActivate: [AuthenticatedGuard],
+    loadChildren: () =>
+      import('./bookmarks/bookmarks.module').then((m) => m.BookmarksModule),
   },
 ];
 
