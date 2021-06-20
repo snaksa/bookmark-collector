@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { LocalStorageKeys, LocalStorageService } from './local-storage.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 
 interface LoginResponse {

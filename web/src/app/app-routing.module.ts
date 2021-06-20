@@ -5,18 +5,21 @@ import { AuthenticatedGuard } from './guards/authenticated.guard';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./site/site.module').then((m) => m.SiteModule),
+    loadChildren: () =>
+      import('./modules/site/site.module').then((m) => m.SiteModule),
   },
   {
     path: 'my-profile',
     loadChildren: () =>
-      import('./users/users.module').then((m) => m.UsersModule),
+      import('./modules/users/users.module').then((m) => m.UsersModule),
   },
   {
     path: 'bookmarks',
     canActivate: [AuthenticatedGuard],
     loadChildren: () =>
-      import('./bookmarks/bookmarks.module').then((m) => m.BookmarksModule),
+      import('./modules/bookmarks/bookmarks.module').then(
+        (m) => m.BookmarksModule
+      ),
   },
 ];
 
