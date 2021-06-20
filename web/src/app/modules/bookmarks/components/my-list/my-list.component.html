@@ -1,0 +1,8 @@
+<div *ngFor="let bookmark of bookmarks">
+  <app-bookmark-view
+    [bookmark]="bookmark"
+    (onDelete)="deleteBookmark($event)"
+    (onFavorite)="favoriteBookmark($event)"
+    (onArchive)="archiveBookmark($event)">
+  </app-bookmark-view>
+</div>
