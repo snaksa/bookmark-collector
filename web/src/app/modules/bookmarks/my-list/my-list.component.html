@@ -1,1 +1,6 @@
-<p>my-list works!</p>
+<div *ngFor="let bookmark of bookmarks">
+  <h3> #{{ bookmark.id }} {{ bookmark.title }}</h3>
+  <a href="{{bookmark.url}}">{{bookmark.url}}</a>
+  <br>
+  <img src="{{bookmark.image}}" alt="bookmarkImage" width="100">
+</div>
