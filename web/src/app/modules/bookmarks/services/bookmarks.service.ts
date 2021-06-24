@@ -20,6 +20,16 @@ export class BookmarksService {
       );
   }
 
+  public createBookmark(url: string) {
+    return this.http
+      .post<{data: Bookmark}>(`${environment.apiBaseUrl}/bookmarks`, {url})
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
+
   public updateBookmark(id: string, data: Partial<Bookmark>) {
     return this.http
       .put<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks/${id}`, data)

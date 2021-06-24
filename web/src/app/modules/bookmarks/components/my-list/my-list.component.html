@@ -1,1 +1,6 @@
+<form [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()">
+  <input id="bookmark" type="text" formControlName="bookmark">
+  <button type="submit" [disabled]="!newBookmarkFormGroup.valid">ADD</button>
+</form>
+
 <app-bookmarks-list [bookmarks]="bookmarks"></app-bookmarks-list>
