@@ -10,9 +10,13 @@ import { Bookmark } from '../../shared/models/bookmark.model';
 export class BookmarksService {
   constructor(private http: HttpClient) {}
 
-  public getBookmarks() {
+  public getBookmarks(onlyFavorites = false) {
     return this.http
-      .get<{ data: Bookmark[] }>(`${environment.apiBaseUrl}/bookmarks`)
+      .get<{ data: Bookmark[] }>(`${environment.apiBaseUrl}/bookmarks`, {
+        params: {
+          favorites: onlyFavorites ? 1 : 0,
+        },
+      })
       .pipe(
         map((response) => {
           return response.data;
