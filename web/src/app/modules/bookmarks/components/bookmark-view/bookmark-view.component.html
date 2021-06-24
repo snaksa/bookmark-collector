@@ -3,7 +3,7 @@
   <a href="{{bookmark.url}}">{{bookmark.url}}</a>
   <br>
   <img src="{{bookmark.image}}" alt="bookmarkImage" width="100">
-  <button (click)="favoriteBookmark()">Favorite</button>
-  <button (click)="archiveBookmark()">Archive</button>
+  <button (click)="favoriteBookmark()">Favorite {{ bookmark.isFavorite }}</button>
+  <button (click)="archiveBookmark()">Archive {{ bookmark.isArchived }}</button>
   <button (click)="deleteBookmark()">Delete</button>
 </div>

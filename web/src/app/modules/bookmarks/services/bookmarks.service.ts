@@ -19,4 +19,24 @@ export class BookmarksService {
         })
       );
   }
+
+  public updateBookmark(id: string, data: Partial<Bookmark>) {
+    return this.http
+      .put<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks/${id}`, data)
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
+
+  public deleteBookmark(id: string) {
+    return this.http
+      .delete(`${environment.apiBaseUrl}/bookmarks/${id}`)
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
 }

@@ -17,16 +17,4 @@ export class MyListComponent implements OnInit {
       this.bookmarks = data;
     });
   }
-
-  favoriteBookmark(id: string) {
-    console.log('Favorite bookmark', id);
-  }
-
-  archiveBookmark(id: string) {
-    console.log('Archive bookmark', id);
-  }
-
-  deleteBookmark(id: string) {
-    console.log('Delete bookmark', id);
-  }
 }

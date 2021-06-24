@@ -22,14 +22,9 @@ export class LoginComponent {
         this.loginFormGroup.value.email,
         this.loginFormGroup.value.password
       )
-      .subscribe(
-        (res) => {
-          console.log('Login result: ', res);
-        },
-        (error) => {
-          // TODO: show error
-          console.log('Error', error);
-        }
-      );
+      .subscribe({error: (error) => {
+        // TODO: show error
+        console.log('Error', error);
+      }});
   }
 }

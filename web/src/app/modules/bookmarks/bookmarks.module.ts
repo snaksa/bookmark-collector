@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MyListComponent } from './components/my-list/my-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
+import { BookmarksListComponent } from './components/bookmarks-list/bookmarks-list.component';
 
 const routes = [
   {
@@ -18,7 +19,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [MyListComponent, BookmarkViewComponent],
+  declarations: [MyListComponent, BookmarksListComponent, BookmarkViewComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
 export class BookmarksModule {}

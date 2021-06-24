@@ -17,23 +17,23 @@ export class BookmarkViewComponent implements OnInit {
     labels: [],
   };
 
-  @Output() onDelete = new EventEmitter<string>();
-  @Output() onFavorite = new EventEmitter<string>();
-  @Output() onArchive = new EventEmitter<string>();
+  @Output() onDelete = new EventEmitter<Bookmark>();
+  @Output() toggleFavorite = new EventEmitter<Bookmark>();
+  @Output() toggleArchive = new EventEmitter<Bookmark>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
   favoriteBookmark() {
-    this.onFavorite.emit(this.bookmark.id);
+    this.toggleFavorite.emit(this.bookmark);
   }
 
   archiveBookmark() {
-    this.onArchive.emit(this.bookmark.id);
+    this.toggleArchive.emit(this.bookmark);
   }
 
   deleteBookmark() {
-    this.onDelete.emit(this.bookmark.id);
+    this.onDelete.emit(this.bookmark);
   }
 }
