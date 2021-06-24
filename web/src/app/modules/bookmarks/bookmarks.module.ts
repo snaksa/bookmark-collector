@@ -7,6 +7,8 @@ import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.
 import { BookmarksListComponent } from './components/bookmarks-list/bookmarks-list.component';
 import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
 import { ArchivedListComponent } from './components/archived-list/archived-list.component';
+import { TagsComponent } from './components/tags/tags.component';
+import { TagBookmarksComponent } from './components/tag-bookmarks/tag-bookmarks.component';
 
 const routes = [
   {
@@ -26,10 +28,26 @@ const routes = [
     path: 'archived',
     component: ArchivedListComponent,
   },
+  {
+    path: 'tags',
+    component: TagsComponent,
+  },
+  {
+    path: 'tags/:id',
+    component: TagBookmarksComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [MyListComponent, FavoriteListComponent, ArchivedListComponent, BookmarksListComponent, BookmarkViewComponent],
+  declarations: [
+    MyListComponent,
+    FavoriteListComponent,
+    ArchivedListComponent,
+    TagsComponent,
+    BookmarksListComponent,
+    BookmarkViewComponent,
+    TagBookmarksComponent,
+  ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
 export class BookmarksModule {}
