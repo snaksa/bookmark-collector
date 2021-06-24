@@ -6,6 +6,7 @@ import { SharedModule } from '../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
 import { BookmarksListComponent } from './components/bookmarks-list/bookmarks-list.component';
 import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
+import { ArchivedListComponent } from './components/archived-list/archived-list.component';
 
 const routes = [
   {
@@ -21,10 +22,14 @@ const routes = [
     path: 'favorites',
     component: FavoriteListComponent,
   },
+  {
+    path: 'archived',
+    component: ArchivedListComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [MyListComponent, FavoriteListComponent, BookmarksListComponent, BookmarkViewComponent],
+  declarations: [MyListComponent, FavoriteListComponent, ArchivedListComponent, BookmarksListComponent, BookmarkViewComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
 export class BookmarksModule {}
