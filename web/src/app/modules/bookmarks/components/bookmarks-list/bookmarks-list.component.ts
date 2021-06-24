@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
 import { BookmarksService } from '../../services/bookmarks.service';
 
@@ -9,32 +9,27 @@ import { BookmarksService } from '../../services/bookmarks.service';
 })
 export class BookmarksListComponent {
   @Input() bookmarks: Bookmark[] = [];
+  @Output() onFavoriteToggle = new EventEmitter<Bookmark>();
+  @Output() onArchiveToggle = new EventEmitter<Bookmark>();
+  @Output() onDeleteToggle = new EventEmitter<Bookmark>();
 
   constructor(private bookmarksService: BookmarksService) {}
 
   toggleFavoriteBookmark(bookmark: Bookmark) {
     this.bookmarksService.updateBookmark(bookmark.id, {isFavorite: !bookmark.isFavorite}).subscribe((res) => {
-      this.bookmarks.forEach((item, index) => {
-        if(item.id === res.id) {
-          this.bookmarks[index].isFavorite = res.isFavorite;
-        }
-      });
+      this.onFavoriteToggle.emit(res);
     });
   }
 
   toggleArchiveBookmark(bookmark: Bookmark) {
     this.bookmarksService.updateBookmark(bookmark.id, {isArchived: !bookmark.isArchived}).subscribe((res) => {
-      this.bookmarks.forEach((item, index) => {
-        if(item.id === res.id) {
-          this.bookmarks[index].isArchived = res.isArchived;
-        }
-      });
+      this.onArchiveToggle.emit(res);
     });
   }
 
   deleteBookmark(bookmark: Bookmark) {
     this.bookmarksService.deleteBookmark(bookmark.id).subscribe((res) => {
-      this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
+      this.onDeleteToggle.emit(bookmark);
     });
   }
 

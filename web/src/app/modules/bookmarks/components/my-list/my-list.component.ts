@@ -29,4 +29,24 @@ export class MyListComponent implements OnInit {
       this.bookmarks.unshift(response);
     })
   }
+
+  toggleFavoriteBookmark(bookmark: Bookmark) {
+    this.bookmarks.forEach((item, index) => {
+      if(item.id === bookmark.id) {
+        this.bookmarks[index].isFavorite = bookmark.isFavorite;
+      }
+    });
+  }
+
+  toggleArchiveBookmark(bookmark: Bookmark) {
+    this.bookmarks.forEach((item, index) => {
+      if(item.id === bookmark.id) {
+        this.bookmarks[index].isArchived = bookmark.isArchived;
+      }
+    });
+  }
+
+  deleteBookmark(bookmark: Bookmark) {
+    this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
+  }
 }
