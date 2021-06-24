@@ -1,8 +1,8 @@
 <div>
   <h3>#{{ bookmark.id }} {{ bookmark.title }}</h3>
-  <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.url }}</a>
+  <a [href]="bookmark.url" target="_blank">{{ bookmark.url }}</a>
   <br />
-  <img src="{{ bookmark.image }}" alt="bookmarkImage" width="100" />
+  <img [src]="bookmark.image" alt="bookmarkImage" width="100" />
   <button (click)="favoriteBookmark()">
     Favorite {{ bookmark.isFavorite }}
   </button>
