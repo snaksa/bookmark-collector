@@ -1,0 +1,16 @@
+.sidenav-container {
+  flex: 1;
+  height: 100%;
+
+  .sidenav {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidenav-content {
+    padding: 0 50px;
+    display: flex;
+    flex-direction: column;
+  }
+}

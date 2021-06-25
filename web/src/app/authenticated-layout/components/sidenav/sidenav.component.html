@@ -1,0 +1,17 @@
+<a class="sidenav-item" routerLink="/bookmarks/my-list" [routerLinkActive]="['active']">
+  <span class="icon"><mat-icon matListIcon inline>wb_cloudy</mat-icon></span>
+  <span class="title">All bookmarks</span>
+</a>
+<a routerLink="/bookmarks/favorites" class="sidenav-item" [routerLinkActive]="['active']">
+  <span class="icon"><mat-icon matListIcon inline>star_rate</mat-icon></span>
+  <span class="title">Favorites</span>
+</a>
+<a routerLink="/bookmarks/archived" class="sidenav-item" [routerLinkActive]="['active']">
+  <span class="icon"><mat-icon matListIcon inline>save</mat-icon></span>
+  <span class="title">Archived</span>
+</a>
+<mat-divider></mat-divider>
+<a routerLink="/bookmarks/tags" class="sidenav-item" [routerLinkActive]="['active']">
+  <span class="icon"> <mat-icon matListIcon inline>tag</mat-icon></span>
+  <span class="title">Tags</span>
+</a>

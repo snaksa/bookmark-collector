@@ -5,10 +5,11 @@ import { BookmarksService } from '../../services/bookmarks.service';
 @Component({
   selector: 'app-bookmarks-list',
   templateUrl: './bookmarks-list.component.html',
-  styleUrls: ['./bookmarks-list.component.scss']
+  styleUrls: ['./bookmarks-list.component.scss'],
 })
 export class BookmarksListComponent {
   @Input() bookmarks: Bookmark[] = [];
+
   @Output() onFavoriteToggle = new EventEmitter<Bookmark>();
   @Output() onArchiveToggle = new EventEmitter<Bookmark>();
   @Output() onDeleteToggle = new EventEmitter<Bookmark>();
@@ -16,15 +17,19 @@ export class BookmarksListComponent {
   constructor(private bookmarksService: BookmarksService) {}
 
   toggleFavoriteBookmark(bookmark: Bookmark) {
-    this.bookmarksService.updateBookmark(bookmark.id, {isFavorite: !bookmark.isFavorite}).subscribe((res) => {
-      this.onFavoriteToggle.emit(res);
-    });
+    this.bookmarksService
+      .updateBookmark(bookmark.id, { isFavorite: !bookmark.isFavorite })
+      .subscribe((res) => {
+        this.onFavoriteToggle.emit(res);
+      });
   }
 
   toggleArchiveBookmark(bookmark: Bookmark) {
-    this.bookmarksService.updateBookmark(bookmark.id, {isArchived: !bookmark.isArchived}).subscribe((res) => {
-      this.onArchiveToggle.emit(res);
-    });
+    this.bookmarksService
+      .updateBookmark(bookmark.id, { isArchived: !bookmark.isArchived })
+      .subscribe((res) => {
+        this.onArchiveToggle.emit(res);
+      });
   }
 
   deleteBookmark(bookmark: Bookmark) {
@@ -32,5 +37,4 @@ export class BookmarksListComponent {
       this.onDeleteToggle.emit(bookmark);
     });
   }
-
 }

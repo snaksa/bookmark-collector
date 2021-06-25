@@ -1,5 +1,11 @@
-<div><a routerLink="/bookmarks/my-list">My List</a></div>
-<div><a routerLink="/bookmarks/favorites">Favorites</a></div>
-<div><a routerLink="/bookmarks/archived">Archived</a></div>
-<div><a routerLink="/bookmarks/tags">Tags</a></div>
-<router-outlet></router-outlet>
+<mat-sidenav-container class="sidenav-container">
+
+  <mat-sidenav mode="side" class="sidenav" opened>
+    <app-sidenav></app-sidenav>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -17,8 +17,4 @@ export class TagsComponent implements OnInit {
       this.labels = data;
     });
   }
-
-  getUrl(label: Label) {
-    return `bookmarks/tags/${label.id}`;
-  }
 }
