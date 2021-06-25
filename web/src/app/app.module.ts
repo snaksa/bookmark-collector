@@ -6,9 +6,11 @@ import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthenticatedLayoutComponent } from './authenticated-layout/authenticated-layout.component';
+import { AnonymousLayoutComponent } from './anonymous-layout/anonymous-layout.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AuthenticatedLayoutComponent, AnonymousLayoutComponent],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule],
   providers: [
     {
