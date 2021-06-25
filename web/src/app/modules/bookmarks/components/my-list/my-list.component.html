@@ -1,7 +1,24 @@
 <form [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()">
-  <input id="bookmark" type="text" formControlName="bookmark">
-  <button type="submit" [disabled]="!newBookmarkFormGroup.valid">ADD</button>
+  <mat-form-field class="example-full-width" appearance="fill">
+    <input
+      matInput
+      placeholder="https://..."
+      type="text"
+      formControlName="bookmark"
+    />
+  </mat-form-field>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!newBookmarkFormGroup.valid"
+  >
+    ADD
+  </button>
 </form>
 
-<app-bookmarks-list [bookmarks]="bookmarks" (onFavoriteToggle)="toggleFavoriteBookmark($event)"
-  (onArchiveToggle)="toggleArchiveBookmark($event)" (onDeleteToggle)="deleteBookmark($event)"></app-bookmarks-list>
+<app-bookmarks-list
+  [bookmarks]="bookmarks"
+  (onFavoriteToggle)="toggleFavoriteBookmark($event)"
+  (onArchiveToggle)="toggleArchiveBookmark($event)"
+  (onDeleteToggle)="deleteBookmark($event)"
+></app-bookmarks-list>

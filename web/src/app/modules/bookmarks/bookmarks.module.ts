@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { MyListComponent } from './components/my-list/my-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
@@ -48,6 +50,12 @@ const routes = [
     BookmarkViewComponent,
     TagBookmarksComponent,
   ],
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MatInputModule,
+    MatButtonModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class BookmarksModule {}
