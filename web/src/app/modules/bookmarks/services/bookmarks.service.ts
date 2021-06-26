@@ -10,12 +10,17 @@ import { Bookmark } from '../../shared/models/bookmark.model';
 export class BookmarksService {
   constructor(private http: HttpClient) {}
 
-  public getBookmarks(onlyFavorites = false, onlyArchived = false) {
+  public getBookmarks(
+    onlyFavorites = false,
+    onlyArchived = false,
+    excludeArchived = true
+  ) {
     return this.http
       .get<{ data: Bookmark[] }>(`${environment.apiBaseUrl}/bookmarks`, {
         params: {
           favorites: onlyFavorites ? 1 : 0,
           archived: onlyArchived ? 1 : 0,
+          excludeArchived: excludeArchived ? 1 : 0,
         },
       })
       .pipe(
@@ -27,7 +32,7 @@ export class BookmarksService {
 
   public createBookmark(url: string) {
     return this.http
-      .post<{data: Bookmark}>(`${environment.apiBaseUrl}/bookmarks`, {url})
+      .post<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks`, { url })
       .pipe(
         map((response) => {
           return response.data;
@@ -37,7 +42,10 @@ export class BookmarksService {
 
   public updateBookmark(id: string, data: Partial<Bookmark>) {
     return this.http
-      .put<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks/${id}`, data)
+      .put<{ data: Bookmark }>(
+        `${environment.apiBaseUrl}/bookmarks/${id}`,
+        data
+      )
       .pipe(
         map((response) => {
           return response.data;
@@ -46,12 +54,10 @@ export class BookmarksService {
   }
 
   public deleteBookmark(id: string) {
-    return this.http
-      .delete(`${environment.apiBaseUrl}/bookmarks/${id}`)
-      .pipe(
-        map((response) => {
-          return response;
-        })
-      );
+    return this.http.delete(`${environment.apiBaseUrl}/bookmarks/${id}`).pipe(
+      map((response) => {
+        return response;
+      })
+    );
   }
 }

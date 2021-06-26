@@ -1,11 +1,30 @@
-<div>
-  <h3>#{{ bookmark.id }} {{ bookmark.title }}</h3>
-  <a [href]="bookmark.url" target="_blank">{{ bookmark.url }}</a>
-  <br />
-  <img [src]="bookmark.image" alt="bookmarkImage" width="100" />
-  <button (click)="favoriteBookmark()">
-    Favorite {{ bookmark.isFavorite }}
-  </button>
-  <button (click)="archiveBookmark()">Archive {{ bookmark.isArchived }}</button>
-  <button (click)="deleteBookmark()">Delete</button>
+<div class="wrapper">
+  <div class="image">
+    <img [src]="bookmark.image" alt="bookmarkImage" class="image"/>
+  </div>
+  <div class="content">
+    <div>
+      <div>{{ bookmark.title }}</div>
+      <span *ngFor="let label of bookmark.labels" class="tag">
+        <a [routerLink]="generateTagUrl(label)">#{{label.title}}</a>
+      </span>
+      <div class="meta">
+        <span class="item">
+          <mat-icon class="icon" inline>laptop</mat-icon>
+          <span class="text">{{baseUrl}}</span>
+        </span>
+      </div>
+    </div>
+    <div class="actions">
+      <span (click)="favoriteBookmark()">
+        <mat-icon color="primary">{{bookmark.isFavorite ? 'favorite' : 'favorite_border'}}</mat-icon>
+      </span>
+      <span (click)="archiveBookmark()">
+        <mat-icon>{{bookmark.isArchived ? 'add' : 'save'}}</mat-icon>
+      </span>
+      <span (click)="deleteBookmark()">
+        <mat-icon>delete</mat-icon>
+      </span>
+    </div>
+  </div>
 </div>

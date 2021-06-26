@@ -2,12 +2,12 @@
   display: flex;
   justify-content: flex-start;
   align-content: center;
-  padding: 4px 8px;
+  padding: 8px 8px;
   color: #000;
   text-decoration: none;
 
   &:hover {
-    background-color: #eaeaea;
+    background-color: #e6e6e6;
     cursor: pointer;
   }
 
@@ -26,5 +26,5 @@
 }
 
 .active {
-  background-color: #eaeaea;
+  background-color: #e6e6e6;
 }

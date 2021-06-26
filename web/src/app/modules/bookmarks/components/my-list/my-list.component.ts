@@ -14,7 +14,7 @@ export class MyListComponent implements OnInit {
   constructor(private bookmarkService: BookmarksService) {}
 
   ngOnInit(): void {
-    this.bookmarkService.getBookmarks().subscribe((data) => {
+    this.bookmarkService.getBookmarks(false, false, true).subscribe((data) => {
       this.bookmarks = data;
     });
   }

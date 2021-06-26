@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MyListComponent } from './components/my-list/my-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
@@ -63,6 +64,7 @@ const routes = [
     SharedModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     RouterModule.forChild(routes),
   ],
 })

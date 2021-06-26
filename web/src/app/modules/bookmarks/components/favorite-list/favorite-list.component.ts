@@ -5,16 +5,15 @@ import { BookmarksService } from '../../services/bookmarks.service';
 @Component({
   selector: 'app-favorite-list',
   templateUrl: './favorite-list.component.html',
-  styleUrls: ['./favorite-list.component.scss']
+  styleUrls: ['./favorite-list.component.scss'],
 })
 export class FavoriteListComponent implements OnInit {
-
   bookmarks: Bookmark[] = [];
 
   constructor(private bookmarkService: BookmarksService) {}
 
   ngOnInit(): void {
-    this.bookmarkService.getBookmarks(true).subscribe((data) => {
+    this.bookmarkService.getBookmarks(true, false, false).subscribe((data) => {
       this.bookmarks = data;
     });
   }
@@ -25,7 +24,7 @@ export class FavoriteListComponent implements OnInit {
 
   toggleArchiveBookmark(bookmark: Bookmark) {
     this.bookmarks.forEach((item, index) => {
-      if(item.id === bookmark.id) {
+      if (item.id === bookmark.id) {
         this.bookmarks[index].isArchived = bookmark.isArchived;
       }
     });
@@ -34,5 +33,4 @@ export class FavoriteListComponent implements OnInit {
   deleteBookmark(bookmark: Bookmark) {
     this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
   }
-
 }

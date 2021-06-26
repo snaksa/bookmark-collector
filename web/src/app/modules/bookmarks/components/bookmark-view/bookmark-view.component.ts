@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Bookmark } from '../../../shared/models/bookmark.model';
+import { Label } from '../../../shared/models/label.model';
 
 @Component({
   selector: 'app-bookmark-view',
@@ -21,9 +22,14 @@ export class BookmarkViewComponent implements OnInit {
   @Output() toggleFavorite = new EventEmitter<Bookmark>();
   @Output() toggleArchive = new EventEmitter<Bookmark>();
 
+  baseUrl: string = '';
+
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const pathArray = this.bookmark.url.split('/');
+    this.baseUrl = pathArray[2];
+  }
 
   favoriteBookmark() {
     this.toggleFavorite.emit(this.bookmark);
@@ -35,5 +41,9 @@ export class BookmarkViewComponent implements OnInit {
 
   deleteBookmark() {
     this.onDelete.emit(this.bookmark);
+  }
+
+  generateTagUrl(label: Label) {
+    return `/bookmarks/tags/${label.id}`;
   }
 }
