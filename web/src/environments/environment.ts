@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://hm4clldns1.execute-api.us-east-1.amazonaws.com/prod',
+  apiBaseUrl: '',
 };
 
 /*
