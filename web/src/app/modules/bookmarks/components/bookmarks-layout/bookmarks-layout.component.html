@@ -1,2 +1,15 @@
-<p>bookmarks-layout works!</p>
+<form [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline" class="url-input-field">
+    <mat-label>https://...</mat-label>
+    <input matInput formControlName="bookmark">
+  </mat-form-field>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!newBookmarkFormGroup.valid"
+  >
+    ADD
+  </button>
+</form>
+
 <router-outlet></router-outlet>
