@@ -1,0 +1,50 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  .header {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .content {
+    padding: 16px 0;
+
+    .labels {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      height: 50px;
+      border: 1px solid #ccc;
+      padding: 0 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .label {
+        margin: 0 4px;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: line-through;
+          color: red;
+        }
+      }
+
+      ::ng-deep .mat-form-field-underline {
+        display: none;
+      }
+    }
+  }
+
+  .actions {
+    padding: 8px 0 0 0;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-left: 16px;
+    }
+  }
+}

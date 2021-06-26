@@ -30,6 +30,16 @@ export class BookmarksService {
       );
   }
 
+  public getBookmark(id: string) {
+    return this.http
+      .get<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks/${id}`)
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
+
   public createBookmark(url: string) {
     return this.http
       .post<{ data: Bookmark }>(`${environment.apiBaseUrl}/bookmarks`, { url })
@@ -40,7 +50,10 @@ export class BookmarksService {
       );
   }
 
-  public updateBookmark(id: string, data: Partial<Bookmark>) {
+  public updateBookmark(
+    id: string,
+    data: Partial<Bookmark & { labelIds: string[]; newLabels: string[] }>
+  ) {
     return this.http
       .put<{ data: Bookmark }>(
         `${environment.apiBaseUrl}/bookmarks/${id}`,

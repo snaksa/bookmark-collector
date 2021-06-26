@@ -22,6 +22,9 @@
       <span (click)="archiveBookmark()">
         <mat-icon>{{bookmark.isArchived ? 'add' : 'save'}}</mat-icon>
       </span>
+      <span (click)="openTagDialog()">
+        <mat-icon>tag</mat-icon>
+      </span>
       <span (click)="deleteBookmark()">
         <mat-icon>delete</mat-icon>
       </span>

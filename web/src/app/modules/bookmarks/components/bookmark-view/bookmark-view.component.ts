@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Bookmark } from '../../../shared/models/bookmark.model';
 import { Label } from '../../../shared/models/label.model';
+import { MatDialog } from '@angular/material/dialog';
+import { TagsDialogComponent } from '../tags-dialog/tags-dialog.component';
 
 @Component({
   selector: 'app-bookmark-view',
@@ -24,7 +26,7 @@ export class BookmarkViewComponent implements OnInit {
 
   baseUrl: string = '';
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     const pathArray = this.bookmark.url.split('/');
@@ -45,5 +47,14 @@ export class BookmarkViewComponent implements OnInit {
 
   generateTagUrl(label: Label) {
     return `/bookmarks/tags/${label.id}`;
+  }
+
+  openTagDialog() {
+    const dialogRef = this.dialog.open(TagsDialogComponent, {
+      width: '600px',
+      autoFocus: false,
+      position: { top: '200px' },
+      data: { id: this.bookmark.id },
+    });
   }
 }

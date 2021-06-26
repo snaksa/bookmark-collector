@@ -4,6 +4,9 @@ import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
 import { MyListComponent } from './components/my-list/my-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
@@ -13,6 +16,7 @@ import { ArchivedListComponent } from './components/archived-list/archived-list.
 import { TagsComponent } from './components/tags/tags.component';
 import { TagBookmarksComponent } from './components/tag-bookmarks/tag-bookmarks.component';
 import { BookmarksLayoutComponent } from './components/bookmarks-layout/bookmarks-layout.component';
+import { TagsDialogComponent } from './components/tags-dialog/tags-dialog.component';
 
 const routes = [
   {
@@ -58,6 +62,7 @@ const routes = [
     BookmarkViewComponent,
     TagBookmarksComponent,
     BookmarksLayoutComponent,
+    TagsDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -65,6 +70,9 @@ const routes = [
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    MatSelectModule,
     RouterModule.forChild(routes),
   ],
 })

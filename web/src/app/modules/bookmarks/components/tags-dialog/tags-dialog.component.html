@@ -1,0 +1,29 @@
+<div class="wrapper">
+  <div class="header">Add Tags</div>
+  <div class="content">
+    <div class="labels">
+      <span *ngIf="loading">Loading tags...</span>
+      <span *ngIf="!loading">
+        <span class="label" *ngFor="let label of selectedLabels" (click)="removeLabel(label.id)">#{{label.title}}</span>
+      </span>
+      <form *ngIf="!loading">
+        <mat-form-field appearance="standard">
+          <input type="text"
+                 placeholder="Add tags..."
+                 matInput
+                 [formControl]="inputControl"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event)">
+            <mat-option *ngFor="let option of filteredOptions | async" [id]="option.id" [value]="option.title">
+              {{option.title}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <div class="actions">
+    <button mat-raised-button (click)="onClose()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()">Save</button>
+  </div>
+</div>
