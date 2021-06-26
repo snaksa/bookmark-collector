@@ -11,32 +11,39 @@ import { FavoriteListComponent } from './components/favorite-list/favorite-list.
 import { ArchivedListComponent } from './components/archived-list/archived-list.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { TagBookmarksComponent } from './components/tag-bookmarks/tag-bookmarks.component';
+import { BookmarksLayoutComponent } from './components/bookmarks-layout/bookmarks-layout.component';
 
 const routes = [
   {
     path: '',
-    redirectTo: 'my-list',
-    pathMatch: 'full',
-  },
-  {
-    path: 'my-list',
-    component: MyListComponent,
-  },
-  {
-    path: 'favorites',
-    component: FavoriteListComponent,
-  },
-  {
-    path: 'archived',
-    component: ArchivedListComponent,
-  },
-  {
-    path: 'tags',
-    component: TagsComponent,
-  },
-  {
-    path: 'tags/:id',
-    component: TagBookmarksComponent,
+    component: BookmarksLayoutComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'my-list',
+        pathMatch: 'full',
+      },
+      {
+        path: 'my-list',
+        component: MyListComponent,
+      },
+      {
+        path: 'favorites',
+        component: FavoriteListComponent,
+      },
+      {
+        path: 'archived',
+        component: ArchivedListComponent,
+      },
+      {
+        path: 'tags',
+        component: TagsComponent,
+      },
+      {
+        path: 'tags/:id',
+        component: TagBookmarksComponent,
+      },
+    ],
   },
 ];
 
@@ -49,6 +56,7 @@ const routes = [
     BookmarksListComponent,
     BookmarkViewComponent,
     TagBookmarksComponent,
+    BookmarksLayoutComponent,
   ],
   imports: [
     CommonModule,
