@@ -16,6 +16,10 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AnonymousLayoutComponent } from './anonymous-layout/anonymous-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticatedLayoutModule } from './authenticated-layout/authenticated-layout.module';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent, AnonymousLayoutComponent],
@@ -33,6 +37,13 @@ import { AuthenticatedLayoutModule } from './authenticated-layout/authenticated-
     MatDividerModule,
 
     AuthenticatedLayoutModule,
+
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {

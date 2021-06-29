@@ -17,6 +17,10 @@ import { TagsComponent } from './components/tags/tags.component';
 import { TagBookmarksComponent } from './components/tag-bookmarks/tag-bookmarks.component';
 import { BookmarksLayoutComponent } from './components/bookmarks-layout/bookmarks-layout.component';
 import { TagsDialogComponent } from './components/tags-dialog/tags-dialog.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { bookmarksReducer } from './state/bookmarks.reducer';
+import { BookmarksEffects } from './state/bookmarks.effects';
 
 const routes = [
   {
@@ -74,6 +78,9 @@ const routes = [
     MatAutocompleteModule,
     MatSelectModule,
     RouterModule.forChild(routes),
+
+    StoreModule.forFeature('bookmarks', bookmarksReducer),
+    EffectsModule.forFeature([BookmarksEffects]),
   ],
 })
 export class BookmarksModule {}
