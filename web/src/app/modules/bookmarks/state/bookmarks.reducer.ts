@@ -5,7 +5,7 @@ import {
   loadBookmarksSuccessAction,
   toggleArchiveBookmarkSuccessAction,
   deleteBookmarkSuccessAction,
-  toggleFavoriteBookmarkSuccessAction, updateBookmarkTagsSuccessAction,
+  toggleFavoriteBookmarkSuccessAction, updateBookmarkTagsSuccessAction, createBookmarkSuccessAction,
 } from './bookmarks.actions';
 import {BookmarksState} from './bookmarks.state';
 
@@ -117,6 +117,15 @@ export const bookmarksReducer = createReducer<BookmarksState>(
         ...state.archived,
         data: state.archived.data.filter(bookmark => bookmark.id !== action.bookmarkId),
       }
+    };
+  }),
+  on(createBookmarkSuccessAction, (state, action) => {
+    return {
+      ...state,
+      list: {
+        ...state.list,
+        data: [action.bookmark, ...state.list.data]
+      },
     };
   }),
   on(updateBookmarkTagsSuccessAction, (state, action) => {

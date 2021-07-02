@@ -19,7 +19,7 @@ import {
   toggleFavoriteBookmarkSuccessAction,
   updateBookmarkTagsAction,
   updateBookmarkTagsSuccessAction,
-  updateBookmarkTagsFailureAction,
+  updateBookmarkTagsFailureAction, createBookmarkAction, createBookmarkSuccessAction, createBookmarkFailureAction,
 } from './bookmarks.actions';
 
 @Injectable()
@@ -100,6 +100,22 @@ export class BookmarksEffects {
           ),
           catchError((error) =>
             of(deleteBookmarkFailureAction({error}))
+          )
+        );
+      })
+    );
+  });
+
+  createBookmark$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(createBookmarkAction),
+      mergeMap((action) => {
+        return this.bookmarksService.createBookmark(action.url).pipe(
+          map((bookmark) =>
+            createBookmarkSuccessAction({bookmark})
+          ),
+          catchError((error) =>
+            of(createBookmarkFailureAction({error}))
           )
         );
       })

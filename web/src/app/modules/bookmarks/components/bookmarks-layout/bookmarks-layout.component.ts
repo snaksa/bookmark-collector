@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { BookmarksService } from '../../services/bookmarks.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {State} from "../../state/bookmarks.state";
+import {Store} from "@ngrx/store";
+import {createBookmarkAction} from "../../state/bookmarks.actions";
 
 @Component({
   selector: 'app-bookmarks-layout',
@@ -12,12 +14,11 @@ export class BookmarksLayoutComponent {
     bookmark: new FormControl('', Validators.required),
   });
 
-  constructor(private bookmarksService: BookmarksService) {}
+  constructor(private store: Store<State>) {
+  }
 
   public onSubmit() {
     const url = this.newBookmarkFormGroup.controls['bookmark'].value;
-    this.bookmarksService.createBookmark(url).subscribe((response) => {
-      // this.bookmarks.unshift(response);
-    });
+    this.store.dispatch(createBookmarkAction({url}));
   }
 }

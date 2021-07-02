@@ -1,6 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import { Bookmark } from '../../shared/models/bookmark.model';
-import { BookmarkType } from './bookmark-type.enum';
+import {createAction, props} from '@ngrx/store';
+import {Bookmark} from '../../shared/models/bookmark.model';
+import {BookmarkType} from './bookmark-type.enum';
 
 export const loadBookmarksAction = createAction(
   '[Bookmarks API] Load List',
@@ -64,7 +64,7 @@ export const deleteBookmarkFailureAction = createAction(
 
 export const updateBookmarkTagsAction = createAction(
   '[Bookmarks API] Update Bookmark Tags',
-  props<{ bookmarkId: string; labelIds: string[]; newLabels: string[]}>()
+  props<{ bookmarkId: string; labelIds: string[]; newLabels: string[] }>()
 );
 
 export const updateBookmarkTagsSuccessAction = createAction(
@@ -74,5 +74,20 @@ export const updateBookmarkTagsSuccessAction = createAction(
 
 export const updateBookmarkTagsFailureAction = createAction(
   '[Bookmarks API] Update Bookmark Tags Failure',
+  props<{ error: string }>()
+);
+
+export const createBookmarkAction = createAction(
+  '[Bookmarks API] Create Bookmark',
+  props<{ url: string }>()
+);
+
+export const createBookmarkSuccessAction = createAction(
+  '[Bookmarks API] Create Bookmark Success',
+  props<{ bookmark: Bookmark }>()
+);
+
+export const createBookmarkFailureAction = createAction(
+  '[Bookmarks API] Create Bookmark Failure',
   props<{ error: string }>()
 );
