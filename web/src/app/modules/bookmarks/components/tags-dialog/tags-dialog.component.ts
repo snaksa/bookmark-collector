@@ -1,12 +1,15 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
-import { Label } from '../../../shared/models/label.model';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { BookmarksService } from '../../services/bookmarks.service';
-import { LabelsService } from '../../services/labels.service';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Observable} from 'rxjs';
+import {FormControl} from '@angular/forms';
+import {map, startWith} from 'rxjs/operators';
+import {Label} from '../../../shared/models/label.model';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {BookmarksService} from '../../services/bookmarks.service';
+import {LabelsService} from '../../services/labels.service';
+import {Store} from "@ngrx/store";
+import {State} from "../../state/bookmarks.state";
+import {updateBookmarkTagsAction} from "../../state/bookmarks.actions";
 
 @Component({
   selector: 'app-tags-dialog',
@@ -15,20 +18,18 @@ import { LabelsService } from '../../services/labels.service';
 })
 export class TagsDialogComponent {
   constructor(
+    private store: Store<State>,
     private bookmarkService: BookmarksService,
     private labelsService: LabelsService,
     public dialogRef: MatDialogRef<TagsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: string }
-  ) {}
+  ) {
+  }
 
   loadingBookmark = true;
   loadingLabels = true;
   inputControl = new FormControl();
-  options: Label[] = [
-    { id: '1', title: 'sport', color: 'red', bookmarks: [] },
-    { id: '2', title: 'reactjs', color: 'blue', bookmarks: [] },
-    { id: '3', title: 'angular', color: 'green', bookmarks: [] },
-  ];
+  options: Label[] = [];
   filteredOptions: Observable<Label[]> = new Observable<Label[]>();
 
   selectedLabels: Label[] = [];
@@ -107,14 +108,14 @@ export class TagsDialogComponent {
       }
     });
 
-    this.bookmarkService
-      .updateBookmark(this.data.id, {
+    this.store.dispatch(updateBookmarkTagsAction({
+        bookmarkId: this.data.id,
         newLabels: newLabels,
-        labelIds: existingLabels,
+        labelIds: existingLabels
       })
-      .subscribe((response) => {
-        this.dialogRef.close();
-      });
+    );
+
+    this.onClose();
   }
 
   onClose() {

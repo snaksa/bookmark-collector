@@ -1,4 +1,4 @@
-<div *ngFor="let bookmark of bookmarks">
+<div *ngFor="let bookmark of bookmarks; trackBy: trackBy">
   <app-bookmark-view
     [bookmark]="bookmark"
     (onDelete)="deleteBookmark($event)"
