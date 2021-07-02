@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Label } from 'src/app/modules/shared/models/label.model';
-import { LabelsService } from '../../services/labels.service';
+import { LabelsService } from '../../../labels/services/labels.service';
 
 @Component({
   selector: 'app-tags',

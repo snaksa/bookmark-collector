@@ -6,7 +6,7 @@ import {map, startWith} from 'rxjs/operators';
 import {Label} from '../../../shared/models/label.model';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {BookmarksService} from '../../services/bookmarks.service';
-import {LabelsService} from '../../services/labels.service';
+import {LabelsService} from '../../../labels/services/labels.service';
 import {Store} from "@ngrx/store";
 import {State} from "../../state/bookmarks.state";
 import {updateBookmarkTagsAction} from "../../state/bookmarks.actions";

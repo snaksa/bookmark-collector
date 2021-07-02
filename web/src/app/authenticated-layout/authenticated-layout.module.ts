@@ -8,10 +8,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [AuthenticatedLayoutComponent, SidenavComponent],
   imports: [
+    CommonModule,
     RouterModule,
 
     MatToolbarModule,

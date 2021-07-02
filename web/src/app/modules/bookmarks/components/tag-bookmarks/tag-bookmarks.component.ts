@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
-import { LabelsService } from '../../services/labels.service';
+import { LabelsService } from '../../../labels/services/labels.service';
 
 @Component({
   selector: 'app-tag-bookmarks',
