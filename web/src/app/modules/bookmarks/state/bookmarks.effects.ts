@@ -26,7 +26,7 @@ export class BookmarksEffects {
           case BookmarkType.Favorites:
             request = this.bookmarksService.getBookmarks(true, false, false);
             break;
-          case BookmarkType.Archvied:
+          case BookmarkType.Archived:
             request = this.bookmarksService.getBookmarks(false, true, false);
             break;
           default:

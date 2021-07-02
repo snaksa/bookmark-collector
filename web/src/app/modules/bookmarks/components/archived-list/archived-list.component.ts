@@ -22,7 +22,7 @@ export class ArchivedListComponent implements OnInit {
     this.store.select(getArchivedBookmarksSelector).subscribe((list) => {
       if (!list.isInitialized && !list.isLoading) {
         this.store.dispatch(
-          loadBookmarksAction({ key: BookmarkType.Archvied })
+          loadBookmarksAction({ key: BookmarkType.Archived })
         );
       }
 
