@@ -17,9 +17,10 @@ export class TagBookmarksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const labelId = this.route.snapshot.paramMap.get('id') ?? 'undefined';
-    this.labelsService.getLabelBookmarks(labelId).subscribe((data) => {
-      this.bookmarks = data;
+    this.route.params.subscribe((params) => {
+      this.labelsService.getLabelBookmarks(params.id).subscribe((data) => {
+        this.bookmarks = data;
+      });
     });
   }
 

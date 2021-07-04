@@ -23,4 +23,8 @@ export class SidenavComponent implements OnInit {
       this.labels = labels.data;
     });
   }
+
+  generateLabelURL(label: Label) {
+    return `/bookmarks/tags/${label.id}`;
+  }
 }
