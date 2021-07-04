@@ -21,6 +21,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { bookmarksReducer } from './state/bookmarks.reducer';
 import { BookmarksEffects } from './state/bookmarks.effects';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 const routes = [
   {
@@ -67,6 +68,7 @@ const routes = [
     TagBookmarksComponent,
     BookmarksLayoutComponent,
     TagsDialogComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,

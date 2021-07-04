@@ -3,6 +3,7 @@ import { Bookmark } from '../../../shared/models/bookmark.model';
 import { Label } from '../../../shared/models/label.model';
 import { MatDialog } from '@angular/material/dialog';
 import { TagsDialogComponent } from '../tags-dialog/tags-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-bookmark-view',
@@ -42,7 +43,21 @@ export class BookmarkViewComponent implements OnInit {
   }
 
   deleteBookmark() {
-    this.onDelete.emit(this.bookmark);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      autoFocus: false,
+      position: { top: '200px' },
+      data: {
+        title: 'Are you sure?',
+        subtitle: 'The bookmark will be deleted',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.onDelete.emit(this.bookmark);
+      }
+    });
   }
 
   generateTagUrl(label: Label) {
