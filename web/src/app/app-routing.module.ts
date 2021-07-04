@@ -12,8 +12,9 @@ const routes: Routes = [
       import('./modules/site/site.module').then((m) => m.SiteModule),
   },
   {
-    path: 'my-profile',
+    path: 'user',
     component: AuthenticatedLayoutComponent,
+    canActivate: [AuthenticatedGuard],
     loadChildren: () =>
       import('./modules/users/users.module').then((m) => m.UsersModule),
   },
