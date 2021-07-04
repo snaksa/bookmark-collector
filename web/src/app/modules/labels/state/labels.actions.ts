@@ -1,9 +1,7 @@
-import {createAction, props} from '@ngrx/store';
-import {Label} from "../modules/shared/models/label.model";
+import { createAction, props } from '@ngrx/store';
+import { Label } from '../../shared/models/label.model';
 
-export const loadLabelsAction = createAction(
-  '[Labels API] Load List'
-);
+export const loadLabelsAction = createAction('[Labels API] Load List');
 
 export const loadLabelsSuccessAction = createAction(
   '[Labels API] Load List Success',

@@ -1,12 +1,5 @@
-import {Label} from "../modules/shared/models/label.model";
-
-export interface LabelsState {
-  isLoading: boolean;
-  isInitialized: boolean;
-  data: Label[],
-  error: string,
-}
+import { LabelsState } from '../modules/labels/state/labels.state';
 
 export interface AppState {
-  labels: LabelsState,
+  labels: LabelsState;
 }

@@ -20,8 +20,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { environment } from 'src/environments/environment';
-import {appReducer} from "./state/app.reducer";
-import {AppEffects} from "./state/app.effects";
+import { LabelsModule } from './modules/labels/labels.module';
 
 @NgModule({
   declarations: [AppComponent, AnonymousLayoutComponent],
@@ -39,15 +38,14 @@ import {AppEffects} from "./state/app.effects";
     MatDividerModule,
 
     AuthenticatedLayoutModule,
+    LabelsModule,
 
     StoreModule.forRoot({}),
-    StoreModule.forFeature('labels', appReducer),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([]),
-    EffectsModule.forFeature([AppEffects]),
   ],
   providers: [
     {

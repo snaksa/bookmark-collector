@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {AppState} from "../../../state/app.state";
-import {Store} from "@ngrx/store";
-import {loadLabelsAction} from "../../../state/app.actions";
-import {getLabelsSelector} from "../../../state/app.selectors";
-import {Label} from "../../../modules/shared/models/label.model";
+import { Component, OnInit } from '@angular/core';
+import { AppState } from '../../../state/app.state';
+import { Store } from '@ngrx/store';
+import { Label } from '../../../modules/shared/models/label.model';
+import { getLabelsSelector } from '../../../modules/labels/state/labels.selectors';
+import { loadLabelsAction } from '../../../modules/labels/state/labels.actions';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,8 +13,7 @@ import {Label} from "../../../modules/shared/models/label.model";
 export class SidenavComponent implements OnInit {
   labels: Label[] = [];
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.store.select(getLabelsSelector).subscribe((labels) => {
