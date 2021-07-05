@@ -22,36 +22,43 @@ import { EffectsModule } from '@ngrx/effects';
 import { bookmarksReducer } from './state/bookmarks.reducer';
 import { BookmarksEffects } from './state/bookmarks.effects';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { AuthenticatedLayoutComponent } from '../../authenticated-layout/authenticated-layout.component';
 
 const routes = [
   {
     path: '',
-    component: BookmarksLayoutComponent,
+    component: AuthenticatedLayoutComponent,
     children: [
       {
         path: '',
-        redirectTo: 'my-list',
-        pathMatch: 'full',
-      },
-      {
-        path: 'my-list',
-        component: MyListComponent,
-      },
-      {
-        path: 'favorites',
-        component: FavoriteListComponent,
-      },
-      {
-        path: 'archived',
-        component: ArchivedListComponent,
-      },
-      {
-        path: 'tags',
-        component: TagsComponent,
-      },
-      {
-        path: 'tags/:id',
-        component: TagBookmarksComponent,
+        component: BookmarksLayoutComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'my-list',
+            pathMatch: 'full',
+          },
+          {
+            path: 'my-list',
+            component: MyListComponent,
+          },
+          {
+            path: 'favorites',
+            component: FavoriteListComponent,
+          },
+          {
+            path: 'archived',
+            component: ArchivedListComponent,
+          },
+          {
+            path: 'tags',
+            component: TagsComponent,
+          },
+          {
+            path: 'tags/:id',
+            component: TagBookmarksComponent,
+          },
+        ],
       },
     ],
   },

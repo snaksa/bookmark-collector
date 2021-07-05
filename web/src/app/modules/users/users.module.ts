@@ -9,11 +9,18 @@ import { SharedModule } from '../shared/shared.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { SecurityComponent } from './components/user-details/tabs/security/security.component';
+import { AuthenticatedLayoutComponent } from '../../authenticated-layout/authenticated-layout.component';
 
 const routes = [
   {
     path: '',
-    component: UsersLayoutComponent,
+    component: AuthenticatedLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: UsersLayoutComponent,
+      },
+    ],
   },
 ];
 
