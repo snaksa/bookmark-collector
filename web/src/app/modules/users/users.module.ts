@@ -8,6 +8,7 @@ import { AccountComponent } from './components/user-details/tabs/account/account
 import { SharedModule } from '../shared/shared.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { SecurityComponent } from './components/user-details/tabs/security/security.component';
 
 const routes = [
   {
@@ -17,7 +18,7 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [UsersLayoutComponent, UserDetailsComponent, AccountComponent],
+  declarations: [UsersLayoutComponent, UserDetailsComponent, AccountComponent, SecurityComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), MatTabsModule, MatInputModule, MatButtonModule],
 })
 export class UsersModule {}

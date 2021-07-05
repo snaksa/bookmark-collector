@@ -76,4 +76,17 @@ export class AuthService {
         })
       );
   }
+
+  public changePassword(oldPassword: string, newPassword: string) {
+    return this.http
+      .put(`${environment.apiBaseUrl}/auth/me/change-password`, {
+        oldPassword,
+        newPassword,
+      })
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
 }
