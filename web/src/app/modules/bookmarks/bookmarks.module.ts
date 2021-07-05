@@ -23,6 +23,7 @@ import { bookmarksReducer } from './state/bookmarks.reducer';
 import { BookmarksEffects } from './state/bookmarks.effects';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { AuthenticatedLayoutComponent } from '../../authenticated-layout/authenticated-layout.component';
+import { AuthenticatedLayoutModule } from '../../authenticated-layout/authenticated-layout.module';
 
 const routes = [
   {
@@ -86,6 +87,7 @@ const routes = [
     MatDialogModule,
     MatAutocompleteModule,
     MatSelectModule,
+    AuthenticatedLayoutModule,
     RouterModule.forChild(routes),
 
     StoreModule.forFeature('bookmarks', bookmarksReducer),

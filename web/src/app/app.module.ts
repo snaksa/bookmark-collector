@@ -15,7 +15,6 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AnonymousLayoutComponent } from './anonymous-layout/anonymous-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthenticatedLayoutModule } from './authenticated-layout/authenticated-layout.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
@@ -37,7 +36,6 @@ import { LabelsModule } from './modules/labels/labels.module';
     MatListModule,
     MatDividerModule,
 
-    AuthenticatedLayoutModule,
     LabelsModule,
 
     StoreModule.forRoot({}),
