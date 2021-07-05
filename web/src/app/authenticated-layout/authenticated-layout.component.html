@@ -1,5 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
-
+<mat-sidenav-container *ngIf='currentUser.id; else loading' class="sidenav-container">
   <mat-sidenav mode="side" class="sidenav" opened>
     <app-sidenav></app-sidenav>
   </mat-sidenav>
@@ -9,3 +8,6 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+
+<ng-template #loading>Loading...</ng-template>
+

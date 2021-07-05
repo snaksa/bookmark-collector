@@ -1,6 +1,6 @@
 <mat-tab-group animationDuration='400' mat-align-tabs='center' dynamicHeight>
   <mat-tab label='Account'>
-    <app-account></app-account>
+    <app-account [currentUser]="currentUser"></app-account>
   </mat-tab>
   <mat-tab label='Security'>
     <app-security></app-security>

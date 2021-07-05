@@ -8,7 +8,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
-import {CommonModule} from "@angular/common";
+import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { usersReducer } from './state/users.reducer';
+import { UsersEffects } from './state/users.effects';
 
 @NgModule({
   declarations: [AuthenticatedLayoutComponent, SidenavComponent],
@@ -22,6 +26,9 @@ import {CommonModule} from "@angular/common";
     MatSidenavModule,
     MatListModule,
     MatDividerModule,
+
+    StoreModule.forFeature('users', usersReducer),
+    EffectsModule.forFeature([UsersEffects]),
   ],
   exports: [AuthenticatedLayoutComponent],
 })

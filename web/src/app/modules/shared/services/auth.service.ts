@@ -15,7 +15,7 @@ interface LoginResponse {
   };
 }
 
-interface UpdateResponse {
+interface UserResponse {
   data: {
     id: string;
     firstName: string;
@@ -65,7 +65,7 @@ export class AuthService {
 
   public updateUser(firstName: string, lastName: string, email: string) {
     return this.http
-      .put<UpdateResponse>(`${environment.apiBaseUrl}/auth/me`, {
+      .put<UserResponse>(`${environment.apiBaseUrl}/auth/me`, {
         firstName,
         lastName,
         email,
@@ -88,5 +88,13 @@ export class AuthService {
           return response;
         })
       );
+  }
+
+  public getCurrentUser() {
+    return this.http.get<UserResponse>(`${environment.apiBaseUrl}/auth/me`).pipe(
+      map((response) => {
+        return response.data;
+      })
+    );
   }
 }
