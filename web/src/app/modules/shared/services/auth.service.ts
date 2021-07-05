@@ -15,15 +15,20 @@ interface LoginResponse {
   };
 }
 
+interface UpdateResponse {
+  data: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private localStorage: LocalStorageService
-  ) {}
+  constructor(private http: HttpClient, private router: Router, private localStorage: LocalStorageService) {}
 
   public getTokens(): {
     accessToken: string;
@@ -51,12 +56,23 @@ export class AuthService {
           };
 
           // add tokens to localStorage
-          this.localStorage.setItem(
-            LocalStorageKeys.TOKENS,
-            JSON.stringify(tokens)
-          );
+          this.localStorage.setItem(LocalStorageKeys.TOKENS, JSON.stringify(tokens));
 
           this.router.navigateByUrl('bookmarks/my-list');
+        })
+      );
+  }
+
+  public updateUser(firstName: string, lastName: string, email: string) {
+    return this.http
+      .put<UpdateResponse>(`${environment.apiBaseUrl}/auth/me`, {
+        firstName,
+        lastName,
+        email,
+      })
+      .pipe(
+        map((response) => {
+          return response.data;
         })
       );
   }

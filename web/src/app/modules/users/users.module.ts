@@ -4,27 +4,20 @@ import { UsersLayoutComponent } from './components/users-layout/users-layout.com
 import { RouterModule } from '@angular/router';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { AccountComponent } from './components/user-details/tabs/account/account.component';
+import { SharedModule } from '../shared/shared.module';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes = [
   {
     path: '',
     component: UsersLayoutComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: 'details',
-        pathMatch: 'full',
-      },
-      {
-        path: 'details',
-        component: UserDetailsComponent,
-      },
-    ],
   },
 ];
 
 @NgModule({
-  declarations: [UsersLayoutComponent, UserDetailsComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), MatTabsModule],
+  declarations: [UsersLayoutComponent, UserDetailsComponent, AccountComponent],
+  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), MatTabsModule, MatInputModule, MatButtonModule],
 })
 export class UsersModule {}
