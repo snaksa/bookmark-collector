@@ -13,16 +13,16 @@ import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { AnonymousLayoutComponent } from './anonymous-layout/anonymous-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { environment } from 'src/environments/environment';
-import { LabelsModule } from './modules/labels/labels.module';
+import { appReducer } from './state/app.reducer';
+import { AppEffects } from './state/app.effects';
 
 @NgModule({
-  declarations: [AppComponent, AnonymousLayoutComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -36,14 +36,14 @@ import { LabelsModule } from './modules/labels/labels.module';
     MatListModule,
     MatDividerModule,
 
-    LabelsModule,
-
     StoreModule.forRoot({}),
+    StoreModule.forFeature('app', appReducer),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([]),
+    EffectsModule.forFeature([AppEffects]),
   ],
   providers: [
     {

@@ -1,23 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AnonymousLayoutComponent } from './anonymous-layout/anonymous-layout.component';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: AnonymousLayoutComponent,
-    loadChildren: () => import('./modules/site/site.module').then((m) => m.SiteModule),
+    loadChildren: () => import('./modules/anonymous/site/site.module').then((m) => m.SiteModule),
   },
   {
     path: 'user',
     canActivate: [AuthenticatedGuard],
-    loadChildren: () => import('./modules/users/users.module').then((m) => m.UsersModule),
+    loadChildren: () => import('./modules/authenticated/users/users.module').then((m) => m.UsersModule),
   },
   {
     path: 'bookmarks',
     canActivate: [AuthenticatedGuard],
-    loadChildren: () => import('./modules/bookmarks/bookmarks.module').then((m) => m.BookmarksModule),
+    loadChildren: () => import('./modules/authenticated/bookmarks/bookmarks.module').then((m) => m.BookmarksModule),
   },
 ];
 
