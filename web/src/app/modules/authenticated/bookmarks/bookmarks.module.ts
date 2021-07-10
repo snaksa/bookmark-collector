@@ -1,12 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatSelectModule } from '@angular/material/select';
 import { MyListComponent } from './components/my-list/my-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BookmarkViewComponent } from './components/bookmark-view/bookmark-view.component';
@@ -24,6 +18,7 @@ import { BookmarksEffects } from './state/bookmarks.effects';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { AuthenticatedLayoutComponent } from '../layout/authenticated-layout.component';
 import { AuthenticatedLayoutModule } from '../layout/authenticated-layout.module';
+import { CoreModule } from '../../core/core.module';
 
 const routes = [
   {
@@ -81,12 +76,7 @@ const routes = [
   imports: [
     CommonModule,
     SharedModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatAutocompleteModule,
-    MatSelectModule,
+    CoreModule,
     AuthenticatedLayoutModule,
     RouterModule.forChild(routes),
 

@@ -9,14 +9,21 @@ import { AuthService } from '../../../shared/services/auth.service';
 })
 export class LoginComponent {
   loginFormGroup: FormGroup = new FormGroup({
-    email: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
+    email: new FormControl(''),
+    password: new FormControl(''),
   });
+
+  error = '';
 
   constructor(private authService: AuthService) {}
 
   onSubmit() {
-    console.log(this.loginFormGroup.value);
+    this.error = '';
+    if (!this.loginFormGroup.controls['email'].value || !this.loginFormGroup.controls['email'].value) {
+      this.error = 'Please fill all fields';
+      return;
+    }
+
     this.authService.login(this.loginFormGroup.value.email, this.loginFormGroup.value.password).subscribe({
       error: (error) => {
         // TODO: show error
