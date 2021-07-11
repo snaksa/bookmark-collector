@@ -32,5 +32,6 @@ export class BookmarksLayoutComponent implements OnInit, OnDestroy {
   public onSubmit() {
     const url = this.newBookmarkFormGroup.controls['bookmark'].value;
     this.store.dispatch(createBookmarkAction({ url }));
+    this.newBookmarkFormGroup.controls['bookmark'].setValue('');
   }
 }

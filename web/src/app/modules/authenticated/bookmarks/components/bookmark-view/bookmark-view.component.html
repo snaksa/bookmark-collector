@@ -1,10 +1,11 @@
 <div class="wrapper">
   <div class="image">
-    <img [src]="bookmark.image" alt="bookmarkImage" class="image"/>
+    <img *ngIf="bookmark.image" [src]="bookmark.image" alt="bookmarkImage" class="image"/>
+    <div *ngIf="!bookmark.image" class="image empty"></div>
   </div>
   <div class="content">
     <div>
-      <div>{{ bookmark.title }}</div>
+      <div>{{ bookmark.title ? bookmark.title : bookmark.url  }}</div>
       <span *ngFor="let label of bookmark.labels" class="tag">
         <a [routerLink]="generateTagUrl(label)">#{{label.title}}</a>
       </span>

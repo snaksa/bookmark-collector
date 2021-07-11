@@ -11,6 +11,11 @@
     width: 100px;
     height: 60px;
     border-radius: 4px;
+
+    &.empty {
+      background-color: #e6e6e6;
+      background-image: linear-gradient(#ccc, #fff);
+    }
   }
 
   .content {
