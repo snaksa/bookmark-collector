@@ -1,4 +1,12 @@
-.url-input-field {
-  width: 400px;
-  margin-right: 5px;
+.new-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: baseline;
+  padding: 12px;
+
+  .url-input-field {
+    width: 600px;
+    margin-right: 12px;
+  }
 }

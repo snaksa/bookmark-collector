@@ -1,12 +1,12 @@
-<form [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="outline" class="url-input-field">
+<form [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()" class="new-form">
+  <mat-form-field class="url-input-field">
     <mat-label>https://...</mat-label>
     <input matInput formControlName="bookmark">
   </mat-form-field>
   <button
     mat-raised-button
     color="primary"
-    [disabled]="!newBookmarkFormGroup.valid"
+    [disabled]="disabled"
   >
     ADD
   </button>
