@@ -15,6 +15,12 @@ interface LoginResponse {
   };
 }
 
+interface RegisterResponse {
+  data: {
+    id: string;
+  };
+}
+
 interface UserResponse {
   data: {
     id: string;
@@ -59,6 +65,21 @@ export class AuthService {
           this.localStorage.setItem(LocalStorageKeys.TOKENS, JSON.stringify(tokens));
 
           this.router.navigateByUrl('bookmarks/my-list');
+        })
+      );
+  }
+
+  public register(email: string, firstName: string, lastName: string, password: string) {
+    return this.http
+      .post<RegisterResponse>(`${environment.apiBaseUrl}/auth/register`, {
+        email,
+        firstName,
+        lastName,
+        password,
+      })
+      .pipe(
+        map((response) => {
+          this.router.navigateByUrl('login');
         })
       );
   }

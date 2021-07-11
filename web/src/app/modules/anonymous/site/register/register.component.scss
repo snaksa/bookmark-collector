@@ -1,0 +1,65 @@
+.main {
+  display: flex;
+  height: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  padding: 150px 300px;
+  background-color: #fafafa;
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    width: 100%;
+    border-radius: 24px;
+    box-shadow: 0 5px 16px #ccc;
+
+    .side {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .image {
+        width: 100%;
+      }
+
+      .sign-up {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-weight: bold;
+        width: 200px;
+        height: 50px;
+        border-radius: 32px;
+        background-color: blue;
+        cursor: pointer;
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        .error {
+          color: red;
+          padding-bottom: 12px;
+        }
+
+        mat-form-field {
+          width: 80%;
+        }
+
+        button {
+          width: 200px;
+          height: 50px;
+          border-radius: 32px;
+        }
+      }
+    }
+  }
+}

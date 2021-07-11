@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="side">
       <img src="assets/login.png" alt="Login image" class="image">
-      <div class="sign-up">Sign Up</div>
+      <div class="sign-up" (click)="redirectToRegister()">Sign Up</div>
     </div>
     <div class="side">
       <form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit()" class="form">
@@ -16,9 +16,8 @@
           <input type="password" matInput formControlName="password">
         </mat-form-field>
         <span class="error">{{this.error}}</span>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!loginFormGroup.valid">Login</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginFormGroup.valid">Sign In</button>
       </form>
-
     </div>
   </div>
 </div>
