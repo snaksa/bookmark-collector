@@ -6,6 +6,7 @@ export interface ApplicationState {
     isInitialized: boolean;
     data: User;
     error: string;
+    updating: boolean;
   };
 }
 

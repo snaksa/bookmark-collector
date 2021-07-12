@@ -12,20 +12,23 @@ export class SecurityComponent {
     oldPassword: new FormControl('', Validators.required),
     newPassword: new FormControl('', Validators.required),
   });
+  loading = false;
 
   constructor(private authService: AuthService) {}
 
   onSubmit() {
-    console.log(this.securityFormGroup.value);
+    this.loading = true;
     this.authService
       .changePassword(this.securityFormGroup.value.oldPassword, this.securityFormGroup.value.newPassword)
       .subscribe({
         next: (data) => {
-          console.log('response', data);
+          // TODO: show success
+          this.loading = false;
         },
         error: (error) => {
           // TODO: show error
           console.log('Error', error);
+          this.loading = false;
         },
       });
   }

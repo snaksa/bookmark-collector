@@ -1,5 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadUserAction, loadUserFailureAction, loadUserSuccessAction } from './app.actions';
+import {
+  loadUserAction,
+  loadUserFailureAction,
+  loadUserSuccessAction,
+  updateUserAction,
+  updateUserFailureAction,
+  updateUserSuccessAction,
+} from './app.actions';
 import { ApplicationState } from './app.state';
 
 const initialState: ApplicationState = {
@@ -13,6 +20,7 @@ const initialState: ApplicationState = {
       email: '',
     },
     error: '',
+    updating: false,
   },
 };
 
@@ -45,6 +53,35 @@ export const appReducer = createReducer<ApplicationState>(
         ...state.currentUser,
         isLoading: false,
         isInitialized: true,
+        error: action.error,
+      },
+    };
+  }),
+  on(updateUserAction, (state, action) => {
+    return {
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        updating: true,
+      },
+    };
+  }),
+  on(updateUserSuccessAction, (state, action) => {
+    return {
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        updating: false,
+        data: action.user,
+      },
+    };
+  }),
+  on(updateUserFailureAction, (state, action) => {
+    return {
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        updating: false,
         error: action.error,
       },
     };

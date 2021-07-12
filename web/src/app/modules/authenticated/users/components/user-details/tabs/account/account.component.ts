@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../../../shared/services/auth.service';
 import { User } from '../../../../../../shared/models/user.model';
@@ -22,7 +22,9 @@ export class AccountComponent implements OnInit {
     email: '',
   };
 
-  constructor(private authService: AuthService) {}
+  @Input() updating = false;
+
+  @Output() updateUser = new EventEmitter<{ firstName: string; lastName: string; email: string }>();
 
   ngOnInit() {
     this.accountFormGroup.controls['firstName'].setValue(this.currentUser.firstName);
@@ -31,20 +33,10 @@ export class AccountComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService
-      .updateUser(
-        this.accountFormGroup.value.firstName,
-        this.accountFormGroup.value.lastName,
-        this.accountFormGroup.value.email
-      )
-      .subscribe({
-        next: (data) => {
-          console.log('response', data);
-        },
-        error: (error) => {
-          // TODO: show error
-          console.log('Error', error);
-        },
-      });
+    this.updateUser.emit({
+      firstName: this.accountFormGroup.value.firstName,
+      lastName: this.accountFormGroup.value.lastName,
+      email: this.accountFormGroup.value.email,
+    });
   }
 }

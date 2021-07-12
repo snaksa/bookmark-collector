@@ -1,11 +1,11 @@
 <form [formGroup]='securityFormGroup' (ngSubmit)='onSubmit()' class='form'>
-  <mat-form-field appearance='standard'>
+  <mat-form-field appearance='outline'>
     <mat-label>Old Password</mat-label>
-    <input matInput formControlName='oldPassword'>
+    <input type="password" matInput formControlName='oldPassword'>
   </mat-form-field>
-  <mat-form-field appearance='standard'>
+  <mat-form-field appearance='outline'>
     <mat-label>New Password</mat-label>
-    <input matInput formControlName='newPassword'>
+    <input type="password" matInput formControlName='newPassword'>
   </mat-form-field>
-  <button mat-raised-button color='primary' type='submit' [disabled]='!securityFormGroup.valid'>Save</button>
+  <button mat-raised-button color='primary' type='submit' [disabled]='!securityFormGroup.valid || loading'>Save</button>
 </form>

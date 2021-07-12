@@ -1,15 +1,15 @@
 <form [formGroup]='accountFormGroup' (ngSubmit)='onSubmit()' class='form'>
-  <mat-form-field appearance='standard'>
+  <mat-form-field appearance='outline'>
     <mat-label>Email</mat-label>
     <input matInput formControlName='email'>
   </mat-form-field>
-  <mat-form-field appearance='standard'>
+  <mat-form-field appearance='outline'>
     <mat-label>First Name</mat-label>
     <input matInput formControlName='firstName'>
   </mat-form-field>
-  <mat-form-field appearance='standard'>
+  <mat-form-field appearance='outline'>
     <mat-label>Last Name</mat-label>
     <input matInput formControlName='lastName'>
   </mat-form-field>
-  <button mat-raised-button color='primary' type='submit' [disabled]='!accountFormGroup.valid'>Save</button>
+  <button mat-raised-button color='primary' type='submit' [disabled]='!accountFormGroup.valid || updating'>Save</button>
 </form>
