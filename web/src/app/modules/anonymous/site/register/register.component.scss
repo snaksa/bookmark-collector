@@ -4,7 +4,7 @@
   box-sizing: border-box;
   justify-content: center;
   padding: 150px 300px;
-  background-color: #fafafa;
+  background-image: radial-gradient(circle, white, white, blue);
 
   .wrapper {
     display: flex;
@@ -23,6 +23,7 @@
 
       .image {
         width: 100%;
+        border-left: 1px solid #ccc;
       }
 
       .sign-up {
