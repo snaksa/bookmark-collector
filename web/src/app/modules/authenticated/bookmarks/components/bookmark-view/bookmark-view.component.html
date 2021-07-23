@@ -16,7 +16,7 @@
         </span>
       </div>
     </div>
-    <div class="actions">
+    <div *ngIf='!isHandset' class="actions">
       <span (click)="favoriteBookmark()">
         <mat-icon color="primary">{{bookmark.isFavorite ? 'favorite' : 'favorite_border'}}</mat-icon>
       </span>
@@ -29,6 +29,17 @@
       <span (click)="deleteBookmark()">
         <mat-icon>delete</mat-icon>
       </span>
+    </div>
+    <div *ngIf='isHandset' class="actions-handset">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)='favoriteBookmark()'>{{bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}}</button>
+        <button mat-menu-item (click)='archiveBookmark()'>{{bookmark.isArchived ? 'Remove from Archived' : 'Add to Archive'}}</button>
+        <button mat-menu-item (click)='openTagDialog()'>Edit Tags</button>
+        <button mat-menu-item (click)='deleteBookmark()'>Delete</button>
+      </mat-menu>
     </div>
   </div>
 </div>

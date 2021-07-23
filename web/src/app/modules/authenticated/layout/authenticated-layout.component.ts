@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./authenticated-layout.component.scss'],
 })
 export class AuthenticatedLayoutComponent implements OnInit {
-  constructor(private router: Router, private breakpointObserver: BreakpointObserver, private store: Store<AppState>) {}
   currentUser: User = {
     id: '',
     firstName: '',
@@ -28,6 +27,8 @@ export class AuthenticatedLayoutComponent implements OnInit {
   sidenav!: MatSidenav;
 
   isHandset = false;
+
+  constructor(private router: Router, private breakpointObserver: BreakpointObserver, private store: Store<AppState>) {}
 
   ngOnInit() {
     // get the current user

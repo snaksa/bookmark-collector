@@ -4,11 +4,16 @@ import { Label } from '../../../../shared/models/label.model';
 import { MatDialog } from '@angular/material/dialog';
 import { TagsDialogComponent } from '../tags-dialog/tags-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Router } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../../state/app.state';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bookmark-view',
   templateUrl: './bookmark-view.component.html',
-  styleUrls: ['./bookmark-view.component.scss'],
+  styleUrls: ['./bookmark-view.component.scss']
 })
 export class BookmarkViewComponent implements OnInit {
   @Input() bookmark: Bookmark = {
@@ -18,7 +23,7 @@ export class BookmarkViewComponent implements OnInit {
     url: '',
     isFavorite: false,
     isArchived: false,
-    labels: [],
+    labels: []
   };
 
   @Output() onDelete = new EventEmitter<Bookmark>();
@@ -26,12 +31,23 @@ export class BookmarkViewComponent implements OnInit {
   @Output() toggleArchive = new EventEmitter<Bookmark>();
 
   baseUrl: string = '';
+  isHandset = false;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog) {
+  }
 
   ngOnInit(): void {
     const pathArray = this.bookmark.url.split('/');
     this.baseUrl = pathArray[2];
+
+    this.breakpointObserver.observe(Breakpoints.Handset)
+      .pipe(
+        map(result => result.matches),
+        shareReplay()
+      )
+      .subscribe(handset => {
+        this.isHandset = handset;
+      });
   }
 
   favoriteBookmark() {
@@ -49,8 +65,8 @@ export class BookmarkViewComponent implements OnInit {
       position: { top: '200px' },
       data: {
         title: 'Are you sure?',
-        subtitle: 'The bookmark will be deleted',
-      },
+        subtitle: 'The bookmark will be deleted'
+      }
     });
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
@@ -69,7 +85,7 @@ export class BookmarkViewComponent implements OnInit {
       width: '600px',
       autoFocus: false,
       position: { top: '200px' },
-      data: { id: this.bookmark.id },
+      data: { id: this.bookmark.id }
     });
   }
 }
