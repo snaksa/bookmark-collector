@@ -1,9 +1,18 @@
-<mat-sidenav-container *ngIf='currentUser.id; else loading' class="sidenav-container">
-  <mat-sidenav mode="side" class="sidenav" opened>
+<mat-sidenav-container *ngIf='currentUser.id; else loading' class='sidenav-container'>
+  <mat-sidenav
+    [mode]="isHandset ? 'over' : 'side'"
+    [opened]='isHandset === false'
+    class='sidenav'
+    #sidenav
+  >
     <app-sidenav></app-sidenav>
   </mat-sidenav>
 
-  <mat-sidenav-content class="sidenav-content">
+  <mat-sidenav-content class='sidenav-content'>
+    <mat-toolbar *ngIf='isHandset === true'>
+      <mat-icon (click)='openSidenav()'>menu</mat-icon>
+      Bookmark Collector
+    </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 
