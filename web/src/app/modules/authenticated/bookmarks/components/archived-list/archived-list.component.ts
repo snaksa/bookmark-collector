@@ -9,7 +9,6 @@ import { State } from '../../state/bookmarks.state';
 @Component({
   selector: 'app-archived-list',
   templateUrl: './archived-list.component.html',
-  styleUrls: ['./archived-list.component.scss'],
 })
 export class ArchivedListComponent implements OnInit {
   bookmarks: Bookmark[] = [];
@@ -21,9 +20,7 @@ export class ArchivedListComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(getArchivedBookmarksSelector).subscribe((list) => {
       if (!list.isInitialized && !list.isLoading) {
-        this.store.dispatch(
-          loadBookmarksAction({ key: BookmarkType.Archived })
-        );
+        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Archived }));
       }
 
       this.bookmarks = list.data;

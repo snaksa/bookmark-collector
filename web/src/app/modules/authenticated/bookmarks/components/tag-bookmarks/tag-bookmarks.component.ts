@@ -7,7 +7,6 @@ import { Label } from '../../../../shared/models/label.model';
 @Component({
   selector: 'app-tag-bookmarks',
   templateUrl: './tag-bookmarks.component.html',
-  styleUrls: ['./tag-bookmarks.component.scss'],
 })
 export class TagBookmarksComponent implements OnInit {
   label!: Label;

@@ -9,7 +9,6 @@ import { State } from '../../state/bookmarks.state';
 @Component({
   selector: 'app-favorite-list',
   templateUrl: './favorite-list.component.html',
-  styleUrls: ['./favorite-list.component.scss'],
 })
 export class FavoriteListComponent implements OnInit {
   bookmarks: Bookmark[] = [];
@@ -21,9 +20,7 @@ export class FavoriteListComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(getFavoriteBookmarksSelector).subscribe((list) => {
       if (!list.isInitialized && !list.isLoading) {
-        this.store.dispatch(
-          loadBookmarksAction({ key: BookmarkType.Favorites })
-        );
+        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Favorites }));
       }
 
       this.bookmarks = list.data;

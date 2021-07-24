@@ -5,7 +5,6 @@ import { LabelsService } from '../../../labels/services/labels.service';
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.scss'],
 })
 export class TagsComponent implements OnInit {
   labels: Label[] = [];
