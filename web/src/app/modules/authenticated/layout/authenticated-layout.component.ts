@@ -41,17 +41,19 @@ export class AuthenticatedLayoutComponent implements OnInit {
     });
 
     // watch for breakpoint changes
-    this.breakpointObserver.observe(Breakpoints.Handset)
+    this.breakpointObserver
+      .observe(Breakpoints.Handset)
       .pipe(
-        map(result => result.matches),
+        map((result) => result.matches),
         shareReplay()
-      ).subscribe((handset) => {
+      )
+      .subscribe((handset) => {
         this.isHandset = handset;
-    })
+      });
 
     // hide sidebar on routing if on handset device
-    this.router.events.subscribe(event => {
-      if(this.isHandset) {
+    this.router.events.subscribe((event) => {
+      if (this.isHandset) {
         this.sidenav.close();
       }
     });

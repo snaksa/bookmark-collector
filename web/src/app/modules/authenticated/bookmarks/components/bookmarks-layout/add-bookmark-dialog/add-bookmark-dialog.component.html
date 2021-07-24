@@ -1,0 +1,9 @@
+<div>
+  <h3>New Bookmark</h3>
+  <mat-form-field appearance="outline">
+    <mat-label>https://...</mat-label>
+    <input matInput [formControl]="inputControl">
+  </mat-form-field>
+  <button mat-raised-button (click)="close()">Close</button>
+  <button mat-raised-button color="primary" (click)="add()">Add</button>
+</div>

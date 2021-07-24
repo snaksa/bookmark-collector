@@ -10,3 +10,13 @@
     margin-right: 12px;
   }
 }
+
+.button-floating {
+  z-index: 1;
+  position: fixed;
+  display : flex;
+  align-self : flex-end;
+  margin-bottom: 16px;
+  bottom : 1rem;
+  right: 2rem;
+}

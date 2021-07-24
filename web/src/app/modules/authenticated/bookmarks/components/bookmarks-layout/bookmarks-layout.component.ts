@@ -4,6 +4,10 @@ import { State } from '../../state/bookmarks.state';
 import { Store } from '@ngrx/store';
 import { createBookmarkAction } from '../../state/bookmarks.actions';
 import { Observable, Subscription } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map, shareReplay } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { AddBookmarkDialogComponent } from './add-bookmark-dialog/add-bookmark-dialog.component';
 
 @Component({
   selector: 'app-bookmarks-layout',
@@ -11,18 +15,29 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./bookmarks-layout.component.scss'],
 })
 export class BookmarksLayoutComponent implements OnInit, OnDestroy {
+  isHandset = false;
   changes: Subscription = new Subscription();
   disabled = true;
   newBookmarkFormGroup: FormGroup = new FormGroup({
     bookmark: new FormControl(''),
   });
 
-  constructor(private store: Store<State>) {}
+  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog, private store: Store<State>) {}
 
   ngOnInit() {
     this.changes = this.newBookmarkFormGroup.controls['bookmark'].valueChanges.subscribe((value) => {
       this.disabled = !value;
     });
+
+    this.breakpointObserver
+      .observe(Breakpoints.Handset)
+      .pipe(
+        map((result) => result.matches),
+        shareReplay()
+      )
+      .subscribe((handset) => {
+        this.isHandset = handset;
+      });
   }
 
   ngOnDestroy() {
@@ -33,5 +48,17 @@ export class BookmarksLayoutComponent implements OnInit, OnDestroy {
     const url = this.newBookmarkFormGroup.controls['bookmark'].value;
     this.store.dispatch(createBookmarkAction({ url }));
     this.newBookmarkFormGroup.controls['bookmark'].setValue('');
+  }
+
+  showDialog() {
+    const dialogRef = this.dialog.open(AddBookmarkDialogComponent, {
+      width: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe((value) => {
+      if (value) {
+        this.store.dispatch(createBookmarkAction({ url: value }));
+      }
+    });
   }
 }

@@ -19,6 +19,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { AuthenticatedLayoutComponent } from '../layout/authenticated-layout.component';
 import { AuthenticatedLayoutModule } from '../layout/authenticated-layout.module';
 import { CoreModule } from '../../core/core.module';
+import { AddBookmarkDialogComponent } from './components/bookmarks-layout/add-bookmark-dialog/add-bookmark-dialog.component';
 
 const routes = [
   {
@@ -72,6 +73,7 @@ const routes = [
     BookmarksLayoutComponent,
     TagsDialogComponent,
     ConfirmationDialogComponent,
+    AddBookmarkDialogComponent,
   ],
   imports: [
     CommonModule,
