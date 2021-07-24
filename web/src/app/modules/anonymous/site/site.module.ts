@@ -8,6 +8,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { AnonymousLayoutComponent } from '../layout/anonymous-layout.component';
 import { AnonymousLayoutModule } from '../layout/anonymous-layout.modue';
 import { CoreModule } from '../../core/core.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 const routes = [
   {
@@ -32,7 +33,14 @@ const routes = [
 
 @NgModule({
   declarations: [HomeComponent, LoginComponent, RegisterComponent],
-  imports: [CommonModule, SharedModule, AnonymousLayoutModule, RouterModule.forChild(routes), CoreModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AnonymousLayoutModule,
+    AuthenticationModule,
+    RouterModule.forChild(routes),
+    CoreModule,
+  ],
   exports: [RouterModule],
 })
 export class SiteModule {}

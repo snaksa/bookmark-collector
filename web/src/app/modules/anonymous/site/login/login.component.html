@@ -1,23 +1,20 @@
-<div class="main">
-  <div class="wrapper">
-    <div class="side">
-      <img src="assets/login.png" alt="Login image" class="image">
-      <div class="sign-up" (click)="redirectToRegister()">Sign Up</div>
-    </div>
-    <div class="side">
-      <form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit()" class="form">
-        <h2>Sign in</h2>
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
-          <input type="password" matInput formControlName="password">
-        </mat-form-field>
-        <span class="error">{{this.error}}</span>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!loginFormGroup.valid">Sign In</button>
-      </form>
-    </div>
-  </div>
-</div>
+<app-authentication-wrapper>
+  <app-authentication-wrapper-side>
+    <img src="assets/login.png" alt="Login image" class="image">
+    <app-authentication-redirect-button (click)="redirectToRegister()">Sign Up</app-authentication-redirect-button>
+  </app-authentication-wrapper-side>
+  <app-authentication-wrapper-side>
+    <app-authentication-form title="Sign In" [formGroup]="loginFormGroup" (submit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+      </mat-form-field>
+      <span class="error">{{this.error}}</span>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!loginFormGroup.valid">Sign In</button>
+    </app-authentication-form>
+  </app-authentication-wrapper-side>
+</app-authentication-wrapper>
