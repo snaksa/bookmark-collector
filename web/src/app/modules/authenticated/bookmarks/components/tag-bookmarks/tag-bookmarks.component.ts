@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
 import { LabelsService } from '../../../labels/services/labels.service';
+import { Label } from '../../../../shared/models/label.model';
 
 @Component({
   selector: 'app-tag-bookmarks',
@@ -9,35 +10,35 @@ import { LabelsService } from '../../../labels/services/labels.service';
   styleUrls: ['./tag-bookmarks.component.scss'],
 })
 export class TagBookmarksComponent implements OnInit {
-  bookmarks: Bookmark[] = [];
+  label!: Label;
 
   constructor(private route: ActivatedRoute, private labelsService: LabelsService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.labelsService.getLabelBookmarks(params.id).subscribe((data) => {
-        this.bookmarks = data;
+        this.label = data;
       });
     });
   }
 
   toggleFavoriteBookmark(bookmark: Bookmark) {
-    this.bookmarks.forEach((item, index) => {
+    this.label.bookmarks.forEach((item, index) => {
       if (item.id === bookmark.id) {
-        this.bookmarks[index].isFavorite = bookmark.isFavorite;
+        this.label.bookmarks[index].isFavorite = bookmark.isFavorite;
       }
     });
   }
 
   toggleArchiveBookmark(bookmark: Bookmark) {
-    this.bookmarks.forEach((item, index) => {
+    this.label.bookmarks.forEach((item, index) => {
       if (item.id === bookmark.id) {
-        this.bookmarks[index].isArchived = bookmark.isArchived;
+        this.label.bookmarks[index].isArchived = bookmark.isArchived;
       }
     });
   }
 
   deleteBookmark(bookmark: Bookmark) {
-    this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
+    this.label.bookmarks = this.label.bookmarks.filter((item) => item.id !== bookmark.id);
   }
 }

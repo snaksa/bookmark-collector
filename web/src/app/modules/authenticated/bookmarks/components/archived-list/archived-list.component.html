@@ -1,5 +1,7 @@
 <app-bookmarks-list
   [bookmarks]="bookmarks"
+  title="Archived"
+  icon="save"
   (onFavoriteToggle)="toggleFavoriteBookmark($event)"
   (onArchiveToggle)="toggleArchiveBookmark($event)"
   (onDeleteToggle)="deleteBookmark($event)"

@@ -21,7 +21,7 @@ export class LabelsService {
   public getLabelBookmarks(id: string) {
     return this.http.get<{ data: Label }>(`${environment.apiBaseUrl}/labels/${id}`).pipe(
       map((response) => {
-        return response.data.bookmarks;
+        return response.data;
       })
     );
   }

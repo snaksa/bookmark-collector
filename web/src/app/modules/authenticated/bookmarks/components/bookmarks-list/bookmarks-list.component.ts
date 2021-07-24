@@ -1,13 +1,13 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {Bookmark} from 'src/app/modules/shared/models/bookmark.model';
-import {BookmarksService} from '../../services/bookmarks.service';
-import {Store} from "@ngrx/store";
-import {State} from "../../state/bookmarks.state";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
+import { BookmarksService } from '../../services/bookmarks.service';
+import { Store } from '@ngrx/store';
+import { State } from '../../state/bookmarks.state';
 import {
   toggleArchiveBookmarkAction,
   deleteBookmarkAction,
-  toggleFavoriteBookmarkAction
-} from "../../state/bookmarks.actions";
+  toggleFavoriteBookmarkAction,
+} from '../../state/bookmarks.actions';
 
 @Component({
   selector: 'app-bookmarks-list',
@@ -15,14 +15,15 @@ import {
   styleUrls: ['./bookmarks-list.component.scss'],
 })
 export class BookmarksListComponent {
+  @Input() title: string = 'All bookmarks';
+  @Input() icon: string = 'home';
   @Input() bookmarks: Bookmark[] = [];
 
   @Output() onFavoriteToggle = new EventEmitter<Bookmark>();
   @Output() onArchiveToggle = new EventEmitter<Bookmark>();
   @Output() onDeleteToggle = new EventEmitter<Bookmark>();
 
-  constructor(private bookmarksService: BookmarksService, private store: Store<State>) {
-  }
+  constructor(private bookmarksService: BookmarksService, private store: Store<State>) {}
 
   trackBy(index: number, item: Bookmark) {
     return item.id;
@@ -31,7 +32,8 @@ export class BookmarksListComponent {
   toggleFavoriteBookmark(bookmark: Bookmark) {
     this.store.dispatch(
       toggleFavoriteBookmarkAction({
-        bookmarkId: bookmark.id, isFavorite: !bookmark.isFavorite
+        bookmarkId: bookmark.id,
+        isFavorite: !bookmark.isFavorite,
       })
     );
   }
@@ -39,7 +41,8 @@ export class BookmarksListComponent {
   toggleArchiveBookmark(bookmark: Bookmark) {
     this.store.dispatch(
       toggleArchiveBookmarkAction({
-        bookmarkId: bookmark.id, isArchived: !bookmark.isArchived
+        bookmarkId: bookmark.id,
+        isArchived: !bookmark.isArchived,
       })
     );
   }
@@ -47,7 +50,7 @@ export class BookmarksListComponent {
   deleteBookmark(bookmark: Bookmark) {
     this.store.dispatch(
       deleteBookmarkAction({
-        bookmarkId: bookmark.id
+        bookmarkId: bookmark.id,
       })
     );
   }
