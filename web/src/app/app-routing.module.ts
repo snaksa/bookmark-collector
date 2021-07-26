@@ -5,22 +5,23 @@ import { AuthenticatedGuard } from './guards/authenticated.guard';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./modules/anonymous/site/site.module').then((m) => m.SiteModule),
+    loadChildren: () => import('./modules/anonymous/site/site.module').then((m) => m.SiteModule)
   },
   {
     path: 'user',
     canActivate: [AuthenticatedGuard],
-    loadChildren: () => import('./modules/authenticated/users/users.module').then((m) => m.UsersModule),
+    loadChildren: () => import('./modules/authenticated/users/users.module').then((m) => m.UsersModule)
   },
   {
     path: 'bookmarks',
     canActivate: [AuthenticatedGuard],
-    loadChildren: () => import('./modules/authenticated/bookmarks/bookmarks.module').then((m) => m.BookmarksModule),
-  },
+    loadChildren: () => import('./modules/authenticated/bookmarks/bookmarks.module').then((m) => m.BookmarksModule)
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

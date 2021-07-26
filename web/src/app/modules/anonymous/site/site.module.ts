@@ -2,13 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AnonymousLayoutComponent } from '../layout/anonymous-layout.component';
 import { AnonymousLayoutModule } from '../layout/anonymous-layout.modue';
 import { CoreModule } from '../../core/core.module';
-import { AuthenticationModule } from '../authentication/authentication.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 const routes = [
   {
@@ -17,30 +15,25 @@ const routes = [
     children: [
       {
         path: '',
-        component: HomeComponent,
-      },
-    ],
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
+        component: HomeComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({
-  declarations: [HomeComponent, LoginComponent, RegisterComponent],
+  declarations: [
+    HomeComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
     AnonymousLayoutModule,
     AuthenticationModule,
     RouterModule.forChild(routes),
-    CoreModule,
+    CoreModule
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class SiteModule {}
+export class SiteModule {
+}
