@@ -3,9 +3,30 @@
   border-right: 1px solid #ccc;
 }
 
+.logo {
+  width: 300px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
+}
+
+.actions {
+  div {
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
 .error {
   color: red;
   padding-bottom: 12px;
+}
+
+.cover {
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 }
 
 mat-form-field {

@@ -1,5 +1,6 @@
 <app-authentication-wrapper>
   <app-authentication-wrapper-side>
+    <img src="https://download.blender.org/branding/blender_logo_socket.png" class='logo' alt='logo'>
     <app-authentication-form [formGroup]="registerFormGroup" (submit)="onSubmit()" title="Sign Up">
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
@@ -17,11 +18,14 @@
         <mat-label>Password</mat-label>
         <input type="password" matInput formControlName="password">
       </mat-form-field>
-      <span class="error">{{this.error}}</span>
+      <span *ngIf='error' class="error">{{this.error}}</span>
       <button mat-raised-button color="primary" type="submit" [disabled]="!registerFormGroup.valid">Sign Up</button>
     </app-authentication-form>
+    <div class='actions'>
+      <div>Already have an account? <a routerLink="/login">Sign In here</a></div>
+    </div>
   </app-authentication-wrapper-side>
-  <app-authentication-wrapper-side>
+  <app-authentication-wrapper-side class="cover">
     <img src="assets/login.png" alt="Login image" class="image">
     <app-authentication-redirect-button (click)="redirectToLogin()">Sign In</app-authentication-redirect-button>
   </app-authentication-wrapper-side>

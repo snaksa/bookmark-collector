@@ -3,6 +3,27 @@
   border-left: 1px solid #ccc;
 }
 
+.logo {
+  width: 300px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
+}
+
+.actions {
+  div {
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
+.cover {
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
+}
+
 .error {
   color: red;
   padding-bottom: 12px;
