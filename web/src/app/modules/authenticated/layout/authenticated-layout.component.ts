@@ -42,7 +42,7 @@ export class AuthenticatedLayoutComponent implements OnInit {
 
     // watch for breakpoint changes
     this.breakpointObserver
-      .observe(Breakpoints.Handset)
+      .observe(Breakpoints.Small)
       .pipe(
         map((result) => result.matches),
         shareReplay()

@@ -13,7 +13,7 @@ import { map, shareReplay } from 'rxjs/operators';
 @Component({
   selector: 'app-bookmark-view',
   templateUrl: './bookmark-view.component.html',
-  styleUrls: ['./bookmark-view.component.scss']
+  styleUrls: ['./bookmark-view.component.scss'],
 })
 export class BookmarkViewComponent implements OnInit {
   @Input() bookmark: Bookmark = {
@@ -23,7 +23,7 @@ export class BookmarkViewComponent implements OnInit {
     url: '',
     isFavorite: false,
     isArchived: false,
-    labels: []
+    labels: [],
   };
 
   @Output() onDelete = new EventEmitter<Bookmark>();
@@ -33,19 +33,19 @@ export class BookmarkViewComponent implements OnInit {
   baseUrl: string = '';
   isHandset = false;
 
-  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog) {
-  }
+  constructor(private breakpointObserver: BreakpointObserver, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     const pathArray = this.bookmark.url.split('/');
     this.baseUrl = pathArray[2];
 
-    this.breakpointObserver.observe(Breakpoints.Handset)
+    this.breakpointObserver
+      .observe(Breakpoints.Small)
       .pipe(
-        map(result => result.matches),
+        map((result) => result.matches),
         shareReplay()
       )
-      .subscribe(handset => {
+      .subscribe((handset) => {
         this.isHandset = handset;
       });
   }
@@ -65,8 +65,8 @@ export class BookmarkViewComponent implements OnInit {
       position: { top: '200px' },
       data: {
         title: 'Are you sure?',
-        subtitle: 'The bookmark will be deleted'
-      }
+        subtitle: 'The bookmark will be deleted',
+      },
     });
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
@@ -85,7 +85,7 @@ export class BookmarkViewComponent implements OnInit {
       width: '600px',
       autoFocus: false,
       position: { top: '200px' },
-      data: { id: this.bookmark.id }
+      data: { id: this.bookmark.id },
     });
   }
 }

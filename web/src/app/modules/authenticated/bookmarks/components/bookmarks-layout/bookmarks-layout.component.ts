@@ -28,7 +28,7 @@ export class BookmarksLayoutComponent implements OnInit, OnDestroy {
     });
 
     this.breakpointObserver
-      .observe(Breakpoints.Handset)
+      .observe(Breakpoints.Small)
       .pipe(
         map((result) => result.matches),
         shareReplay()
