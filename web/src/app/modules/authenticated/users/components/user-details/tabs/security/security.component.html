@@ -2,10 +2,16 @@
   <mat-form-field appearance='outline'>
     <mat-label>Old Password</mat-label>
     <input type="password" matInput formControlName='oldPassword'>
+    <mat-error *ngIf="oldPasswordControl.hasError('required')">
+      Old Password is required
+    </mat-error>
   </mat-form-field>
   <mat-form-field appearance='outline'>
     <mat-label>New Password</mat-label>
     <input type="password" matInput formControlName='newPassword'>
+    <mat-error *ngIf="newPasswordControl.hasError('required')">
+      New Password is required
+    </mat-error>
   </mat-form-field>
-  <button mat-raised-button color='primary' type='submit' [disabled]='!securityFormGroup.valid || loading'>Save</button>
+  <button mat-raised-button color='primary' type='submit' [disabled]='loading'>Save</button>
 </form>

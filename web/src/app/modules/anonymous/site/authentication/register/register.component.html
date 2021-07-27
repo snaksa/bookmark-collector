@@ -5,21 +5,33 @@
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input type="text" matInput formControlName="firstName">
+        <mat-error *ngIf="firstNameControl.hasError('required')">
+          First Name is required
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Last Name</mat-label>
         <input type="text" matInput formControlName="lastName">
+        <mat-error *ngIf="lastNameControl.hasError('required')">
+          Last Name is required
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="emailControl.hasError('required')">
+          Email is required
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
         <input type="password" matInput formControlName="password">
+        <mat-error *ngIf="passwordControl.hasError('required')">
+          Password is required
+        </mat-error>
       </mat-form-field>
-      <span *ngIf='error' class="error">{{this.error}}</span>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!registerFormGroup.valid">Sign Up</button>
+      <span *ngIf='generalError' class="error">{{this.generalError}}</span>
+      <button mat-raised-button color="primary" type="submit">Sign Up</button>
     </app-authentication-form>
     <div class='actions'>
       <div>Already have an account? <a routerLink="/login">Sign In here</a></div>

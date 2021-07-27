@@ -17,6 +17,7 @@ export class UsersLayoutComponent implements OnInit {
     email: '',
   };
   updating = false;
+  error = '';
 
   constructor(private store: Store<AppState>) {}
 
@@ -24,6 +25,7 @@ export class UsersLayoutComponent implements OnInit {
     this.store.select(getCurrentUserSelector).subscribe((currentUser) => {
       this.currentUser = currentUser.data;
       this.updating = currentUser.updating;
+      this.error = currentUser.error;
     });
   }
 

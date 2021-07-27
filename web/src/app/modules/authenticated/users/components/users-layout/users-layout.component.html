@@ -1,6 +1,6 @@
 <mat-tab-group animationDuration='400' mat-align-tabs='center' dynamicHeight>
   <mat-tab label='Account'>
-    <app-account [currentUser]="currentUser" [updating]="updating" (updateUser)="updateUser($event)"></app-account>
+    <app-account [currentUser]="currentUser" [updating]="updating" [error]="error" (updateUser)="updateUser($event)"></app-account>
   </mat-tab>
   <mat-tab label='Security'>
     <app-security></app-security>

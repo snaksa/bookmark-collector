@@ -34,7 +34,7 @@ export class AppEffects {
       mergeMap((data) => {
         return this.authService.updateUser(data.firstName, data.lastName, data.email).pipe(
           map((user) => updateUserSuccessAction({ user })),
-          catchError((error) => of(updateUserFailureAction({ error })))
+          catchError((error) => of(updateUserFailureAction({ error: error.message })))
         );
       })
     );

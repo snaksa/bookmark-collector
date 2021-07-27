@@ -2,14 +2,24 @@
   <mat-form-field appearance='outline'>
     <mat-label>Email</mat-label>
     <input matInput formControlName='email'>
+    <mat-error *ngIf="emailControl.hasError('required')">
+      Email is required
+    </mat-error>
   </mat-form-field>
   <mat-form-field appearance='outline'>
     <mat-label>First Name</mat-label>
     <input matInput formControlName='firstName'>
+    <mat-error *ngIf="firstNameControl.hasError('required')">
+      First Name is required
+    </mat-error>
   </mat-form-field>
   <mat-form-field appearance='outline'>
     <mat-label>Last Name</mat-label>
     <input matInput formControlName='lastName'>
+    <mat-error *ngIf="lastNameControl.hasError('required')">
+      Last Name is required
+    </mat-error>
   </mat-form-field>
-  <button mat-raised-button color='primary' type='submit' [disabled]='!accountFormGroup.valid || updating'>Save</button>
+  <span *ngIf='error' class="error">{{this.error}}</span>
+  <button mat-raised-button color='primary' type='submit' [disabled]='updating'>Save</button>
 </form>

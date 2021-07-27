@@ -1,12 +1,13 @@
-<form *ngIf="!isHandset" [formGroup]="newBookmarkFormGroup" (ngSubmit)="onSubmit()" class="new-form">
+<form *ngIf="!isHandset" class="new-form">
   <mat-form-field class="url-input-field">
     <mat-label>https://...</mat-label>
-    <input matInput formControlName="bookmark">
+    <input matInput [formControl]="bookmarkControl">
   </mat-form-field>
   <button
     mat-raised-button
     color="primary"
     [disabled]="disabled"
+    (click)="onSubmit()"
   >
     ADD
   </button>

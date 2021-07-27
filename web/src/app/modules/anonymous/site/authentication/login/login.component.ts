@@ -9,26 +9,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  loginFormGroup: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
-  });
-
-  error = '';
+  generalError = '';
+  loginFormGroup: FormGroup = new FormGroup(
+    {
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', Validators.required),
+    },
+    {
+      updateOn: 'submit',
+    }
+  );
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  get emailControl() {
+    return this.loginFormGroup.get('email')!;
+  }
+
+  get passwordControl() {
+    return this.loginFormGroup.get('password')!;
+  }
+
   onSubmit() {
-    this.error = '';
-    if (!this.loginFormGroup.controls['email'].value || !this.loginFormGroup.controls['password'].value) {
-      this.error = 'Please fill all fields';
+    this.generalError = '';
+    if (!this.loginFormGroup.valid) {
       return;
     }
 
     this.authService.login(this.loginFormGroup.value.email, this.loginFormGroup.value.password).subscribe({
       error: (error) => {
-        // TODO: show error
-        console.log('Error', error);
+        this.generalError = error.message;
       },
     });
   }

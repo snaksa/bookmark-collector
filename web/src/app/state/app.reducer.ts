@@ -63,6 +63,7 @@ export const appReducer = createReducer<ApplicationState>(
       currentUser: {
         ...state.currentUser,
         updating: true,
+        error: '',
       },
     };
   }),

@@ -16,20 +16,30 @@ export class SecurityComponent {
 
   constructor(private authService: AuthService) {}
 
+  get oldPasswordControl() {
+    return this.securityFormGroup.get('oldPassword')!;
+  }
+
+  get newPasswordControl() {
+    return this.securityFormGroup.get('newPassword')!;
+  }
+
   onSubmit() {
+    if (!this.securityFormGroup.valid) {
+      return;
+    }
+
     this.loading = true;
-    this.authService
-      .changePassword(this.securityFormGroup.value.oldPassword, this.securityFormGroup.value.newPassword)
-      .subscribe({
-        next: (data) => {
-          // TODO: show success
-          this.loading = false;
-        },
-        error: (error) => {
-          // TODO: show error
-          console.log('Error', error);
-          this.loading = false;
-        },
-      });
+    this.authService.changePassword(this.oldPasswordControl.value, this.newPasswordControl.value).subscribe({
+      next: (data) => {
+        // TODO: show success
+        this.loading = false;
+      },
+      error: (error) => {
+        // TODO: show error
+        console.log('Error', error);
+        this.loading = false;
+      },
+    });
   }
 }

@@ -9,11 +9,16 @@ import { User } from '../../../../../../shared/models/user.model';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  accountFormGroup: FormGroup = new FormGroup({
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
-  });
+  accountFormGroup: FormGroup = new FormGroup(
+    {
+      firstName: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+    },
+    {
+      updateOn: 'submit',
+    }
+  );
 
   @Input() currentUser: User = {
     id: '',
@@ -23,8 +28,20 @@ export class AccountComponent implements OnInit {
   };
 
   @Input() updating = false;
-
+  @Input() error = '';
   @Output() updateUser = new EventEmitter<{ firstName: string; lastName: string; email: string }>();
+
+  get firstNameControl() {
+    return this.accountFormGroup.get('firstName')!;
+  }
+
+  get lastNameControl() {
+    return this.accountFormGroup.get('lastName')!;
+  }
+
+  get emailControl() {
+    return this.accountFormGroup.get('email')!;
+  }
 
   ngOnInit() {
     this.accountFormGroup.controls['firstName'].setValue(this.currentUser.firstName);
@@ -33,6 +50,10 @@ export class AccountComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.accountFormGroup.valid) {
+      return;
+    }
+
     this.updateUser.emit({
       firstName: this.accountFormGroup.value.firstName,
       lastName: this.accountFormGroup.value.lastName,

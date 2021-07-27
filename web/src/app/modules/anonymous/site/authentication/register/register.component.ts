@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -9,41 +9,53 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  registerFormGroup: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    password: new FormControl(''),
-  });
-
-  error = '';
+  generalError = '';
+  registerFormGroup: FormGroup = new FormGroup(
+    {
+      email: new FormControl('', [Validators.required, Validators.email]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+    },
+    {
+      updateOn: 'submit',
+    }
+  );
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  get firstNameControl() {
+    return this.registerFormGroup.get('firstName')!;
+  }
+
+  get lastNameControl() {
+    return this.registerFormGroup.get('lastName')!;
+  }
+
+  get emailControl() {
+    return this.registerFormGroup.get('email')!;
+  }
+
+  get passwordControl() {
+    return this.registerFormGroup.get('password')!;
+  }
+
   onSubmit() {
-    this.error = '';
-    if (
-      !this.registerFormGroup.controls['email'].value ||
-      !this.registerFormGroup.controls['password'].value ||
-      !this.registerFormGroup.controls['firstName'].value ||
-      !this.registerFormGroup.controls['lastName'].value
-    ) {
-      this.error = 'Please fill all fields';
+    this.generalError = '';
+    if (!this.registerFormGroup.valid) {
       return;
     }
 
     this.authService
       .register(
-        this.registerFormGroup.value.email,
-        this.registerFormGroup.value.firstName,
-        this.registerFormGroup.value.lastName,
-        this.registerFormGroup.value.password
+        this.emailControl.value,
+        this.firstNameControl.value,
+        this.lastNameControl.value,
+        this.passwordControl.value
       )
       .subscribe({
         error: (error) => {
-          // TODO: show error
-          console.log('Error', error);
-          this.error = error;
+          this.generalError = error.message;
         },
       });
   }

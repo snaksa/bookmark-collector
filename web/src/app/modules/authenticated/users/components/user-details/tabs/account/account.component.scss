@@ -7,9 +7,15 @@
 
   mat-form-field {
     width: 25rem;
+    margin-bottom: 4px;
 
     @media screen and (max-width: 900px) {
       width: 100%;
     }
+  }
+
+  .error {
+    color: red;
+    padding-bottom: 12px;
   }
 }
