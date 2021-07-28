@@ -3,12 +3,9 @@ import { Bookmark } from '../../../../shared/models/bookmark.model';
 import { Label } from '../../../../shared/models/label.model';
 import { MatDialog } from '@angular/material/dialog';
 import { TagsDialogComponent } from '../tags-dialog/tags-dialog.component';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../../../state/app.state';
 import { map, shareReplay } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-bookmark-view',

@@ -1,0 +1,8 @@
+<app-dialog-container>
+  <app-dialog-title>{{data.title}}</app-dialog-title>
+  <app-dialog-content>{{data.subtitle}}</app-dialog-content>
+  <app-dialog-actions>
+    <app-dialog-action (onClick)="onClose()">No</app-dialog-action>
+    <app-dialog-action color="primary" (onClick)="onConfirm()">Yes</app-dialog-action>
+  </app-dialog-actions>
+</app-dialog-container>

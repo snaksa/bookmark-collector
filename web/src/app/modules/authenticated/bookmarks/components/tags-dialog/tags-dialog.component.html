@@ -1,6 +1,6 @@
-<div class="wrapper">
-  <div class="header">Add Tags</div>
-  <div class="content">
+<app-dialog-container>
+  <app-dialog-title>Add Tags</app-dialog-title>
+  <app-dialog-content>
     <div class="labels">
       <span *ngIf="loading">Loading tags...</span>
       <span *ngIf="!loading">
@@ -21,9 +21,9 @@
         </mat-form-field>
       </form>
     </div>
-  </div>
-  <div class="actions">
-    <button mat-raised-button (click)="onClose()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()">Save</button>
-  </div>
-</div>
+  </app-dialog-content>
+  <app-dialog-actions>
+    <app-dialog-action (onClick)="onClose()">Cancel</app-dialog-action>
+    <app-dialog-action color="primary" (onClick)="onSubmit()">Save</app-dialog-action>
+  </app-dialog-actions>
+</app-dialog-container>

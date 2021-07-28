@@ -15,7 +15,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { bookmarksReducer } from './state/bookmarks.reducer';
 import { BookmarksEffects } from './state/bookmarks.effects';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { AuthenticatedLayoutComponent } from '../layout/authenticated-layout.component';
 import { AuthenticatedLayoutModule } from '../layout/authenticated-layout.module';
 import { CoreModule } from '../../core/core.module';
@@ -72,7 +71,6 @@ const routes = [
     TagBookmarksComponent,
     BookmarksLayoutComponent,
     TagsDialogComponent,
-    ConfirmationDialogComponent,
     AddBookmarkDialogComponent,
   ],
   imports: [
