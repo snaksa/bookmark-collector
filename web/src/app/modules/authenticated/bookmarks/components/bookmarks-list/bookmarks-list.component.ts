@@ -15,7 +15,7 @@ import {
   styleUrls: ['./bookmarks-list.component.scss'],
 })
 export class BookmarksListComponent {
-  @Input() title: string = 'All bookmarks';
+  @Input() header: string = 'All bookmarks';
   @Input() icon: string = 'home';
   @Input() bookmarks: Bookmark[] = [];
 
