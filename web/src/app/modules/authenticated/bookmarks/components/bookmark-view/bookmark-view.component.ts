@@ -37,7 +37,7 @@ export class BookmarkViewComponent implements OnInit {
     this.baseUrl = pathArray[2];
 
     this.breakpointObserver
-      .observe(Breakpoints.Small)
+      .observe([Breakpoints.XSmall, Breakpoints.Small])
       .pipe(
         map((result) => result.matches),
         shareReplay()
@@ -47,15 +47,22 @@ export class BookmarkViewComponent implements OnInit {
       });
   }
 
-  favoriteBookmark() {
+  openUrl() {
+    (window as any).open(this.bookmark.url, '_blank');
+  }
+
+  favoriteBookmark($event: any) {
+    $event.stopPropagation();
     this.toggleFavorite.emit(this.bookmark);
   }
 
-  archiveBookmark() {
+  archiveBookmark($event: any) {
+    $event.stopPropagation();
     this.toggleArchive.emit(this.bookmark);
   }
 
-  deleteBookmark() {
+  deleteBookmark($event: any) {
+    $event.stopPropagation();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       autoFocus: false,
@@ -77,7 +84,8 @@ export class BookmarkViewComponent implements OnInit {
     return `/bookmarks/tags/${label.id}`;
   }
 
-  openTagDialog() {
+  openTagDialog($event: any) {
+    $event.stopPropagation();
     const dialogRef = this.dialog.open(TagsDialogComponent, {
       width: '600px',
       autoFocus: false,

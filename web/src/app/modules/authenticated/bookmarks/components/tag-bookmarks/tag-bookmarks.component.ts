@@ -9,7 +9,12 @@ import { Label } from '../../../../shared/models/label.model';
   templateUrl: './tag-bookmarks.component.html',
 })
 export class TagBookmarksComponent implements OnInit {
-  label!: Label;
+  label: Label = {
+    id: '',
+    title: '',
+    bookmarks: [],
+    color: '',
+  };
 
   constructor(private route: ActivatedRoute, private labelsService: LabelsService) {}
 
