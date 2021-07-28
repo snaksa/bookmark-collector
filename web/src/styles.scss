@@ -1,9 +1,23 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@use '~@angular/material' as mat;
+@include mat.core();;
+
+@import 'assets/styles/light-theme';
+@import 'assets/styles/dark-theme';
+@import 'assets/styles/custom-styles';
+
+@include mat.all-component-themes($light-theme);
+@include app-theme($light-theme);
+
+.theme-dark {
+  @include mat.all-component-themes($dark-theme);
+  @include app-theme($dark-theme);
+}
 
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

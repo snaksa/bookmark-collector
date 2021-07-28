@@ -1,3 +1,5 @@
+@import "variables";
+
 .image {
   width: 100%;
   border-right: 1px solid #ccc;
@@ -6,7 +8,7 @@
 .logo {
   width: 300px;
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: $small-screen) {
     width: 100%;
   }
 }
@@ -24,7 +26,7 @@
 }
 
 .cover {
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: $small-screen) {
     display: none;
   }
 }
