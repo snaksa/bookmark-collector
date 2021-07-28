@@ -19,29 +19,13 @@ export class FavoriteListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select(getFavoriteBookmarksSelector).subscribe((list) => {
-      if (!list.isInitialized && !list.isLoading) {
-        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Favorites }));
-      }
-
       this.bookmarks = list.data;
       this.isLoading = list.isLoading;
       this.error = list.error;
+
+      if (!list.isInitialized && !list.isLoading) {
+        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Favorites }));
+      }
     });
-  }
-
-  toggleFavoriteBookmark(bookmark: Bookmark) {
-    // this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
-  }
-
-  toggleArchiveBookmark(bookmark: Bookmark) {
-    // this.bookmarks.forEach((item, index) => {
-    //   if (item.id === bookmark.id) {
-    //     this.bookmarks[index].isArchived = bookmark.isArchived;
-    //   }
-    // });
-  }
-
-  deleteBookmark(bookmark: Bookmark) {
-    // this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
   }
 }

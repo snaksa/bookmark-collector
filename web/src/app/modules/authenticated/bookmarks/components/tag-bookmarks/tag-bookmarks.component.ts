@@ -9,6 +9,7 @@ import { Label } from '../../../../shared/models/label.model';
   templateUrl: './tag-bookmarks.component.html',
 })
 export class TagBookmarksComponent implements OnInit {
+  isLoading: boolean = true;
   label: Label = {
     id: '',
     title: '',
@@ -20,8 +21,17 @@ export class TagBookmarksComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
+      this.isLoading = true;
+      this.label = {
+        id: '',
+        title: '',
+        bookmarks: [],
+        color: '',
+      };
+
       this.labelsService.getLabelBookmarks(params.id).subscribe((data) => {
         this.label = data;
+        this.isLoading = false;
       });
     });
   }

@@ -10,3 +10,5 @@
   >
   </app-bookmark-view>
 </div>
+
+<div *ngIf="!isLoading && !bookmarks.length" class="no-records">No records</div>

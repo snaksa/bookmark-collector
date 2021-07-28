@@ -19,29 +19,13 @@ export class ArchivedListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select(getArchivedBookmarksSelector).subscribe((list) => {
-      if (!list.isInitialized && !list.isLoading) {
-        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Archived }));
-      }
-
       this.bookmarks = list.data;
       this.isLoading = list.isLoading;
       this.error = list.error;
+
+      if (!list.isInitialized && !list.isLoading) {
+        this.store.dispatch(loadBookmarksAction({ key: BookmarkType.Archived }));
+      }
     });
-  }
-
-  toggleFavoriteBookmark(bookmark: Bookmark) {
-    // this.bookmarks.forEach((item, index) => {
-    //   if (item.id === bookmark.id) {
-    //     this.bookmarks[index].isFavorite = bookmark.isFavorite;
-    //   }
-    // });
-  }
-
-  toggleArchiveBookmark(bookmark: Bookmark) {
-    // this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
-  }
-
-  deleteBookmark(bookmark: Bookmark) {
-    // this.bookmarks = this.bookmarks.filter((item) => item.id !== bookmark.id);
   }
 }

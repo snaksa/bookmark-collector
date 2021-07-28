@@ -18,6 +18,7 @@ export class BookmarksListComponent {
   @Input() header: string = 'All bookmarks';
   @Input() icon: string = 'home';
   @Input() bookmarks: Bookmark[] = [];
+  @Input() isLoading: boolean = false;
 
   @Output() onFavoriteToggle = new EventEmitter<Bookmark>();
   @Output() onArchiveToggle = new EventEmitter<Bookmark>();
@@ -36,6 +37,8 @@ export class BookmarksListComponent {
         isFavorite: !bookmark.isFavorite,
       })
     );
+
+    this.onFavoriteToggle.emit({ ...bookmark, isFavorite: !bookmark.isFavorite });
   }
 
   toggleArchiveBookmark(bookmark: Bookmark) {
@@ -45,6 +48,8 @@ export class BookmarksListComponent {
         isArchived: !bookmark.isArchived,
       })
     );
+
+    this.onArchiveToggle.emit({ ...bookmark, isArchived: !bookmark.isArchived });
   }
 
   deleteBookmark(bookmark: Bookmark) {
@@ -53,5 +58,7 @@ export class BookmarksListComponent {
         bookmarkId: bookmark.id,
       })
     );
+
+    this.onDeleteToggle.emit(bookmark);
   }
 }

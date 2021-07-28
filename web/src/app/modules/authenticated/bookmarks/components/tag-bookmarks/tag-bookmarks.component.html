@@ -1,7 +1,8 @@
 <app-bookmarks-list
-  [bookmarks]="label.bookmarks"
   [header]="label.title"
   icon="tag"
+  [isLoading]="isLoading"
+  [bookmarks]="label.bookmarks"
   (onFavoriteToggle)="toggleFavoriteBookmark($event)"
   (onArchiveToggle)="toggleArchiveBookmark($event)"
   (onDeleteToggle)="deleteBookmark($event)"
