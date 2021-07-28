@@ -10,9 +10,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LabelsModule } from '../labels/labels.module';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
-  declarations: [AuthenticatedLayoutComponent, SidenavComponent],
+  declarations: [AuthenticatedLayoutComponent, SidenavComponent, LoaderComponent],
   imports: [
     CommonModule,
     RouterModule,
