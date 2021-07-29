@@ -1,7 +1,6 @@
 <app-authentication-wrapper>
   <app-authentication-wrapper-side class="cover">
     <img src='assets/images/login-cover.png' alt="Login image" class="image">
-    <app-authentication-redirect-button (click)="redirectToRegister()">Sign Up</app-authentication-redirect-button>
   </app-authentication-wrapper-side>
   <app-authentication-wrapper-side>
     <img src="https://download.blender.org/branding/blender_logo_socket.png" class='logo' alt='logo'>
@@ -24,8 +23,8 @@
       <button mat-raised-button color="primary" type="submit">Sign In</button>
     </app-authentication-form>
     <div class='actions'>
-      <div>Forgot Password? <a routerLink="/recover-password">Recover here</a></div>
-      <div>Don't have an account? <a routerLink="/register">Sign Up here</a></div>
+      <div>Forgot Password? <a routerLink="/recover-password" class="simple-link">Recover here</a></div>
+      <div>Don't have an account? <a routerLink="/register" class="simple-link">Sign Up here</a></div>
     </div>
   </app-authentication-wrapper-side>
 </app-authentication-wrapper>

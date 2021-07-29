@@ -7,7 +7,7 @@
   $accent-palette: map.get($color-config, 'accent');
 
   $primary-color: mat.get-color-from-palette($primary-palette, 500);
-  $accent-color: mat.get-color-from-palette($accent-palette, 500);
+  $accent-color: mat.get-color-from-palette($accent-palette, 400);
 
   .background-primary {
     background-color: $primary-color;
@@ -15,6 +15,24 @@
 
   .background-accent {
     background-color: $accent-color;
+  }
+
+  .mat-raised-button, .mat-fab {
+    &.mat-primary {
+      color: #FFF;
+    }
+  }
+
+  a {
+    &.simple-link {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 

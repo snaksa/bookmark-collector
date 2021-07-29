@@ -7,10 +7,8 @@
   box-sizing: border-box;
   justify-content: center;
   padding: 7rem 10rem;
-  background-image: url('https://www.wallpapertip.com/wmimgs/200-2007939_perfect-white-gradient-4k-wallpaper.jpg');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-
+  background: rgb(255, 255, 255);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 19%, rgba(255, 239, 214, 1) 50%, rgba(255, 226, 183, 1) 66%, rgba(255, 152, 0, 1) 89%, rgba(255, 152, 0, 1) 100%);
   @media screen and (max-width: $small-screen) {
     padding: 0;
   }

@@ -34,11 +34,10 @@
       <button mat-raised-button color="primary" type="submit">Sign Up</button>
     </app-authentication-form>
     <div class='actions'>
-      <div>Already have an account? <a routerLink="/login">Sign In here</a></div>
+      <div>Already have an account? <a routerLink="/login" class="simple-link">Sign In here</a></div>
     </div>
   </app-authentication-wrapper-side>
   <app-authentication-wrapper-side class="cover">
     <img src='assets/images/register-cover.png' alt="Login image" class="image">
-    <app-authentication-redirect-button (click)="redirectToLogin()">Sign In</app-authentication-redirect-button>
   </app-authentication-wrapper-side>
 </app-authentication-wrapper>

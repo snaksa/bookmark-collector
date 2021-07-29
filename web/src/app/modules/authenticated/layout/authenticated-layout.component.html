@@ -9,13 +9,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content class='sidenav-content'>
-    <mat-toolbar *ngIf='isHandset === true'>
+    <mat-toolbar class="toolbar" color="primary" *ngIf='isHandset === true'>
       <mat-icon class="menu" (click)='openSidenav()'>menu</mat-icon>
-      Bookmark Collector
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
-
 </mat-sidenav-container>
 
 <ng-template #loading>
