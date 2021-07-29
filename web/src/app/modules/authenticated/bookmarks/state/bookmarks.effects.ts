@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
-import {BookmarksService} from '../services/bookmarks.service';
-import {BookmarkType} from './bookmark-type.enum';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { BookmarksService } from '../services/bookmarks.service';
+import { BookmarkType } from './bookmark-type.enum';
 import {
   loadBookmarksAction,
   loadBookmarksFailureAction,
@@ -19,16 +19,20 @@ import {
   toggleFavoriteBookmarkSuccessAction,
   updateBookmarkTagsAction,
   updateBookmarkTagsSuccessAction,
-  updateBookmarkTagsFailureAction, createBookmarkAction, createBookmarkSuccessAction, createBookmarkFailureAction,
+  updateBookmarkTagsFailureAction,
+  createBookmarkAction,
+  createBookmarkSuccessAction,
+  createBookmarkFailureAction,
 } from './bookmarks.actions';
+import { NotificationService } from '../../../shared/services/notification.service';
 
 @Injectable()
 export class BookmarksEffects {
   constructor(
     private actions$: Actions,
-    private bookmarksService: BookmarksService
-  ) {
-  }
+    private bookmarksService: BookmarksService,
+    private notificationService: NotificationService
+  ) {}
 
   loadBookmarks$ = createEffect(() => {
     return this.actions$.pipe(
@@ -47,12 +51,8 @@ export class BookmarksEffects {
         }
 
         return request.pipe(
-          map((bookmarks) =>
-            loadBookmarksSuccessAction({bookmarks, key: action.key})
-          ),
-          catchError((error) =>
-            of(loadBookmarksFailureAction({error, key: action.key}))
-          )
+          map((bookmarks) => loadBookmarksSuccessAction({ bookmarks, key: action.key })),
+          catchError((error) => of(loadBookmarksFailureAction({ error, key: action.key })))
         );
       })
     );
@@ -62,13 +62,15 @@ export class BookmarksEffects {
     return this.actions$.pipe(
       ofType(toggleFavoriteBookmarkAction),
       mergeMap((action) => {
-        return this.bookmarksService.updateBookmark(action.bookmarkId, {isFavorite: action.isFavorite}).pipe(
-          map((bookmark) =>
-            toggleFavoriteBookmarkSuccessAction({bookmark})
-          ),
-          catchError((error) =>
-            of(toggleFavoriteBookmarkFailureAction({error}))
-          )
+        return this.bookmarksService.updateBookmark(action.bookmarkId, { isFavorite: action.isFavorite }).pipe(
+          map((bookmark) => {
+            const message = bookmark.isFavorite ? 'Bookmark added to Favorites' : 'Bookmark removed from Favorites';
+            const icon = bookmark.isFavorite ? 'star' : 'star_border';
+            this.notificationService.success({ message, icon });
+            return toggleFavoriteBookmarkSuccessAction({ bookmark });
+          }),
+
+          catchError((error) => of(toggleFavoriteBookmarkFailureAction({ error })))
         );
       })
     );
@@ -78,13 +80,14 @@ export class BookmarksEffects {
     return this.actions$.pipe(
       ofType(toggleArchiveBookmarkAction),
       mergeMap((action) => {
-        return this.bookmarksService.updateBookmark(action.bookmarkId, {isArchived: action.isArchived}).pipe(
-          map((bookmark) =>
-            toggleArchiveBookmarkSuccessAction({bookmark})
-          ),
-          catchError((error) =>
-            of(toggleArchiveBookmarkFailureAction({error}))
-          )
+        return this.bookmarksService.updateBookmark(action.bookmarkId, { isArchived: action.isArchived }).pipe(
+          map((bookmark) => {
+            const message = bookmark.isArchived ? 'Bookmark added to Archive' : 'Bookmark removed from Archive';
+            const icon = bookmark.isArchived ? 'link_off' : 'cloud_queue';
+            this.notificationService.success({ message, icon });
+            return toggleArchiveBookmarkSuccessAction({ bookmark });
+          }),
+          catchError((error) => of(toggleArchiveBookmarkFailureAction({ error })))
         );
       })
     );
@@ -95,12 +98,11 @@ export class BookmarksEffects {
       ofType(deleteBookmarkAction),
       mergeMap((action) => {
         return this.bookmarksService.deleteBookmark(action.bookmarkId).pipe(
-          map(() =>
-            deleteBookmarkSuccessAction({bookmarkId: action.bookmarkId})
-          ),
-          catchError((error) =>
-            of(deleteBookmarkFailureAction({error}))
-          )
+          map(() => {
+            this.notificationService.success({ message: 'Bookmark deleted', icon: 'delete_outline' });
+            return deleteBookmarkSuccessAction({ bookmarkId: action.bookmarkId });
+          }),
+          catchError((error) => of(deleteBookmarkFailureAction({ error })))
         );
       })
     );
@@ -111,12 +113,11 @@ export class BookmarksEffects {
       ofType(createBookmarkAction),
       mergeMap((action) => {
         return this.bookmarksService.createBookmark(action.url).pipe(
-          map((bookmark) =>
-            createBookmarkSuccessAction({bookmark})
-          ),
-          catchError((error) =>
-            of(createBookmarkFailureAction({error}))
-          )
+          map((bookmark) => {
+            this.notificationService.success({ message: 'Bookmark created', icon: 'cloud_queue' });
+            return createBookmarkSuccessAction({ bookmark });
+          }),
+          catchError((error) => of(createBookmarkFailureAction({ error })))
         );
       })
     );
@@ -126,17 +127,18 @@ export class BookmarksEffects {
     return this.actions$.pipe(
       ofType(updateBookmarkTagsAction),
       mergeMap((action) => {
-        return this.bookmarksService.updateBookmark(action.bookmarkId, {
-          labelIds: action.labelIds,
-          newLabels: action.newLabels
-        }).pipe(
-          map((bookmark) =>
-            updateBookmarkTagsSuccessAction({bookmark})
-          ),
-          catchError((error) =>
-            of(updateBookmarkTagsFailureAction({error}))
-          )
-        );
+        return this.bookmarksService
+          .updateBookmark(action.bookmarkId, {
+            labelIds: action.labelIds,
+            newLabels: action.newLabels,
+          })
+          .pipe(
+            map((bookmark) => {
+              this.notificationService.success({ message: 'Bookmark updated', icon: 'cloud_queue' });
+              return updateBookmarkTagsSuccessAction({ bookmark });
+            }),
+            catchError((error) => of(updateBookmarkTagsFailureAction({ error })))
+          );
       })
     );
   });

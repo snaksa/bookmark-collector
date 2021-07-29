@@ -34,6 +34,14 @@
       }
     }
   }
+
+  .wrapper-success {
+    background-color: #55b559;
+  }
+
+  .wrapper-error {
+    background-color: #f55145;
+  }
 }
 
 @mixin app-theme($theme) {
