@@ -60,7 +60,11 @@ class SingleLambdaHandler extends BaseHandler {
           labelBookmark.bookmarkCreatedAt
         )
     );
-    label.setBookmarks(bookmarks);
+    label.setBookmarks(
+      bookmarks.sort((a, b) => {
+        return b.bookmarkCreatedAt - a.bookmarkCreatedAt;
+      })
+    );
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,

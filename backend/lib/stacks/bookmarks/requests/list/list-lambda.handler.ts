@@ -63,10 +63,14 @@ class ListLambdaHandler extends BaseHandler {
       this.excludeArchived
     );
 
+    const bookmarks = result.map((bookmark: Bookmark) => bookmark.toObject());
+
     return {
       statusCode: ApiGatewayResponseCodes.OK,
       body: {
-        data: result.map((bookmark: Bookmark) => bookmark.toObject()),
+        data: bookmarks.sort((a, b) => {
+          return b.createdAt - a.createdAt;
+        }),
       },
     };
   }

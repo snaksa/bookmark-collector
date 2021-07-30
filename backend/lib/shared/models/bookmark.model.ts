@@ -16,7 +16,7 @@ export default class Bookmark implements Model {
   bookmarkUrl: string;
   bookmarkTitle: string;
   bookmarkImage: string;
-  createdAt: number;
+  bookmarkCreatedAt: number;
 
   labels: Label[];
 
@@ -31,7 +31,7 @@ export default class Bookmark implements Model {
     createdAt = Date.now()
   ) {
     this.pk = `USER#${userId}`;
-    this.sk = `BOOKMARK#${createdAt}#${id}`;
+    this.sk = `BOOKMARK#${id}`;
     this.GSI1 = `USER#${userId}`;
 
     this.bookmarkId = id;
@@ -43,7 +43,7 @@ export default class Bookmark implements Model {
     this.bookmarkTitle = title;
     this.bookmarkImage = image;
 
-    this.createdAt = createdAt;
+    this.bookmarkCreatedAt = createdAt;
 
     this.labels = [];
   }
@@ -65,7 +65,7 @@ export default class Bookmark implements Model {
       labels: this.labels.map((label: Label) => label.toObject()),
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
-      createdAt: this.createdAt,
+      createdAt: this.bookmarkCreatedAt,
     };
   }
 
@@ -88,7 +88,7 @@ export default class Bookmark implements Model {
       bookmarkImage: this.bookmarkImage,
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
-      createdAt: this.createdAt,
+      bookmarkCreatedAt: this.bookmarkCreatedAt,
       GSI1: this.GSI1,
       entityType: Bookmark.ENTITY_TYPE,
     };
@@ -103,7 +103,7 @@ export default class Bookmark implements Model {
       o.isArchived,
       o.bookmarkTitle,
       o.bookmarkImage,
-      o.createdAt
+      o.bookmarkCreatedAt
     );
   }
 }

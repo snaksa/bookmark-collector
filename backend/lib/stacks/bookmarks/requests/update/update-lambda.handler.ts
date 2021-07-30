@@ -113,7 +113,8 @@ class UpdateLambdaHandler extends BaseHandler {
             bookmark.isFavorite,
             bookmark.isArchived,
             bookmark.bookmarkTitle,
-            bookmark.bookmarkImage
+            bookmark.bookmarkImage,
+            bookmark.bookmarkCreatedAt
           );
           created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
         } else {
@@ -160,7 +161,8 @@ class UpdateLambdaHandler extends BaseHandler {
             bookmark.isFavorite,
             bookmark.isArchived,
             bookmark.bookmarkTitle,
-            bookmark.bookmarkImage
+            bookmark.bookmarkImage,
+            bookmark.bookmarkCreatedAt
           );
 
           created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));

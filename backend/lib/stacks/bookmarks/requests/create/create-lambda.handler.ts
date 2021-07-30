@@ -87,7 +87,8 @@ class CreateLambdaHandler extends BaseHandler {
           bookmark.isFavorite,
           bookmark.isArchived,
           bookmark.bookmarkTitle,
-          bookmark.bookmarkImage
+          bookmark.bookmarkImage,
+          bookmark.bookmarkCreatedAt
         );
         bookmarkLabels.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
       });
