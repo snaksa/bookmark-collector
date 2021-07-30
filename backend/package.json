@@ -9,7 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "deploy": "cdk deploy",
-    "deploy-all": "cdk deploy '*'",
+    "deploy-all": "cdk deploy '*' --require-approval never",
+    "destroy": "cdk destroy --all",
     "prettier": "prettier --write 'lib/**/*.ts'",
     "eslint": "eslint 'lib/**/*.ts'"
   },

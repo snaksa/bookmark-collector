@@ -10,6 +10,7 @@ export default class User implements Model {
 
   id: string;
   status: number;
+  userStatus: number;
   userId: string;
   email: string;
   firstName: string;
@@ -35,12 +36,8 @@ export default class User implements Model {
 
   public toObject() {
     return {
-      pk: this.pk,
-      sk: this.sk,
       id: this.id,
       email: this.GSI1,
-      GSI1: this.GSI1,
-      status: this.status,
       firstName: this.firstName,
       lastName: this.lastName,
     };
@@ -68,6 +65,6 @@ export default class User implements Model {
   }
 
   public static fromDynamoDb(o: User): User {
-    return new User(o.userId, o.GSI1, o.firstName, o.lastName, o.status);
+    return new User(o.userId, o.GSI1, o.firstName, o.lastName, o.userStatus);
   }
 }

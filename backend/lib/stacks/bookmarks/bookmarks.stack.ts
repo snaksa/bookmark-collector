@@ -21,7 +21,7 @@ export class BookmarksStack extends BaseStack {
     this.loadAuthorizer();
 
     const queue = new Queue(this, "MyQueue", {
-      visibilityTimeout: Duration.seconds(30),
+      visibilityTimeout: Duration.seconds(120),
       receiveMessageWaitTime: Duration.seconds(20),
     });
 
