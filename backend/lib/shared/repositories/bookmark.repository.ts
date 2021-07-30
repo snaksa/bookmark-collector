@@ -37,8 +37,8 @@ export class BookmarkRepository {
     const updated = await new QueryBuilder<Bookmark>()
       .table(this.dbStore)
       .where({
-        pk: `USER#${bookmark.userId}`,
-        sk: `BOOKMARK#${bookmark.bookmarkId}`,
+        pk: bookmark.pk,
+        sk: bookmark.sk,
       })
       .update(bookmark.toDynamoDbObject(true));
 
@@ -131,7 +131,8 @@ export class BookmarkRepository {
           record.isFavorite,
           record.isArchived,
           record.bookmarkTitle,
-          record.bookmarkImage
+          record.bookmarkImage,
+          record.bookmarkCreatedAt
         );
       }
 

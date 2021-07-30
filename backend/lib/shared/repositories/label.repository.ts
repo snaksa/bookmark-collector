@@ -79,12 +79,12 @@ export class LabelRepository {
     );
   }
 
-  async updateBookmarks(bookmarkLabel: BookmarkLabel) {
+  async updateBookmarks(bookmarkLabel: BookmarkLabel): Promise<BookmarkLabel> {
     const updated = await new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
       .where({
-        pk: `LABEL#${bookmarkLabel.labelId}`,
-        sk: `BOOKMARK#${bookmarkLabel.bookmarkId}`,
+        pk: bookmarkLabel.pk,
+        sk: bookmarkLabel.sk,
       })
       .update(bookmarkLabel.toDynamoDbObject(true));
 

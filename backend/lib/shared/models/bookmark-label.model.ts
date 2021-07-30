@@ -1,7 +1,7 @@
 import { Model } from "./base.model";
 
 export default class BookmarkLabel implements Model {
-  static ENTITY_TYPE: string = "bookmarkLabel";
+  static ENTITY_TYPE = "bookmarkLabel";
 
   pk: string;
   sk: string;
@@ -14,6 +14,7 @@ export default class BookmarkLabel implements Model {
   bookmarkUrl: string;
   bookmarkTitle: string;
   bookmarkImage: string;
+  bookmarkCreatedAt: number;
   isFavorite: boolean;
   isArchived: boolean;
   title: string;
@@ -29,7 +30,8 @@ export default class BookmarkLabel implements Model {
     isFavorite = false,
     isArchived = false,
     bookmarkTitle = "",
-    bookmarkImage = ""
+    bookmarkImage = "",
+    bookmarkCreatedAt = Date.now()
   ) {
     this.pk = `LABEL#${labelId}`;
     this.sk = `BOOKMARK#${bookmarkId}`;
@@ -45,6 +47,7 @@ export default class BookmarkLabel implements Model {
     this.isArchived = isArchived;
     this.bookmarkTitle = bookmarkTitle;
     this.bookmarkImage = bookmarkImage;
+    this.bookmarkCreatedAt = bookmarkCreatedAt;
   }
 
   public toObject() {
@@ -54,6 +57,7 @@ export default class BookmarkLabel implements Model {
       bookmarkUrl: this.bookmarkUrl,
       bookmarkTitle: this.bookmarkTitle,
       bookmarkImage: this.bookmarkImage,
+      bookmarkCreatedAt: this.bookmarkCreatedAt,
       title: this.title,
       color: this.color,
     };
@@ -79,6 +83,7 @@ export default class BookmarkLabel implements Model {
       bookmarkUrl: this.bookmarkUrl,
       bookmarkTitle: this.bookmarkTitle,
       bookmarkImage: this.bookmarkImage,
+      bookmarkCreatedAt: this.bookmarkCreatedAt,
       isFavorite: this.isFavorite,
       isArchived: this.isArchived,
       GSI1: this.GSI1,
@@ -97,7 +102,8 @@ export default class BookmarkLabel implements Model {
       o.isFavorite,
       o.isArchived,
       o.bookmarkTitle,
-      o.bookmarkImage
+      o.bookmarkImage,
+      o.bookmarkCreatedAt
     );
   }
 }

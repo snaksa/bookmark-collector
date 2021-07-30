@@ -56,7 +56,8 @@ class SingleLambdaHandler extends BaseHandler {
           labelBookmark.isFavorite,
           labelBookmark.isArchived,
           labelBookmark.bookmarkTitle,
-          labelBookmark.bookmarkImage
+          labelBookmark.bookmarkImage,
+          labelBookmark.bookmarkCreatedAt
         )
     );
     label.setBookmarks(bookmarks);

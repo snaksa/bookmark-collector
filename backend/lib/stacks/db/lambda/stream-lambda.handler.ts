@@ -121,6 +121,7 @@ class StreamLambdaHandler extends BaseHandler {
       bl.isArchived = bookmark.isArchived;
       bl.bookmarkTitle = bookmark.bookmarkTitle;
       bl.bookmarkImage = bookmark.bookmarkImage;
+      bl.bookmarkCreatedAt = bookmark.createdAt;
 
       updated.push(this.labelRepository.updateBookmarks(bl));
     }
