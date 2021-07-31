@@ -9,6 +9,7 @@ import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request
 import { UpdateLambda } from "./requests/update/update-lambda";
 import { SingleLambda } from "./requests/single/single-lambda";
 import { ChangePasswordLambda } from "./requests/change-password/change-password-lambda";
+import { RefreshLambda } from "./requests/refresh/refresh-lambda";
 
 export class UsersStack extends BaseStack {
   dbStore: ITable;
@@ -66,6 +67,24 @@ export class UsersStack extends BaseStack {
         ApiGatewayRequestMethods.POST,
         new LambdaIntegration(
           new LoginLambda(this, "login-lambda", {
+            cognitoClientId: this.cognitoClientId,
+          })
+        )
+      );
+
+    auth
+      .addResource("refresh", {
+        defaultCorsPreflightOptions: {
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowMethods: Cors.ALL_METHODS,
+          allowHeaders: ["*"],
+          disableCache: true,
+        },
+      })
+      .addMethod(
+        ApiGatewayRequestMethods.POST,
+        new LambdaIntegration(
+          new RefreshLambda(this, "refresh-lambda", {
             cognitoClientId: this.cognitoClientId,
           })
         )
