@@ -3,34 +3,53 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor,
+  HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { AuthService } from '../modules/shared/services/auth.service';
+import { catchError, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const tokens = this.authService.getTokens();
-    if (tokens) {
-      if (tokens.expires > Date.now()) {
+    const blacklist = [
+      'auth/login',
+      'auth/register',
+      'auth/refresh'
+    ];
+
+    // if the requested URL does not require authentication skip the headers
+    for (const url of blacklist) {
+      if (request.url.includes(url)) {
+        return next.handle(request);
+      }
+    }
+
+    // otherwise fetch the access token
+    return this.authService.getToken().pipe(
+      switchMap((token) => {
+        if (!token) {
+          // if no valid token was retrieved then redirect to login
+          this.router.navigate(['/login']);
+          return EMPTY;
+        }
+
+        // if a valid token was retrieved add it to the headers
         const req = request.clone({
           setHeaders: {
-            Authorization: tokens.accessToken,
-          },
+            Authorization: token
+          }
         });
 
         return next.handle(req);
-      } else {
-        // TODO: token has expired - try to refresh it
-        console.log('refresh token request');
-      }
-    }
-    return next.handle(request);
+      })
+    );
   }
 }

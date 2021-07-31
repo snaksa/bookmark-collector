@@ -4,16 +4,17 @@ import {
   CanActivate,
   Router,
   RouterStateSnapshot,
-  UrlTree,
+  UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../modules/shared/services/auth.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthenticatedGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -23,16 +24,15 @@ export class AuthenticatedGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const tokens = this.authService.getTokens();
-    if (tokens) {
-      if (tokens.expires > Date.now()) {
-        return true;
-      } else {
-        // TODO: try to refresh the token
-      }
-    }
+    return new Observable<boolean>((observer) => {
+      this.authService.getToken().subscribe((token) => {
+        observer.next(!!token);
+        observer.complete();
 
-    this.router.navigateByUrl('login');
-    return false;
+        if(!token) {
+          this.router.navigateByUrl('login');
+        }
+      })
+    });
   }
 }
