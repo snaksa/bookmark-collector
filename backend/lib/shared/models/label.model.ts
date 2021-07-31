@@ -2,7 +2,7 @@ import { Model } from "./base.model";
 import Bookmark from "./bookmark.model";
 
 export default class Label implements Model {
-  static ENTITY_TYPE: string = "label";
+  static ENTITY_TYPE = "label";
 
   pk: string;
   sk: string;

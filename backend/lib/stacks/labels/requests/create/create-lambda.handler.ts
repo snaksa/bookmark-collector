@@ -7,7 +7,6 @@ import BaseHandler, {
 import { Validator } from "../../../../shared/validators/validator";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
-import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 
 interface CreateEventData {
