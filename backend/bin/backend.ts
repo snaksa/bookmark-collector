@@ -7,6 +7,7 @@ import { ApiGatewayStack } from "../lib/stacks/api-gateway/api-gateway.stack";
 import { UsersStack } from "../lib/stacks/users/users.stack";
 import { LabelsStack } from "../lib/stacks/labels/labels.stack";
 import { BookmarksStack } from "../lib/stacks/bookmarks/bookmarks.stack";
+import { FrontendStack } from "../lib/stacks/frontend/frontend.stack";
 
 const app = new cdk.App();
 
@@ -30,3 +31,5 @@ labelsStack.addDependency(apiGatewayStack);
 const bookmarksStack = new BookmarksStack(app, "BookmarksStack");
 bookmarksStack.addDependency(dbStack);
 bookmarksStack.addDependency(apiGatewayStack);
+
+new FrontendStack(app, "FrontendStack");
