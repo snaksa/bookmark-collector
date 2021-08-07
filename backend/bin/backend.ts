@@ -32,4 +32,4 @@ const bookmarksStack = new BookmarksStack(app, "BookmarksStack");
 bookmarksStack.addDependency(dbStack);
 bookmarksStack.addDependency(apiGatewayStack);
 
-new FrontendStack(app, "FrontendStack");
+// new FrontendStack(app, "FrontendStack");
