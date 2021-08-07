@@ -9,32 +9,27 @@ import { LabelsStack } from "../lib/stacks/labels/labels.stack";
 import { BookmarksStack } from "../lib/stacks/bookmarks/bookmarks.stack";
 import { FrontendStack } from "../lib/stacks/frontend/frontend.stack";
 
-const env = {
-  account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
-};
-
 const app = new cdk.App();
 
-const dbStack = new DbStack(app, "DbStack", { env });
+const dbStack = new DbStack(app, "DbStack");
 
-const cognitoStack = new CognitoStack(app, "CognitoStack", { env });
+const cognitoStack = new CognitoStack(app, "CognitoStack");
 cognitoStack.addDependency(dbStack);
 
-const apiGatewayStack = new ApiGatewayStack(app, "ApiGatewayStack", { env });
+const apiGatewayStack = new ApiGatewayStack(app, "ApiGatewayStack");
 apiGatewayStack.addDependency(cognitoStack);
 
-const usersStack = new UsersStack(app, "UsersStack", { env });
+const usersStack = new UsersStack(app, "UsersStack");
 usersStack.addDependency(dbStack);
 usersStack.addDependency(apiGatewayStack);
 usersStack.addDependency(cognitoStack);
 
-const labelsStack = new LabelsStack(app, "LabelsStack", { env });
+const labelsStack = new LabelsStack(app, "LabelsStack");
 labelsStack.addDependency(dbStack);
 labelsStack.addDependency(apiGatewayStack);
 
-const bookmarksStack = new BookmarksStack(app, "BookmarksStack", { env });
+const bookmarksStack = new BookmarksStack(app, "BookmarksStack");
 bookmarksStack.addDependency(dbStack);
 bookmarksStack.addDependency(apiGatewayStack);
 
-new FrontendStack(app, "FrontendStack", { env });
+new FrontendStack(app, "FrontendStack");
