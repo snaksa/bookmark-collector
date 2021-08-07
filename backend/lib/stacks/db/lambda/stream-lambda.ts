@@ -11,7 +11,7 @@ interface StreamLambdaProps {
 export class StreamLambda extends NodejsFunction {
   constructor(scope: Construct, id: string, props: StreamLambdaProps) {
     super(scope, id, {
-      entry: path.resolve(__dirname, "./stream-lambda.handler.ts"),
+      entry: path.join(__dirname, "stream-lambda.handler.ts"),
       environment: {
         dbStore: props.dbStore.tableName,
         reversedDbStore: props.reversedDbStore,
