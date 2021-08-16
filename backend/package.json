@@ -11,8 +11,8 @@
     "diff": "cdk diff -c env=dev",
     "synth": "cdk synth -c env=dev",
     "deploy": "cdk deploy -c env=dev",
-    "deploy-all": "cdk deploy '*' --require-approval never -c env=sinan",
-    "destroy": "cdk destroy --all -c env=sinan",
+    "deploy-all": "cdk deploy '*' --require-approval never -c env=dev",
+    "destroy": "cdk destroy --all -c env=dev",
     "prettier": "prettier --write 'lib/**/*.ts'",
     "eslint": "eslint 'lib/**/*.ts'"
   },
