@@ -10,6 +10,7 @@ import { UpdateLambda } from "./requests/update/update-lambda";
 import { SingleLambda } from "./requests/single/single-lambda";
 import { ChangePasswordLambda } from "./requests/change-password/change-password-lambda";
 import { RefreshLambda } from "./requests/refresh/refresh-lambda";
+import { BuildConfig } from "../../shared/services/environment.service";
 
 export class UsersStack extends BaseStack {
   dbStore: ITable;
@@ -17,8 +18,13 @@ export class UsersStack extends BaseStack {
   api: IRestApi;
   cognitoClientId: string;
 
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+  constructor(
+    scope: Construct,
+    id: string,
+    buildConfig: BuildConfig,
+    props?: StackProps
+  ) {
+    super(scope, id, buildConfig, props);
 
     this.loadTables();
     this.loadApi();
@@ -46,9 +52,11 @@ export class UsersStack extends BaseStack {
       .addMethod(
         ApiGatewayRequestMethods.POST,
         new LambdaIntegration(
-          new RegisterLambda(this, "register-lambda", {
+          new RegisterLambda(this, buildConfig.envSpecific("register-lambda"), {
             dbStore: this.dbStore,
-            userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
+            userIndexByEmail: buildConfig.envSpecific(
+              AwsResources.DB_STORE_TABLE_GSI1
+            ),
             cognitoClientId: this.cognitoClientId,
           })
         )
@@ -66,7 +74,7 @@ export class UsersStack extends BaseStack {
       .addMethod(
         ApiGatewayRequestMethods.POST,
         new LambdaIntegration(
-          new LoginLambda(this, "login-lambda", {
+          new LoginLambda(this, buildConfig.envSpecific("login-lambda"), {
             cognitoClientId: this.cognitoClientId,
           })
         )
@@ -84,7 +92,7 @@ export class UsersStack extends BaseStack {
       .addMethod(
         ApiGatewayRequestMethods.POST,
         new LambdaIntegration(
-          new RefreshLambda(this, "refresh-lambda", {
+          new RefreshLambda(this, buildConfig.envSpecific("refresh-lambda"), {
             cognitoClientId: this.cognitoClientId,
           })
         )
@@ -102,7 +110,7 @@ export class UsersStack extends BaseStack {
     me.addMethod(
       ApiGatewayRequestMethods.GET,
       new LambdaIntegration(
-        new SingleLambda(this, "single-lambda", {
+        new SingleLambda(this, buildConfig.envSpecific("single-lambda"), {
           dbStore: this.dbStore,
         })
       ),
@@ -112,9 +120,11 @@ export class UsersStack extends BaseStack {
     me.addMethod(
       ApiGatewayRequestMethods.PUT,
       new LambdaIntegration(
-        new UpdateLambda(this, "update-lambda", {
+        new UpdateLambda(this, buildConfig.envSpecific("update-lambda"), {
           dbStore: this.dbStore,
-          userIndexByEmail: AwsResources.DB_STORE_TABLE_GSI1,
+          userIndexByEmail: buildConfig.envSpecific(
+            AwsResources.DB_STORE_TABLE_GSI1
+          ),
           cognitoUserPoolId: this.cognitoUserPoolId,
           cognitoUserPoolArn: this.cognitoUserPoolArn,
         })
@@ -122,23 +132,30 @@ export class UsersStack extends BaseStack {
       this.getAuthorization()
     );
 
-    const userPassword = me.addResource("change-password", {
-      defaultCorsPreflightOptions: {
-        allowOrigins: Cors.ALL_ORIGINS,
-        allowMethods: Cors.ALL_METHODS,
-        allowHeaders: ["*"],
-        disableCache: true,
-      },
-    });
+    const userPassword = me.addResource(
+      buildConfig.envSpecific("change-password"),
+      {
+        defaultCorsPreflightOptions: {
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowMethods: Cors.ALL_METHODS,
+          allowHeaders: ["*"],
+          disableCache: true,
+        },
+      }
+    );
 
     userPassword.addMethod(
       ApiGatewayRequestMethods.PUT,
       new LambdaIntegration(
-        new ChangePasswordLambda(this, "change-password-lambda", {
-          dbStore: this.dbStore,
-          cognitoUserPoolId: this.cognitoUserPoolId,
-          cognitoUserPoolArn: this.cognitoUserPoolArn,
-        })
+        new ChangePasswordLambda(
+          this,
+          buildConfig.envSpecific("change-password-lambda"),
+          {
+            dbStore: this.dbStore,
+            cognitoUserPoolId: this.cognitoUserPoolId,
+            cognitoUserPoolArn: this.cognitoUserPoolArn,
+          }
+        )
       ),
       this.getAuthorization()
     );

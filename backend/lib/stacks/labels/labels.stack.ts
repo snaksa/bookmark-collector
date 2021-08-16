@@ -7,10 +7,16 @@ import { UpdateLambda } from "./requests/update/update-lambda";
 import { BaseStack } from "../base.stack";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { SingleLambda } from "./requests/single/single-lambda";
+import { BuildConfig } from "../../shared/services/environment.service";
 
 export class LabelsStack extends BaseStack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+  constructor(
+    scope: Construct,
+    id: string,
+    buildConfig: BuildConfig,
+    props?: StackProps
+  ) {
+    super(scope, id, buildConfig, props);
 
     this.loadTables();
     this.loadApi();
@@ -29,7 +35,7 @@ export class LabelsStack extends BaseStack {
     labels.addMethod(
       ApiGatewayRequestMethods.GET,
       new LambdaIntegration(
-        new ListLambda(this, "list-lambda", {
+        new ListLambda(this, buildConfig.envSpecific("list-lambda"), {
           dbStore: this.dbStore,
         })
       ),
@@ -39,7 +45,7 @@ export class LabelsStack extends BaseStack {
     labels.addMethod(
       ApiGatewayRequestMethods.POST,
       new LambdaIntegration(
-        new CreateLambda(this, "create-lambda", {
+        new CreateLambda(this, buildConfig.envSpecific("create-lambda"), {
           dbStore: this.dbStore,
         })
       ),
@@ -51,7 +57,7 @@ export class LabelsStack extends BaseStack {
     singleLabel.addMethod(
       ApiGatewayRequestMethods.GET,
       new LambdaIntegration(
-        new SingleLambda(this, "single-lambda", {
+        new SingleLambda(this, buildConfig.envSpecific("single-lambda"), {
           dbStore: this.dbStore,
         })
       ),
@@ -61,7 +67,7 @@ export class LabelsStack extends BaseStack {
     singleLabel.addMethod(
       ApiGatewayRequestMethods.DELETE,
       new LambdaIntegration(
-        new DeleteLambda(this, "delete-lambda", {
+        new DeleteLambda(this, buildConfig.envSpecific("delete-lambda"), {
           dbStore: this.dbStore,
         })
       ),
@@ -71,7 +77,7 @@ export class LabelsStack extends BaseStack {
     singleLabel.addMethod(
       ApiGatewayRequestMethods.PUT,
       new LambdaIntegration(
-        new UpdateLambda(this, "update-lambda", {
+        new UpdateLambda(this, buildConfig.envSpecific("update-lambda"), {
           dbStore: this.dbStore,
         })
       ),
