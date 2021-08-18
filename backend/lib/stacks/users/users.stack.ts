@@ -132,17 +132,14 @@ export class UsersStack extends BaseStack {
       this.getAuthorization()
     );
 
-    const userPassword = me.addResource(
-      buildConfig.envSpecific("change-password"),
-      {
-        defaultCorsPreflightOptions: {
-          allowOrigins: Cors.ALL_ORIGINS,
-          allowMethods: Cors.ALL_METHODS,
-          allowHeaders: ["*"],
-          disableCache: true,
-        },
-      }
-    );
+    const userPassword = me.addResource("change-password", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
+        allowHeaders: ["*"],
+        disableCache: true,
+      },
+    });
 
     userPassword.addMethod(
       ApiGatewayRequestMethods.PUT,
