@@ -1,5 +1,8 @@
 <div class="wrapper">
-  <div class="header">anonymous-layout</div>
+  <div class="header">
+    <button mat-button color='primary' (click)='redirectToRegister()'>SIGN UP</button>
+    <button mat-raised-button color='primary' (click)='redirectToLogin()'>LOG IN</button>
+  </div>
   <div class="content">
     <router-outlet></router-outlet>
   </div>

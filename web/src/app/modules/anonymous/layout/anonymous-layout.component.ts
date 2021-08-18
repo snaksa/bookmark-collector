@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-anonymous-layout',
   templateUrl: './anonymous-layout.component.html',
   styleUrls: ['./anonymous-layout.component.scss']
 })
-export class AnonymousLayoutComponent implements OnInit {
+export class AnonymousLayoutComponent {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
-  ngOnInit(): void {
+  redirectToRegister() {
+    this.router.navigateByUrl('register');
   }
 
+  redirectToLogin() {
+    this.router.navigateByUrl('login');
+  }
 }

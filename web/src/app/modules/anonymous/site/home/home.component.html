@@ -1,2 +1,56 @@
-<div><a routerLink="/login">Login</a></div>
-<div><a routerLink="/register">Register</a></div>
+<div class='wrapper'>
+  <div class='hero'>
+    <div class='content'>
+      <div class='header'>
+        <div>
+          All Your Bookmarks<br>in One Place
+        </div>
+        <button
+          mat-raised-button
+          color='secondary'
+          (click)='redirectToRegister()'
+        >
+          TRY NOW FOR FREE
+        </button>
+      </div>
+    </div>
+    <div class='cover'>
+      <img src='assets/images/home.png' alt='Home Image'>
+    </div>
+  </div>
+
+  <div class='description'>
+    <span>Managing your bookmarks is like taking care of your health.</span>
+    <span>Both are essential to lead and enjoy the richness of your life.</span>
+  </div>
+
+  <div class='features'>
+    <div class='header'>Advantages</div>
+    <div class='content'>
+      <div class='item'>
+        <span class='title'>See the big picture</span>
+        <span class='subtitle'>All relevant info about bookmarks visible at a glance</span>
+      </div>
+      <div class='item'>
+        <span class='title'>No limits</span>
+        <span class='subtitle'>Free to use indefinitely</span>
+      </div>
+      <div class='item'>
+        <span class='title'>Organize with Tags</span>
+        <span class='subtitle'>Keep your bookmarks organized by tagging them</span>
+      </div>
+    </div>
+  </div>
+  <div class='ready'>
+    <div class='content'>
+      <div class='text'>
+        <span class='header'>Save Content From Everywhere</span>
+        <span>Save articles, videos and stories from any publication, page or app. Curate your own space filled with everything you can’t wait to learn.</span>
+      </div>
+    </div>
+
+    <div class='cover'>
+      <img src='assets/images/content.png' alt='Save content from everywhere'>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,5 @@
+@import "variables";
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -6,6 +8,21 @@
 
   .header {
     background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 10%;
+
+
+    @media screen and (max-width: $small-screen) {
+      padding: 1rem;
+      justify-content: center;
+    }
+
+    button {
+      margin-left: 1rem;
+    }
   }
 
   .content {
