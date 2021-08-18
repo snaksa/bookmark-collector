@@ -177,4 +177,9 @@ export class AuthService {
       })
     );
   }
+
+  public logout() {
+    this.localStorage.removeItem(LocalStorageKeys.TOKENS);
+    this.router.navigateByUrl('/');
+  }
 }
