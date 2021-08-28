@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,9 @@ export class RegisterComponent {
     }
   );
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private titleService: Title) {
+    this.titleService.setTitle('Sign Up | Sinilinx')
+  }
 
   get firstNameControl() {
     return this.registerFormGroup.get('firstName')!;

@@ -5,6 +5,7 @@ import { BookmarkType } from '../../state/bookmark-type.enum';
 import { loadBookmarksAction } from '../../state/bookmarks.actions';
 import { getArchivedBookmarksSelector } from '../../state/bookmarks.selectors';
 import { State } from '../../state/bookmarks.state';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-archived-list',
@@ -15,7 +16,9 @@ export class ArchivedListComponent implements OnInit {
   isLoading = false;
   error = '';
 
-  constructor(private store: Store<State>) {}
+  constructor(private store: Store<State>, private titleService: Title) {
+    this.titleService.setTitle('Archived | Sinilinx');
+  }
 
   ngOnInit(): void {
     this.store.select(getArchivedBookmarksSelector).subscribe((list) => {

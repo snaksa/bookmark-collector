@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
 import { LabelsService } from '../../../labels/services/labels.service';
 import { Label } from '../../../../shared/models/label.model';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tag-bookmarks',
@@ -17,7 +18,9 @@ export class TagBookmarksComponent implements OnInit {
     color: '',
   };
 
-  constructor(private route: ActivatedRoute, private labelsService: LabelsService) {}
+  constructor(private route: ActivatedRoute, private labelsService: LabelsService, private titleService: Title) {
+    this.titleService.setTitle(`# | Sinilinx`);
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -32,6 +35,8 @@ export class TagBookmarksComponent implements OnInit {
       this.labelsService.getLabelBookmarks(params.id).subscribe((data) => {
         this.label = data;
         this.isLoading = false;
+
+        this.titleService.setTitle(`# ${this.label.title} | Sinilinx`);
       });
     });
   }

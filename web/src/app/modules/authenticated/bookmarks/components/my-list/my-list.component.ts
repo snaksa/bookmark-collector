@@ -5,6 +5,7 @@ import { BookmarkType } from '../../state/bookmark-type.enum';
 import { loadBookmarksAction } from '../../state/bookmarks.actions';
 import { getBookmarksListSelector } from '../../state/bookmarks.selectors';
 import { State } from '../../state/bookmarks.state';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-my-list',
@@ -15,7 +16,9 @@ export class MyListComponent implements OnInit {
   isLoading = false;
   error = '';
 
-  constructor(private store: Store<State>) {}
+  constructor(private store: Store<State>, private titleService: Title) {
+    this.titleService.setTitle('All Bookmarks | Sinilinx');
+  }
 
   ngOnInit(): void {
     this.store.select(getBookmarksListSelector).subscribe((list) => {
