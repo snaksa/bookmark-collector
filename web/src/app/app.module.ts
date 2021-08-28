@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { environment } from 'src/environments/environment';
 import { appReducer } from './state/app.reducer';
 import { AppEffects } from './state/app.effects';
+import { CoreModule } from './modules/core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { AppEffects } from './state/app.effects';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    CoreModule,
 
     StoreModule.forRoot({}),
     StoreModule.forFeature('app', appReducer),

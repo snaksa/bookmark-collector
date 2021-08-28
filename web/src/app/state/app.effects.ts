@@ -9,12 +9,18 @@ import {
   loadUserSuccessAction,
   updateUserAction,
   updateUserFailureAction,
-  updateUserSuccessAction,
+  updateUserSuccessAction
 } from './app.actions';
+import { NotificationService } from '../modules/shared/services/notification.service';
 
 @Injectable()
 export class AppEffects {
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) {
+  }
 
   loadCurrentUser = createEffect(() => {
     return this.actions$.pipe(
@@ -33,7 +39,12 @@ export class AppEffects {
       ofType(updateUserAction),
       mergeMap((data) => {
         return this.authService.updateUser(data.firstName, data.lastName, data.email).pipe(
-          map((user) => updateUserSuccessAction({ user })),
+          map((user) => {
+
+              this.notificationService.success({ message: 'User updated', icon: 'cloud_queue' });
+              return updateUserSuccessAction({ user });
+            }
+          ),
           catchError((error) => of(updateUserFailureAction({ error: error.message })))
         );
       })
