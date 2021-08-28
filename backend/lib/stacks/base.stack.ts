@@ -18,6 +18,10 @@ export class BaseStack extends Stack {
   cognitoUserPoolArn: string;
   cognitoClientId: string;
   authorizerRef: string;
+  hostedZoneId: string;
+  hostedZoneName: string;
+  certificateArn: string;
+  domain: string;
   buildConfig: BuildConfig;
 
   constructor(
@@ -85,5 +89,24 @@ export class BaseStack extends Stack {
       authorizationType: AuthorizationType.COGNITO,
       authorizer: { authorizerId: this.authorizerRef },
     };
+  }
+
+  loadParameters(): void {
+    this.certificateArn = SsmHelper.getParameter(
+      this,
+      AwsResources.CERTIFICATE_ARN
+    );
+
+    this.hostedZoneId = SsmHelper.getParameter(
+      this,
+      AwsResources.HOSTED_ZONE_ID
+    );
+
+    this.hostedZoneName = SsmHelper.getParameter(
+      this,
+      AwsResources.HOSTED_ZONE_NAME
+    );
+
+    this.domain = SsmHelper.getParameter(this, AwsResources.DOMAIN);
   }
 }

@@ -10,4 +10,9 @@ export enum AwsResources {
   COGNITO_CLIENT_ID = "CognitoClientId",
   COGNITO_CLIENT_ARN = "CognitoClientArn",
   COGNITO_USER_POOL_ID = "CognitoUserPoolId",
+
+  CERTIFICATE_ARN = "CertificateArn",
+  HOSTED_ZONE_ID = "HostedZoneId",
+  HOSTED_ZONE_NAME = "HostedZoneName",
+  DOMAIN = "Domain",
 }
