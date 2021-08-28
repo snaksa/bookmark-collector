@@ -3,6 +3,7 @@ import {
   loadLabelsAction,
   loadLabelsFailureAction,
   loadLabelsSuccessAction,
+  updateNewLabelsAction,
 } from './labels.actions';
 import { LabelsState } from './labels.state';
 
@@ -35,6 +36,21 @@ export const labelsReducer = createReducer<LabelsState>(
       isLoading: false,
       isInitialized: true,
       error: action.error,
+    };
+  }),
+  on(updateNewLabelsAction, (state, action) => {
+    const data = [...state.data];
+
+    action.labels.map(label => {
+      const exists = data.find(item => item.id === label.id);
+      if(!exists) {
+        data.push(label);
+      }
+    })
+
+    return {
+      ...state,
+      data: data
     };
   })
 );

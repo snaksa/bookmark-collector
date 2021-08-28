@@ -25,6 +25,7 @@ import {
   createBookmarkFailureAction,
 } from './bookmarks.actions';
 import { NotificationService } from '../../../shared/services/notification.service';
+import { updateNewLabelsAction } from '../../labels/state/labels.actions';
 
 @Injectable()
 export class BookmarksEffects {
@@ -133,9 +134,12 @@ export class BookmarksEffects {
             newLabels: action.newLabels,
           })
           .pipe(
-            map((bookmark) => {
+            mergeMap((bookmark) => {
               this.notificationService.success({ message: 'Bookmark updated', icon: 'cloud_queue' });
-              return updateBookmarkTagsSuccessAction({ bookmark });
+              return [
+                updateNewLabelsAction({labels: bookmark.labels}),
+                updateBookmarkTagsSuccessAction({ bookmark })
+              ];
             }),
             catchError((error) => of(updateBookmarkTagsFailureAction({ error })))
           );

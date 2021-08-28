@@ -19,6 +19,7 @@ import { AuthenticatedLayoutComponent } from '../layout/authenticated-layout.com
 import { AuthenticatedLayoutModule } from '../layout/authenticated-layout.module';
 import { CoreModule } from '../../core/core.module';
 import { AddBookmarkDialogComponent } from './components/bookmarks-layout/add-bookmark-dialog/add-bookmark-dialog.component';
+import { LabelsModule } from '../labels/labels.module';
 
 const routes = [
   {
@@ -78,6 +79,7 @@ const routes = [
     SharedModule,
     CoreModule,
     AuthenticatedLayoutModule,
+    LabelsModule,
     RouterModule.forChild(routes),
 
     StoreModule.forFeature('bookmarks', bookmarksReducer),

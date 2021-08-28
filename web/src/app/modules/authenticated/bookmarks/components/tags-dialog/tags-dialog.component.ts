@@ -10,6 +10,8 @@ import { LabelsService } from '../../../labels/services/labels.service';
 import { Store } from '@ngrx/store';
 import { State } from '../../state/bookmarks.state';
 import { updateBookmarkTagsAction } from '../../state/bookmarks.actions';
+import { getLabelsSelector } from '../../../labels/state/labels.selectors';
+import { loadLabelsAction } from '../../../labels/state/labels.actions';
 
 @Component({
   selector: 'app-tags-dialog',
@@ -39,8 +41,11 @@ export class TagsDialogComponent {
       this.loadingBookmark = false;
     });
 
-    this.labelsService.getLabels().subscribe((labels) => {
-      this.options = labels;
+    this.store.select(getLabelsSelector).subscribe((labels) => {
+      if (!labels.isInitialized && !labels.isLoading) {
+        this.store.dispatch(loadLabelsAction());
+      }
+      this.options = labels.data;
       this.loadingLabels = false;
     });
 
