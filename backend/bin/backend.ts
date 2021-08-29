@@ -62,4 +62,6 @@ bookmarksStack.addDependency(dbStack);
 bookmarksStack.addDependency(apiGatewayStack);
 usersStack.addDependency(cognitoStack);
 
-// new FrontendStack(app, buildConfig.envSpecific("FrontendStack"), buildConfig);
+new FrontendStack(app, buildConfig.envSpecific("FrontendStack"), buildConfig, {
+  env: { region: "us-east-1" },
+});
