@@ -1,10 +1,13 @@
 import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as s3deploy from "@aws-cdk/aws-s3-deployment";
+import { Bucket } from "@aws-cdk/aws-s3";
+import { Source, BucketDeployment } from "@aws-cdk/aws-s3-deployment";
+import { ARecord, HostedZone, RecordTarget } from "@aws-cdk/aws-route53";
+import { CloudFrontTarget } from "@aws-cdk/aws-route53-targets";
+import { Distribution } from "@aws-cdk/aws-cloudfront";
+import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { Certificate } from "@aws-cdk/aws-certificatemanager";
 import { BuildConfig } from "../../shared/services/environment.service";
 import { BaseStack } from "../base.stack";
-import { ARecord, HostedZone, RecordTarget } from "@aws-cdk/aws-route53";
-import { BucketWebsiteTarget } from "@aws-cdk/aws-route53-targets";
 
 export class FrontendStack extends BaseStack {
   constructor(
@@ -17,7 +20,7 @@ export class FrontendStack extends BaseStack {
 
     this.loadParameters();
 
-    const websiteBucket = new s3.Bucket(
+    const websiteBucket = new Bucket(
       this,
       buildConfig.envSpecific("WebAppBucket"),
       {
@@ -32,14 +35,24 @@ export class FrontendStack extends BaseStack {
       }
     );
 
-    new s3deploy.BucketDeployment(
+    new BucketDeployment(this, buildConfig.envSpecific("DeployWebApp"), {
+      sources: [Source.asset("../web/dist/web")],
+      destinationBucket: websiteBucket,
+    });
+
+    const certificate = Certificate.fromCertificateArn(
       this,
-      buildConfig.envSpecific("DeployWebApp"),
-      {
-        sources: [s3deploy.Source.asset("../web/dist/web")],
-        destinationBucket: websiteBucket,
-      }
+      buildConfig.envSpecific("WebAppCertificate"),
+      this.certificateArn
     );
+
+    const cloudFront = new Distribution(this, "WebsiteDistribution", {
+      defaultBehavior: { origin: new S3Origin(websiteBucket) },
+      domainNames: [
+        `${buildConfig.isProd ? "" : buildConfig.env + "."}${this.domain}`,
+      ],
+      certificate: certificate,
+    });
 
     const hostedZone = HostedZone.fromHostedZoneAttributes(
       this,
@@ -49,10 +62,9 @@ export class FrontendStack extends BaseStack {
         zoneName: this.hostedZoneName,
       }
     );
-
     new ARecord(this, buildConfig.envSpecific("ARecordWebApp"), {
       zone: hostedZone,
-      target: RecordTarget.fromAlias(new BucketWebsiteTarget(websiteBucket)),
+      target: RecordTarget.fromAlias(new CloudFrontTarget(cloudFront)),
       recordName: buildConfig.isProd ? "" : buildConfig.env,
     });
   }
