@@ -6,13 +6,12 @@ import {
   RestApi,
   SecurityPolicy,
 } from "@aws-cdk/aws-apigateway";
-import { Certificate } from "@aws-cdk/aws-certificatemanager";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
-import { BuildConfig } from "../../shared/services/environment.service";
-import { ARecord, HostedZone, RecordTarget } from "@aws-cdk/aws-route53";
+import { ARecord, RecordTarget } from "@aws-cdk/aws-route53";
 import { ApiGateway } from "@aws-cdk/aws-route53-targets";
+import { BuildConfig } from "../../shared/services/environment.service";
 
 export class ApiGatewayStack extends BaseStack {
   constructor(
@@ -22,19 +21,12 @@ export class ApiGatewayStack extends BaseStack {
     props?: StackProps
   ) {
     super(scope, id, buildConfig, props);
-    this.loadParameters();
-
-    const certificate = Certificate.fromCertificateArn(
-      this,
-      buildConfig.envSpecific("RestApiCertificate"),
-      this.certificateArn
-    );
 
     const api = new RestApi(this, buildConfig.envSpecific("RestApi"), {
       deploy: true,
       domainName: {
         domainName: `${buildConfig.env}-api.${this.domain}`,
-        certificate: certificate,
+        certificate: this.certificate,
         securityPolicy: SecurityPolicy.TLS_1_2,
       },
     });
@@ -64,17 +56,8 @@ export class ApiGatewayStack extends BaseStack {
       }
     );
 
-    const hostedZone = HostedZone.fromHostedZoneAttributes(
-      this,
-      buildConfig.envSpecific("Route53HostedZone"),
-      {
-        hostedZoneId: this.hostedZoneId,
-        zoneName: this.hostedZoneName,
-      }
-    );
-
     new ARecord(this, buildConfig.envSpecific("ARecord"), {
-      zone: hostedZone,
+      zone: this.hostedZone,
       target: RecordTarget.fromAlias(new ApiGateway(api)),
       recordName: `${buildConfig.env}-api`,
     });

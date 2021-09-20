@@ -1,13 +1,12 @@
 import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
 import { Bucket } from "@aws-cdk/aws-s3";
 import { Source, BucketDeployment } from "@aws-cdk/aws-s3-deployment";
-import { ARecord, HostedZone, RecordTarget } from "@aws-cdk/aws-route53";
 import { CloudFrontTarget } from "@aws-cdk/aws-route53-targets";
-import { Distribution } from "@aws-cdk/aws-cloudfront";
+import { Distribution, ViewerProtocolPolicy } from "@aws-cdk/aws-cloudfront";
 import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
-import { Certificate } from "@aws-cdk/aws-certificatemanager";
-import { BuildConfig } from "../../shared/services/environment.service";
 import { BaseStack } from "../base.stack";
+import { Route53Helper } from "../../shared/helpers/route53-helper";
+import { BuildConfig } from "../../shared/services/environment.service";
 
 export class FrontendStack extends BaseStack {
   constructor(
@@ -17,8 +16,6 @@ export class FrontendStack extends BaseStack {
     props?: StackProps
   ) {
     super(scope, id, buildConfig, props);
-
-    this.loadParameters();
 
     const websiteBucket = new Bucket(
       this,
@@ -40,32 +37,23 @@ export class FrontendStack extends BaseStack {
       destinationBucket: websiteBucket,
     });
 
-    const certificate = Certificate.fromCertificateArn(
-      this,
-      buildConfig.envSpecific("WebAppCertificate"),
-      this.certificateArn
-    );
-
     const cloudFront = new Distribution(this, "WebsiteDistribution", {
-      defaultBehavior: { origin: new S3Origin(websiteBucket) },
+      defaultBehavior: {
+        origin: new S3Origin(websiteBucket),
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      },
       domainNames: [
         `${buildConfig.isProd ? "" : buildConfig.env + "."}${this.domain}`,
       ],
-      certificate: certificate,
+      certificate: this.certificate,
     });
 
-    const hostedZone = HostedZone.fromHostedZoneAttributes(
+    Route53Helper.createARecord(
       this,
-      buildConfig.envSpecific("Route53HostedZone-WebApp"),
-      {
-        hostedZoneId: this.hostedZoneId,
-        zoneName: this.hostedZoneName,
-      }
+      buildConfig.envSpecific(`ARecordWebApp`),
+      this.hostedZone,
+      new CloudFrontTarget(cloudFront),
+      buildConfig.isProd ? "" : buildConfig.env
     );
-    new ARecord(this, buildConfig.envSpecific("ARecordWebApp"), {
-      zone: hostedZone,
-      target: RecordTarget.fromAlias(new CloudFrontTarget(cloudFront)),
-      recordName: buildConfig.isProd ? "" : buildConfig.env,
-    });
   }
 }

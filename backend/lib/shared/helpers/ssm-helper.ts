@@ -1,24 +1,24 @@
-import { Construct, Stack } from "@aws-cdk/core";
+import { Construct } from "@aws-cdk/core";
 import { StringParameter } from "@aws-cdk/aws-ssm";
 
 export class SsmHelper {
   static prefix = "BookmarkCollectorParameters";
 
-  static getParameter(stack: Stack, resource: string): string {
+  static getParameter(construct: Construct, resource: string): string {
     return StringParameter.fromStringParameterName(
-      stack,
-      `${this.prefix}-${resource}-${stack.stackName}`,
+      construct,
+      `${this.prefix}-${resource}-${construct.toString()}`,
       this.getResourceIdentifier(resource)
     ).stringValue;
   }
 
   static setParameter(
-    scope: Construct,
+    construct: Construct,
     resource: string,
     value: string,
     description: string
   ): void {
-    new StringParameter(scope, this.getResourceIdentifier(resource), {
+    new StringParameter(construct, this.getResourceIdentifier(resource), {
       description: description,
       parameterName: this.getResourceIdentifier(resource),
       stringValue: value,

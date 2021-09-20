@@ -21,11 +21,6 @@ export class BookmarksStack extends BaseStack {
   ) {
     super(scope, id, buildConfig, props);
 
-    this.loadTables();
-    this.loadApi();
-    this.loadAuth();
-    this.loadAuthorizer();
-
     const queue = new Queue(this, buildConfig.envSpecific("MyQueue"), {
       visibilityTimeout: Duration.seconds(120),
       receiveMessageWaitTime: Duration.seconds(20),
@@ -53,7 +48,7 @@ export class BookmarksStack extends BaseStack {
           queue: queue,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     bookmarks.addMethod(
@@ -66,7 +61,7 @@ export class BookmarksStack extends BaseStack {
           ),
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     const singleBookmark = bookmarks.addResource("{id}", {
@@ -88,7 +83,7 @@ export class BookmarksStack extends BaseStack {
           ),
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     singleBookmark.addMethod(
@@ -101,7 +96,7 @@ export class BookmarksStack extends BaseStack {
           ),
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     singleBookmark.addMethod(
@@ -114,7 +109,7 @@ export class BookmarksStack extends BaseStack {
           ),
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
   }
 }

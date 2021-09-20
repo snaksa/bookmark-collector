@@ -26,11 +26,6 @@ export class UsersStack extends BaseStack {
   ) {
     super(scope, id, buildConfig, props);
 
-    this.loadTables();
-    this.loadApi();
-    this.loadAuth();
-    this.loadAuthorizer();
-
     const auth = this.api.root.addResource("auth", {
       defaultCorsPreflightOptions: {
         allowOrigins: Cors.ALL_ORIGINS,
@@ -114,7 +109,7 @@ export class UsersStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     me.addMethod(
@@ -129,7 +124,7 @@ export class UsersStack extends BaseStack {
           cognitoUserPoolArn: this.cognitoUserPoolArn,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     const userPassword = me.addResource("change-password", {
@@ -154,7 +149,7 @@ export class UsersStack extends BaseStack {
           }
         )
       ),
-      this.getAuthorization()
+      this.authorization
     );
   }
 }

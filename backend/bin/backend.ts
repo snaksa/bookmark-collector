@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import * as cdk from "@aws-cdk/core";
-import EnvironmentService from "../lib/shared/services/environment.service";
 import { DbStack } from "../lib/stacks/db/db.stack";
 import { CognitoStack } from "../lib/stacks/cognito/cognito.stack";
 import { ApiGatewayStack } from "../lib/stacks/api-gateway/api-gateway.stack";
@@ -9,6 +8,7 @@ import { UsersStack } from "../lib/stacks/users/users.stack";
 import { LabelsStack } from "../lib/stacks/labels/labels.stack";
 import { BookmarksStack } from "../lib/stacks/bookmarks/bookmarks.stack";
 import { FrontendStack } from "../lib/stacks/frontend/frontend.stack";
+import EnvironmentService from "../lib/shared/services/environment.service";
 
 const app = new cdk.App();
 const buildConfig = EnvironmentService.getBuildConfig(app);

@@ -18,11 +18,6 @@ export class LabelsStack extends BaseStack {
   ) {
     super(scope, id, buildConfig, props);
 
-    this.loadTables();
-    this.loadApi();
-    this.loadAuth();
-    this.loadAuthorizer();
-
     const labels = this.api.root.addResource("labels", {
       defaultCorsPreflightOptions: {
         allowOrigins: Cors.ALL_ORIGINS,
@@ -39,7 +34,7 @@ export class LabelsStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     labels.addMethod(
@@ -49,7 +44,7 @@ export class LabelsStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     const singleLabel = labels.addResource("{id}");
@@ -61,7 +56,7 @@ export class LabelsStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     singleLabel.addMethod(
@@ -71,7 +66,7 @@ export class LabelsStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
 
     singleLabel.addMethod(
@@ -81,7 +76,7 @@ export class LabelsStack extends BaseStack {
           dbStore: this.dbStore,
         })
       ),
-      this.getAuthorization()
+      this.authorization
     );
   }
 }
