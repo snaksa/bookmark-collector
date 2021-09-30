@@ -8,7 +8,7 @@ export enum AwsResources {
   REST_API_COGNITO_AUTHORIZER = "RestApiCognitoAuthorizer",
 
   COGNITO_CLIENT_ID = "CognitoClientId",
-  COGNITO_CLIENT_ARN = "CognitoClientArn",
+  COGNITO_USER_POOL_ARN = "CognitoUserPoolArn",
   COGNITO_USER_POOL_ID = "CognitoUserPoolId",
 
   CERTIFICATE_ARN = "CertificateArn",

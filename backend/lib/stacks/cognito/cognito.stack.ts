@@ -3,7 +3,6 @@ import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
-import { CognitoConfirmationLambda } from "./lambda/cognito-confirmation-lambda";
 import { BuildConfig } from "../../shared/services/environment.service";
 
 export class CognitoStack extends BaseStack {
@@ -14,6 +13,10 @@ export class CognitoStack extends BaseStack {
     props?: StackProps
   ) {
     super(scope, id, buildConfig, props);
+
+    if (buildConfig.userPoolArn) {
+      return;
+    }
 
     const userPool = new UserPool(this, buildConfig.envSpecific("UserPool"), {
       selfSignUpEnabled: true,
@@ -39,12 +42,6 @@ export class CognitoStack extends BaseStack {
         requireUppercase: false,
         requireSymbols: false,
       },
-      lambdaTriggers: {
-        preSignUp: new CognitoConfirmationLambda(
-          this,
-          buildConfig.envSpecific("CognitoConfirmation")
-        ),
-      },
     });
 
     const userPoolClient = new UserPoolClient(
@@ -58,6 +55,10 @@ export class CognitoStack extends BaseStack {
       }
     );
 
+    userPoolClient.applyRemovalPolicy(
+      buildConfig.isProd ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY
+    );
+
     SsmHelper.setParameter(
       this,
       buildConfig.envSpecific(AwsResources.COGNITO_CLIENT_ID),
@@ -66,7 +67,7 @@ export class CognitoStack extends BaseStack {
     );
     SsmHelper.setParameter(
       this,
-      buildConfig.envSpecific(AwsResources.COGNITO_CLIENT_ARN),
+      buildConfig.envSpecific(AwsResources.COGNITO_USER_POOL_ARN),
       userPool.userPoolArn,
       "The ARN of the Cognito User Pool"
     );

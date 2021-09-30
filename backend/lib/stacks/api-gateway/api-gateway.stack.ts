@@ -38,11 +38,6 @@ export class ApiGatewayStack extends BaseStack {
       allowMethods: Cors.ALL_METHODS,
     });
 
-    const userPoolArn = SsmHelper.getParameter(
-      this,
-      buildConfig.envSpecific(AwsResources.COGNITO_CLIENT_ARN)
-    );
-
     const cognitoAuthorizer = new CfnAuthorizer(
       this,
       buildConfig.envSpecific("CognitoAuthorizer"),
@@ -51,7 +46,7 @@ export class ApiGatewayStack extends BaseStack {
         restApiId: api.restApiId,
         authType: AuthorizationType.COGNITO,
         type: "COGNITO_USER_POOLS",
-        providerArns: [userPoolArn],
+        providerArns: [this.cognitoUserPoolArn],
         identitySource: "method.request.header.Authorization",
       }
     );

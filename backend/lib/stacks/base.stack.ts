@@ -45,7 +45,8 @@ export class BaseStack extends Stack {
         [
           this.buildConfig.envSpecific(AwsResources.DB_STORE_TABLE_REVERSED),
           this.buildConfig.envSpecific(AwsResources.DB_STORE_TABLE_GSI1),
-        ]
+        ],
+        this.buildConfig.dbTableArn
       );
     }
 
@@ -74,6 +75,10 @@ export class BaseStack extends Stack {
   }
 
   get cognitoClientId(): string {
+    if (this.buildConfig.userPoolClientId) {
+      return this.buildConfig.userPoolClientId;
+    }
+
     if (!this._cognitoClientId) {
       this._cognitoClientId = SsmHelper.getParameter(
         this,
@@ -85,6 +90,10 @@ export class BaseStack extends Stack {
   }
 
   get cognitoUserPoolId(): string {
+    if (this.buildConfig.userPoolId) {
+      return this.buildConfig.userPoolId;
+    }
+
     if (!this._cognitoUserPoolId) {
       this._cognitoUserPoolId = SsmHelper.getParameter(
         this,
@@ -96,10 +105,14 @@ export class BaseStack extends Stack {
   }
 
   get cognitoUserPoolArn(): string {
+    if (this.buildConfig.userPoolArn) {
+      return this.buildConfig.userPoolArn;
+    }
+
     if (!this._cognitoUserPoolArn) {
       this._cognitoUserPoolArn = SsmHelper.getParameter(
         this,
-        this.buildConfig.envSpecific(AwsResources.COGNITO_CLIENT_ARN)
+        this.buildConfig.envSpecific(AwsResources.COGNITO_USER_POOL_ARN)
       );
     }
 

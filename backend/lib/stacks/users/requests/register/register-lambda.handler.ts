@@ -20,6 +20,7 @@ interface Env {
   dbStore: string;
   userIndexByEmail: string;
   cognitoClientId: string;
+  userPoolId: string;
 }
 
 class RegisterLambdaHandler extends BaseHandler {
@@ -30,6 +31,7 @@ class RegisterLambdaHandler extends BaseHandler {
     dbStore: process.env.dbStore ?? "",
     userIndexByEmail: process.env.userIndexByEmail ?? "",
     cognitoClientId: process.env.cognitoClientId ?? "",
+    userPoolId: process.env.userPoolId ?? "",
   };
 
   constructor() {
@@ -79,6 +81,14 @@ class RegisterLambdaHandler extends BaseHandler {
       // add user to Cognito
       const signUpResponse = await cognitoIdentity
         .signUp(registerData)
+        .promise();
+
+      // confirm user
+      await cognitoIdentity
+        .adminConfirmSignUp({
+          Username: registerData.Username,
+          UserPoolId: this.env.userPoolId,
+        })
         .promise();
 
       const userSub = signUpResponse.UserSub;

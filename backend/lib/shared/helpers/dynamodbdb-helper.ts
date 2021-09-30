@@ -6,13 +6,16 @@ export class DynamoDbHelper {
   public static getTable(
     stack: Stack,
     resource: string,
-    globalIndexes: string[] = []
+    globalIndexes: string[] = [],
+    arn: string | null = null,
+    streamArn: string | undefined = undefined
   ): ITable {
     return Table.fromTableAttributes(
       stack,
       `${resource}-table-reference-${stack.stackName}`,
       {
-        tableArn: SsmHelper.getParameter(stack, resource),
+        tableStreamArn: streamArn,
+        tableArn: arn ?? SsmHelper.getParameter(stack, resource),
         globalIndexes: globalIndexes,
       }
     );
