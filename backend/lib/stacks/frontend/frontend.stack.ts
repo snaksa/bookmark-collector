@@ -32,11 +32,6 @@ export class FrontendStack extends BaseStack {
       }
     );
 
-    new BucketDeployment(this, buildConfig.envSpecific("DeployWebApp"), {
-      sources: [Source.asset("../web/dist/web")],
-      destinationBucket: websiteBucket,
-    });
-
     const cloudFront = new Distribution(this, "WebsiteDistribution", {
       defaultBehavior: {
         origin: new S3Origin(websiteBucket),
@@ -46,6 +41,12 @@ export class FrontendStack extends BaseStack {
         `${buildConfig.isProd ? "" : buildConfig.env + "."}${this.domain}`,
       ],
       certificate: this.certificate,
+    });
+
+    new BucketDeployment(this, buildConfig.envSpecific("DeployWebApp"), {
+      sources: [Source.asset("../web/dist/web")],
+      destinationBucket: websiteBucket,
+      distribution: cloudFront,
     });
 
     Route53Helper.createARecord(
