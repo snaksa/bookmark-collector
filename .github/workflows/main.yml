@@ -3,8 +3,6 @@ name: CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -36,8 +34,7 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: '*'
-          cdk_args: '--require-approval never'
-          cdk_args: '-c env=dev'
+          cdk_args: '--require-approval never -c env=dev'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
