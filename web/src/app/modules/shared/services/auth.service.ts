@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { LocalStorageKeys, LocalStorageService } from './local-storage.service';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 
 interface LoginResponse {
   data: {
@@ -44,7 +45,12 @@ interface UserResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient, private router: Router, private localStorage: LocalStorageService) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private localStorage: LocalStorageService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
   }
 
   public getToken(): Observable<string | null> {
@@ -180,6 +186,6 @@ export class AuthService {
 
   public logout() {
     this.localStorage.removeItem(LocalStorageKeys.TOKENS);
-    this.router.navigateByUrl('/');
+    this.document.location.href = '/';
   }
 }

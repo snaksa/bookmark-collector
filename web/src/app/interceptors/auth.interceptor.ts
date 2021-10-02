@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -7,12 +7,17 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 import { AuthService } from '../modules/shared/services/auth.service';
-import { catchError, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
   }
 
   intercept(
@@ -37,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap((token) => {
         if (!token) {
           // if no valid token was retrieved then redirect to login
-          this.router.navigate(['/login']);
+          this.document.location.href = '/';
           return EMPTY;
         }
 
