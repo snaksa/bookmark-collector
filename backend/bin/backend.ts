@@ -16,15 +16,15 @@ const buildConfig = EnvironmentService.getBuildConfig(app);
 cdk.Tags.of(app).add("env", buildConfig.env);
 const account = {
   account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: 'us-east-1'
-}
+  region: "us-east-1",
+};
 
 const dbStack = new DbStack(
   app,
   buildConfig.envSpecific("DbStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 
@@ -33,7 +33,7 @@ const cognitoStack = new CognitoStack(
   buildConfig.envSpecific("CognitoStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 cognitoStack.addDependency(dbStack);
@@ -43,7 +43,7 @@ const apiGatewayStack = new ApiGatewayStack(
   buildConfig.envSpecific("ApiGatewayStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 apiGatewayStack.addDependency(cognitoStack);
@@ -53,7 +53,7 @@ const usersStack = new UsersStack(
   buildConfig.envSpecific("UsersStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 usersStack.addDependency(dbStack);
@@ -65,7 +65,7 @@ const labelsStack = new LabelsStack(
   buildConfig.envSpecific("LabelsStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 labelsStack.addDependency(dbStack);
@@ -77,18 +77,13 @@ const bookmarksStack = new BookmarksStack(
   buildConfig.envSpecific("BookmarksStack"),
   buildConfig,
   {
-    env: account
+    env: account,
   }
 );
 bookmarksStack.addDependency(dbStack);
 bookmarksStack.addDependency(apiGatewayStack);
 usersStack.addDependency(cognitoStack);
 
-new FrontendStack(
-  app,
-  buildConfig.envSpecific("FrontendStack"),
-  buildConfig,
-  {
-    env: account
-  }
-);
+new FrontendStack(app, buildConfig.envSpecific("FrontendStack"), buildConfig, {
+  env: account,
+});

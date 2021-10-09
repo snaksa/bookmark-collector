@@ -15,21 +15,6 @@ jobs:
           node-version: '14'
       - run: npm install --prefix web
       - run: npm run build --prefix web -- --configuration production
-      
-      - name: cdk synth
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'synth'
-          cdk_version: '1.122.0'
-          cdk_args: '-c env=dev'
-          working_dir: 'backend'
-          debug_log: true
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
-          CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
-          CDK_DEFAULT_REGION: 'us-east-1'
 
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v2
