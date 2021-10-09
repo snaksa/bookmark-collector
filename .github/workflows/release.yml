@@ -1,0 +1,47 @@
+name: Release CI
+
+on:
+  push:
+    branches: [ release ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install --prefix web
+      - run: npm run build --prefix web -- --configuration production
+      
+      - name: cdk synth
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'synth'
+          cdk_version: '1.122.0'
+          cdk_args: '-c env=dev'
+          working_dir: 'backend'
+          debug_log: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
+          CDK_DEFAULT_REGION: 'us-east-1'
+
+      - name: cdk deploy
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_stack: '*'
+          cdk_args: '--require-approval never -c env=prod -c dbTableArn=${{ secrets.AWS_DB_TABLE_ARN }} -c dbTableStreamArn=${{ secrets.AWS_DB_TABLE_STREAM }} -c userPoolClientId=${{ secrets.AWS_USER_POOL_CLIENT_ID }} -c userPoolArn=${{ secrets.AWS_USER_POOL_ARN }} -c userPoolId=${{ secrets.AWS_USER_POOL_ID }}'
+          working_dir: 'backend'
+          debug_log: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.CDK_DEFAULT_ACCOUNT }}
+          CDK_DEFAULT_REGION: 'us-east-1'
