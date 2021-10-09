@@ -1,7 +1,7 @@
 <div class="wrapper" (click)="openUrl()">
   <div>
-    <img *ngIf="bookmark.image" [src]="bookmark.image" alt="bookmarkImage" class="image"/>
-    <div *ngIf="!bookmark.image" class="image empty"></div>
+    <img *ngIf="bookmark.image && !imageLoadError" [src]="bookmark.image" (error)='imageLoadErrorHandler()' alt="bookmarkImage" class="image"/>
+    <div *ngIf="!bookmark.image || imageLoadError" class="image empty"></div>
   </div>
   <div class="content">
     <div>

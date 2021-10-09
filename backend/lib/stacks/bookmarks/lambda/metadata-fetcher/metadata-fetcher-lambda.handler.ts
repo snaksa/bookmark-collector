@@ -6,6 +6,7 @@ import BaseHandler, {
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import fetch from "node-fetch";
 import cheerio from "cheerio";
+import { URL } from "url";
 
 interface Env {
   dbStore: string;
@@ -80,6 +81,13 @@ class MetadataFetcherLambdaHandler extends BaseHandler {
       const ogImageElement = $('meta[property="og:image"]');
       if (ogImageElement) {
         image = ogImageElement.attr("content") ?? image;
+
+        // check if the image URL was provided as relative path
+        if (image.length && image[0] === "/") {
+          // append protocol, hostname and image path
+          const urlObject = new URL(bookmark.bookmarkUrl);
+          image = `${urlObject.protocol}//${urlObject.hostname}${image}`;
+        }
       }
 
       bookmark.bookmarkTitle = title;

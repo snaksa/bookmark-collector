@@ -27,6 +27,7 @@ export class BookmarkViewComponent implements OnInit {
   @Output() toggleFavorite = new EventEmitter<Bookmark>();
   @Output() toggleArchive = new EventEmitter<Bookmark>();
 
+  imageLoadError: boolean = false;
   baseUrl: string = '';
   isHandset = false;
 
@@ -92,5 +93,9 @@ export class BookmarkViewComponent implements OnInit {
       position: { top: '200px' },
       data: { id: this.bookmark.id },
     });
+  }
+
+  imageLoadErrorHandler() {
+    this.imageLoadError = true;
   }
 }
