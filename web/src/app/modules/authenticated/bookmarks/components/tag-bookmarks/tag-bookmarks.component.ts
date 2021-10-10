@@ -4,10 +4,15 @@ import { Bookmark } from 'src/app/modules/shared/models/bookmark.model';
 import { LabelsService } from '../../../labels/services/labels.service';
 import { Label } from '../../../../shared/models/label.model';
 import { Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { State } from '../../state/bookmarks.state';
+import { deleteLabelAction } from '../../../labels/state/labels.actions';
+import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tag-bookmarks',
-  templateUrl: './tag-bookmarks.component.html',
+  templateUrl: './tag-bookmarks.component.html'
 })
 export class TagBookmarksComponent implements OnInit {
   isLoading: boolean = true;
@@ -15,10 +20,29 @@ export class TagBookmarksComponent implements OnInit {
     id: '',
     title: '',
     bookmarks: [],
-    color: '',
+    color: ''
   };
 
-  constructor(private route: ActivatedRoute, private labelsService: LabelsService, private titleService: Title) {
+  actions = [
+    {
+      icon: 'edit',
+      action: 'edit',
+      label: 'Edit',
+    },
+    {
+      icon: 'delete_outline',
+      action: 'delete',
+      label: 'Delete',
+    }
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    private labelsService: LabelsService,
+    private titleService: Title,
+    private store: Store<State>,
+    private dialog: MatDialog
+  ) {
     this.titleService.setTitle(`# | Sinilinx`);
   }
 
@@ -29,7 +53,7 @@ export class TagBookmarksComponent implements OnInit {
         id: '',
         title: '',
         bookmarks: [],
-        color: '',
+        color: ''
       };
 
       this.labelsService.getLabelBookmarks(params.id).subscribe((data) => {
@@ -39,6 +63,26 @@ export class TagBookmarksComponent implements OnInit {
         this.titleService.setTitle(`# ${this.label.title} | Sinilinx`);
       });
     });
+  }
+
+  triggerAction(action: string) {
+    if (action === 'delete') {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        autoFocus: false,
+        position: { top: '200px' },
+        data: {
+          title: 'Are you sure?',
+          subtitle: 'The label will be deleted'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.store.dispatch(deleteLabelAction({ id: this.label.id }));
+        }
+      });
+    }
   }
 
   toggleFavoriteBookmark(bookmark: Bookmark) {

@@ -6,4 +6,6 @@
   (onFavoriteToggle)="toggleFavoriteBookmark($event)"
   (onArchiveToggle)="toggleArchiveBookmark($event)"
   (onDeleteToggle)="deleteBookmark($event)"
+  [actions]="actions"
+  (onAction)='triggerAction($event)'
 ></app-bookmarks-list>

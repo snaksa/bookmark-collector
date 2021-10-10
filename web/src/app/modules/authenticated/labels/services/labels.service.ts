@@ -5,10 +5,11 @@ import { environment } from '../../../../../environments/environment';
 import { Label } from '../../../shared/models/label.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LabelsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   public getLabels() {
     return this.http.get<{ data: Label[] }>(`${environment.apiBaseUrl}/labels`).pipe(
@@ -22,6 +23,14 @@ export class LabelsService {
     return this.http.get<{ data: Label }>(`${environment.apiBaseUrl}/labels/${id}`).pipe(
       map((response) => {
         return response.data;
+      })
+    );
+  }
+
+  public deleteLabel(id: string) {
+    return this.http.delete(`${environment.apiBaseUrl}/labels/${id}`).pipe(
+      map((response) => {
+        return id;
       })
     );
   }

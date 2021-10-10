@@ -6,13 +6,13 @@ import { State } from '../../state/bookmarks.state';
 import {
   toggleArchiveBookmarkAction,
   deleteBookmarkAction,
-  toggleFavoriteBookmarkAction,
+  toggleFavoriteBookmarkAction
 } from '../../state/bookmarks.actions';
 
 @Component({
   selector: 'app-bookmarks-list',
   templateUrl: './bookmarks-list.component.html',
-  styleUrls: ['./bookmarks-list.component.scss'],
+  styleUrls: ['./bookmarks-list.component.scss']
 })
 export class BookmarksListComponent {
   @Input() header: string = 'All bookmarks';
@@ -24,7 +24,15 @@ export class BookmarksListComponent {
   @Output() onArchiveToggle = new EventEmitter<Bookmark>();
   @Output() onDeleteToggle = new EventEmitter<Bookmark>();
 
-  constructor(private bookmarksService: BookmarksService, private store: Store<State>) {}
+  @Input() actions: { icon: string; action: string; label: string; }[] = [];
+  @Output() onAction = new EventEmitter<string>();
+
+  constructor(private bookmarksService: BookmarksService, private store: Store<State>) {
+  }
+
+  triggerAction(action: string) {
+    this.onAction.emit(action);
+  }
 
   trackBy(index: number, item: Bookmark) {
     return item.id;
@@ -34,7 +42,7 @@ export class BookmarksListComponent {
     this.store.dispatch(
       toggleFavoriteBookmarkAction({
         bookmarkId: bookmark.id,
-        isFavorite: !bookmark.isFavorite,
+        isFavorite: !bookmark.isFavorite
       })
     );
 
@@ -45,7 +53,7 @@ export class BookmarksListComponent {
     this.store.dispatch(
       toggleArchiveBookmarkAction({
         bookmarkId: bookmark.id,
-        isArchived: !bookmark.isArchived,
+        isArchived: !bookmark.isArchived
       })
     );
 
@@ -55,7 +63,7 @@ export class BookmarksListComponent {
   deleteBookmark(bookmark: Bookmark) {
     this.store.dispatch(
       deleteBookmarkAction({
-        bookmarkId: bookmark.id,
+        bookmarkId: bookmark.id
       })
     );
 

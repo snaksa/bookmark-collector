@@ -1,5 +1,11 @@
 <div class="title">
   <mat-icon class="icon">{{icon}}</mat-icon> {{header}}
+  <div class='actions' *ngIf='!isLoading'>
+    <span *ngFor='let action of actions' (click)="triggerAction(action.action)" matTooltip="{{action.label}}">
+        <mat-icon class="icon">{{ action.icon }}</mat-icon>
+      </span>
+
+  </div>
 </div>
 <div *ngFor="let bookmark of bookmarks; trackBy: trackBy">
   <app-bookmark-view

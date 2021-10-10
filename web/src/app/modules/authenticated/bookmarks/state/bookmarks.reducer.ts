@@ -8,6 +8,7 @@ import {
   toggleFavoriteBookmarkSuccessAction, updateBookmarkTagsSuccessAction, createBookmarkSuccessAction,
 } from './bookmarks.actions';
 import {BookmarksState} from './bookmarks.state';
+import { deleteLabelSuccessAction } from '../../labels/state/labels.actions';
 
 const initialState: BookmarksState = {
   list: {
@@ -144,5 +145,37 @@ export const bookmarksReducer = createReducer<BookmarksState>(
         data: state.archived.data.map(bookmark => bookmark.id === action.bookmark.id ? action.bookmark : bookmark),
       }
     };
-  })
+  }),
+  on(deleteLabelSuccessAction, (state, action) => {
+    return {
+      ...state,
+      list: {
+        ...state.list,
+        data: state.list.data.map(bookmark => {
+          return {
+            ...bookmark,
+            labels: bookmark.labels.filter(label => label.id !== action.id)
+          }
+        }),
+      },
+      favorites: {
+        ...state.favorites,
+        data: state.favorites.data.map(bookmark => {
+          return {
+            ...bookmark,
+            labels: bookmark.labels.filter(label => label.id !== action.id)
+          }
+        }),
+      },
+      archived: {
+        ...state.archived,
+        data: state.archived.data.map(bookmark => {
+          return {
+            ...bookmark,
+            labels: bookmark.labels.filter(label => label.id !== action.id)
+          }
+        }),
+      }
+    };
+  }),
 );
