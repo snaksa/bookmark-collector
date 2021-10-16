@@ -10,3 +10,7 @@ export const deleteLabelSuccessAction = createAction('[Labels API] Delete Label 
 export const deleteLabelFailureAction = createAction('[Labels API] Delete Label Failure', props<{ error: string }>());
 
 export const updateNewLabelsAction = createAction('[Labels API] Update New', props<{ labels: Label[] }>());
+
+export const updateLabelAction = createAction('[Labels API] Update Label', props<{ id: string, title: string }>());
+export const updateLabelSuccessAction = createAction('[Labels API] Update Label Success', props<Label>());
+export const updateLabelFailureAction = createAction('[Labels API] Update Label Failure', props<{ error: string }>());

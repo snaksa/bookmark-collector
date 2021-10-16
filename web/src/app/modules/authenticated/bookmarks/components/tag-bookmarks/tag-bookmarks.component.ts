@@ -6,9 +6,10 @@ import { Label } from '../../../../shared/models/label.model';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { State } from '../../state/bookmarks.state';
-import { deleteLabelAction } from '../../../labels/state/labels.actions';
+import { deleteLabelAction, updateLabelAction } from '../../../labels/state/labels.actions';
 import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EditLabelDialogComponent } from '../../../labels/components/edit-label-dialog/edit-label-dialog.component';
 
 @Component({
   selector: 'app-tag-bookmarks',
@@ -27,12 +28,12 @@ export class TagBookmarksComponent implements OnInit {
     {
       icon: 'edit',
       action: 'edit',
-      label: 'Edit',
+      label: 'Edit'
     },
     {
       icon: 'delete_outline',
       action: 'delete',
-      label: 'Delete',
+      label: 'Delete'
     }
   ];
 
@@ -80,6 +81,20 @@ export class TagBookmarksComponent implements OnInit {
       dialogRef.afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.store.dispatch(deleteLabelAction({ id: this.label.id }));
+        }
+      });
+    } else if (action === 'edit') {
+      const dialogRef = this.dialog.open(EditLabelDialogComponent, {
+        width: '30%',
+        data: {
+          title: this.label.title
+        }
+      });
+
+      dialogRef.afterClosed().subscribe((value) => {
+        if (value) {
+          this.label.title = value;
+          this.store.dispatch(updateLabelAction({ id: this.label.id, title: value }));
         }
       });
     }

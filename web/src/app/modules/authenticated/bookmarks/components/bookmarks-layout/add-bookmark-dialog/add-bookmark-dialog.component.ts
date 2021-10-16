@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -7,12 +7,10 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './add-bookmark-dialog.component.html',
   styleUrls: ['./add-bookmark-dialog.component.scss'],
 })
-export class AddBookmarkDialogComponent implements OnInit {
+export class AddBookmarkDialogComponent {
   inputControl = new FormControl();
 
   constructor(private dialogRef: MatDialogRef<AddBookmarkDialogComponent>) {}
-
-  ngOnInit(): void {}
 
   add() {
     const url = this.inputControl.value;

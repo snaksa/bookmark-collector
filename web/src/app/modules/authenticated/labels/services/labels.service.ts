@@ -34,4 +34,14 @@ export class LabelsService {
       })
     );
   }
+
+  public updateLabel(id: string, title: string) {
+    return this.http.put<{ data: Label }>(`${environment.apiBaseUrl}/labels/${id}`, {
+      label: title
+    }).pipe(
+      map((response) => {
+        return response.data;
+      })
+    );
+  }
 }

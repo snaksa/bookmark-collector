@@ -3,7 +3,7 @@ import {
   deleteLabelAction, deleteLabelFailureAction, deleteLabelSuccessAction,
   loadLabelsAction,
   loadLabelsFailureAction,
-  loadLabelsSuccessAction,
+  loadLabelsSuccessAction, updateLabelFailureAction, updateLabelSuccessAction,
   updateNewLabelsAction
 } from './labels.actions';
 import { LabelsState } from './labels.state';
@@ -69,6 +69,21 @@ export const labelsReducer = createReducer<LabelsState>(
     return {
       ...state,
       data: data
+    };
+  }),
+  on(updateLabelSuccessAction, (state, action) => {
+    return {
+      ...state,
+      data: state.data.map(label => label.id !== action.id ? label : {
+        ...label,
+        title: action.title
+      })
+    };
+  }),
+  on(updateLabelFailureAction, (state, action) => {
+    return {
+      ...state,
+      error: action.error
     };
   })
 );
