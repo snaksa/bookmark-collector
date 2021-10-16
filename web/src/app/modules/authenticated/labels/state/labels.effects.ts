@@ -59,7 +59,7 @@ export class LabelsEffects {
       mergeMap((action) => {
         return this.labelsService.updateLabel(action.id, action.title).pipe(
           map((label: Label) => {
-            this.notificationService.success({ message: 'Label updated', icon: 'cloud_queue' });
+            this.notificationService.success({ message: 'Tag updated', icon: 'cloud_queue' });
             return updateLabelSuccessAction(label);
           }),
           catchError((error) => of(deleteLabelFailureAction({ error })))
