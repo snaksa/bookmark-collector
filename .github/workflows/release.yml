@@ -5,6 +5,9 @@ on:
     branches: [ release ]
   workflow_dispatch:
 
+env:
+  BUILD_ENV: prod
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,6 +17,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm install --prefix web
+      - run: npm run config --prefix web -- --env $BUILD_ENV
       - run: npm run build --prefix web -- --configuration production
 
       - name: cdk deploy
@@ -21,7 +25,7 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: '*'
-          cdk_args: '--require-approval never -c env=prod -c dbTableArn=${{ secrets.AWS_DB_TABLE_ARN }} -c dbTableStreamArn=${{ secrets.AWS_DB_TABLE_STREAM }} -c userPoolClientId=${{ secrets.AWS_USER_POOL_CLIENT_ID }} -c userPoolArn=${{ secrets.AWS_USER_POOL_ARN }} -c userPoolId=${{ secrets.AWS_USER_POOL_ID }}'
+          cdk_args: '--require-approval never -c env=$BUILD_ENV -c dbTableArn=${{ secrets.AWS_DB_TABLE_ARN }} -c dbTableStreamArn=${{ secrets.AWS_DB_TABLE_STREAM }} -c userPoolClientId=${{ secrets.AWS_USER_POOL_CLIENT_ID }} -c userPoolArn=${{ secrets.AWS_USER_POOL_ARN }} -c userPoolId=${{ secrets.AWS_USER_POOL_ID }}'
           working_dir: 'backend'
           debug_log: true
         env:

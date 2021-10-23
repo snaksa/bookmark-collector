@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+env:
+  BUILD_ENV: staging
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,6 +17,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm install --prefix web
+      - run: npm run config --prefix web -- --env $BUILD_ENV
       - run: npm run build --prefix web -- --configuration development
 
       - name: cdk deploy
@@ -21,7 +25,7 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: '*'
-          cdk_args: '--require-approval never -c env=dev'
+          cdk_args: '--require-approval never -c env=$BUILD_ENV'
           working_dir: 'backend'
           debug_log: true
         env:
