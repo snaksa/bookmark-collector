@@ -25,11 +25,10 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: '*'
-          cdk_args: '--require-approval never -c env=$BUILD_ENV'
+          cdk_args: ${{ format('--require-approval never -c env={0}', $BUILD_ENV) }}
           working_dir: 'backend'
           debug_log: true
         env:
-          BUILD_ENV: $BUILD_ENV
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
