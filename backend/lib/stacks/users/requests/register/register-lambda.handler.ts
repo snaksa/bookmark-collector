@@ -102,6 +102,7 @@ class RegisterLambdaHandler extends BaseHandler {
         },
       };
     } catch (err) {
+      console.log(err);
       throw new GenericException();
     }
   }
