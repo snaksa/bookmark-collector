@@ -53,8 +53,6 @@ export class UsersStack extends BaseStack {
               AwsResources.DB_STORE_TABLE_GSI1
             ),
             cognitoClientId: this.cognitoClientId,
-            cognitoUserPoolArn: this.cognitoUserPoolArn,
-            userPoolId: this.cognitoUserPoolId,
           })
         )
       );
