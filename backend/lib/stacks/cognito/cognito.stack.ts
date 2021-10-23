@@ -22,7 +22,10 @@ export class CognitoStack extends BaseStack {
 
     const confirmationLambda = new CognitoConfirmationLambda(
       this,
-      "CognitoConfirmation"
+      "CognitoConfirmation",
+      {
+        userPoolArn: buildConfig.userPoolArn,
+      }
     );
 
     if (!buildConfig.userPoolId) {
