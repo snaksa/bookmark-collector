@@ -25,11 +25,10 @@ jobs:
         with:
           cdk_subcommand: 'deploy'
           cdk_stack: '*'
-          cdk_args: '--require-approval never -c env=$BUILD_ENV -c dbTableArn=${{ secrets.AWS_DB_TABLE_ARN }} -c dbTableStreamArn=${{ secrets.AWS_DB_TABLE_STREAM }} -c userPoolClientId=${{ secrets.AWS_USER_POOL_CLIENT_ID }} -c userPoolArn=${{ secrets.AWS_USER_POOL_ARN }} -c userPoolId=${{ secrets.AWS_USER_POOL_ID }}'
+          cdk_args: ${{ format('--require-approval never -c env={0} -c dbTableArn={1} -c dbTableStreamArn={2} -c userPoolClientId={3} -c userPoolArn={4} -c userPoolId={5}', env.BUILD_ENV, secrets.AWS_DB_TABLE_ARN, secrets.AWS_DB_TABLE_STREAM, secrets.AWS_USER_POOL_CLIENT_ID, secrets.AWS_USER_POOL_ARN, secrets.AWS_USER_POOL_ID) }}
           working_dir: 'backend'
           debug_log: true
         env:
-          BUILD_ENV: $BUILD_ENV
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
