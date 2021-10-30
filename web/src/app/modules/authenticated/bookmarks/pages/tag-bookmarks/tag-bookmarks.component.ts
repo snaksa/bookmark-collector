@@ -85,7 +85,8 @@ export class TagBookmarksComponent implements OnInit {
       });
     } else if (action === 'edit') {
       const dialogRef = this.dialog.open(EditLabelDialogComponent, {
-        width: '30%',
+        width: '400px',
+        position: { top: '200px' },
         data: {
           title: this.label.title
         }

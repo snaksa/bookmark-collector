@@ -2,28 +2,28 @@
   <app-authentication-wrapper-side>
     <img src="/assets/images/logo.webp" class='logo' alt='logo'>
     <app-authentication-form [formGroup]="registerFormGroup" (submit)="onSubmit()" title="Sign Up">
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input type="text" matInput formControlName="firstName">
         <mat-error *ngIf="firstNameControl.hasError('required')">
           First Name is required
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
         <input type="text" matInput formControlName="lastName">
         <mat-error *ngIf="lastNameControl.hasError('required')">
           Last Name is required
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
         <mat-error *ngIf="emailControl.hasError('required')">
           Email is required
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input type="password" matInput formControlName="password">
         <mat-error *ngIf="passwordControl.hasError('required')">

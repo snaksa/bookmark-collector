@@ -1,11 +1,11 @@
 <form *ngIf="!isHandset" class="new-form">
-  <mat-form-field class="url-input-field">
+  <mat-form-field class="url-input-field" color='accent'>
     <mat-label>https://...</mat-label>
     <input matInput [formControl]="bookmarkControl">
   </mat-form-field>
   <button
     mat-raised-button
-    color="primary"
+    color="accent"
     [disabled]="disabled"
     (click)="onSubmit()"
   >
@@ -19,7 +19,7 @@
 >
   <button
     mat-fab
-    color="primary"
+    color="accent"
     (click)="showDialog()"
   >
     <mat-icon>add</mat-icon>

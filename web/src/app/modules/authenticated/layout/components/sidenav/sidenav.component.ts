@@ -6,7 +6,6 @@ import { loadLabelsAction } from '../../../labels/state/labels.actions';
 import { User } from '../../../../shared/models/user.model';
 import { getCurrentUserSelector } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
-import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -22,7 +21,7 @@ export class SidenavComponent implements OnInit {
     email: '',
   };
 
-  constructor(private store: Store<AppState>, private authService: AuthService) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.store.select(getLabelsSelector).subscribe((labels) => {
@@ -39,9 +38,5 @@ export class SidenavComponent implements OnInit {
 
   generateLabelURL(label: Label) {
     return `/bookmarks/tags/${label.id}`;
-  }
-
-  logout() {
-    this.authService.logout();
   }
 }

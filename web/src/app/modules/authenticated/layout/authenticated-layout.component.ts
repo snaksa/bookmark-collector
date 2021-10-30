@@ -9,18 +9,19 @@ import { getCurrentUserSelector } from '../../../state/app.selectors';
 import { AppState } from '../../../state/app.state';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-authenticated-layout',
   templateUrl: './authenticated-layout.component.html',
-  styleUrls: ['./authenticated-layout.component.scss'],
+  styleUrls: ['./authenticated-layout.component.scss']
 })
 export class AuthenticatedLayoutComponent implements OnInit {
   currentUser: User = {
     id: '',
     firstName: '',
     lastName: '',
-    email: '',
+    email: ''
   };
 
   @ViewChild('sidenav')
@@ -28,7 +29,13 @@ export class AuthenticatedLayoutComponent implements OnInit {
 
   isHandset = false;
 
-  constructor(private router: Router, private breakpointObserver: BreakpointObserver, private store: Store<AppState>) {}
+  constructor(
+    private router: Router,
+    private breakpointObserver: BreakpointObserver,
+    private store: Store<AppState>,
+    private authService: AuthService
+  ) {
+  }
 
   ngOnInit() {
     // get the current user
@@ -61,5 +68,9 @@ export class AuthenticatedLayoutComponent implements OnInit {
 
   openSidenav() {
     this.sidenav.open();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

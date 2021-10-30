@@ -13,8 +13,16 @@
     background-color: $primary-color;
   }
 
+  .foreground-primary {
+    color: $primary-color;
+  }
+
   .background-accent {
     background-color: $accent-color;
+  }
+
+  .foreground-accent {
+    color: $accent-color;
   }
 
   .mat-raised-button, .mat-fab {
@@ -41,6 +49,10 @@
 
   .wrapper-error {
     background-color: #f55145;
+  }
+
+  .gradient-background {
+    background: linear-gradient(135deg, #ff9800 0%, #762dfd 100%)
   }
 }
 

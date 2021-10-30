@@ -1,42 +1,47 @@
-<div class="wrapper" (click)="openUrl()">
+<div class='wrapper' (click)='openUrl()'>
   <div>
-    <img *ngIf="bookmark.image && !imageLoadError" [src]="bookmark.image" (error)='imageLoadErrorHandler()' alt="bookmarkImage" class="image"/>
-    <div *ngIf="!bookmark.image || imageLoadError" class="image empty"></div>
+    <img *ngIf='bookmark.image && !imageLoadError' [src]='bookmark.image' (error)='imageLoadErrorHandler()'
+         alt='bookmarkImage' class='image' />
+    <div *ngIf='!bookmark.image || imageLoadError' class='image gradient-background'></div>
   </div>
-  <div class="content">
+  <div class='content'>
     <div>
-      <div>{{ bookmark.title ? bookmark.title : bookmark.url  }}</div>
-      <span *ngFor="let label of bookmark.labels" class="tag">
-        <a [routerLink]="generateTagUrl(label)">#{{label.title}}</a>
+      <div class='title'>{{ bookmark.title ? bookmark.title : bookmark.url  }}</div>
+      <span *ngFor='let label of bookmark.labels' class='tag'>
+        <a class='foreground-accent' [routerLink]='generateTagUrl(label)'>#{{label.title}}</a>
       </span>
-      <div class="meta">
-        <span class="item">
-          <mat-icon class="icon" inline>laptop</mat-icon>
-          <span class="text">{{baseUrl}}</span>
+      <div class='meta'>
+        <span class='item'>
+          <mat-icon class='icon' inline>laptop</mat-icon>
+          <span class='text'>{{baseUrl}}</span>
         </span>
       </div>
     </div>
-    <div *ngIf='!isHandset' class="actions">
-      <span (click)="favoriteBookmark($event)" [matTooltip]="bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'">
-        <mat-icon color="primary">{{bookmark.isFavorite ? 'star' : 'star_border'}}</mat-icon>
+    <div *ngIf='!isHandset' class='actions'>
+      <span (click)='favoriteBookmark($event)'
+            [matTooltip]="bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'">
+        <mat-icon color='accent'>{{bookmark.isFavorite ? 'star' : 'star_border'}}</mat-icon>
       </span>
-      <span (click)="archiveBookmark($event)"  [matTooltip]="bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'">
+      <span (click)='archiveBookmark($event)'
+            [matTooltip]="bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'">
         <mat-icon>{{bookmark.isArchived ? 'add' : 'link_off'}}</mat-icon>
       </span>
-      <span (click)="openTagDialog($event)" matTooltip="Edit Tags">
+      <span (click)='openTagDialog($event)' matTooltip='Edit Tags'>
         <mat-icon>tag</mat-icon>
       </span>
-      <span (click)="deleteBookmark($event)" matTooltip="Delete">
+      <span (click)='deleteBookmark($event)' matTooltip='Delete'>
         <mat-icon>delete_outline</mat-icon>
       </span>
     </div>
-    <div *ngIf='isHandset' class="actions-handset">
-      <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Show More" (click)="$event.stopPropagation()">
+    <div *ngIf='isHandset' class='actions-handset'>
+      <button mat-icon-button [matMenuTriggerFor]='menu' matTooltip='Show More' (click)='$event.stopPropagation()'>
         <mat-icon>more_vert</mat-icon>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)='favoriteBookmark($event)'>{{bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}}</button>
-        <button mat-menu-item (click)='archiveBookmark($event)'>{{bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'}}</button>
+      <mat-menu #menu='matMenu'>
+        <button mat-menu-item
+                (click)='favoriteBookmark($event)'>{{bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}}</button>
+        <button mat-menu-item
+                (click)='archiveBookmark($event)'>{{bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'}}</button>
         <button mat-menu-item (click)='openTagDialog($event)'>Edit Tags</button>
         <button mat-menu-item (click)='deleteBookmark($event)'>Delete</button>
       </mat-menu>

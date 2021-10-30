@@ -5,12 +5,19 @@
     class='sidenav'
     #sidenav
   >
+    <mat-toolbar class="toolbar" color="primary">
+      @Sinilinx Logo
+    </mat-toolbar>
     <app-sidenav></app-sidenav>
   </mat-sidenav>
 
   <mat-sidenav-content class='sidenav-content'>
-    <mat-toolbar class="toolbar" color="primary" *ngIf='isHandset === true'>
-      <mat-icon class="menu" (click)='openSidenav()'>menu</mat-icon>
+    <mat-toolbar class="toolbar" color="primary">
+      <mat-icon class="menu" (click)='openSidenav()' *ngIf='isHandset === true'>menu</mat-icon>
+      <div></div>
+      <button mat-flat-button color='accent' (click)='logout()'>
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
