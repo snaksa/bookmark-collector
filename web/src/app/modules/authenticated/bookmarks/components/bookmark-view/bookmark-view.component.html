@@ -34,16 +34,20 @@
       </span>
     </div>
     <div *ngIf='isHandset' class='actions-handset'>
-      <button mat-icon-button [matMenuTriggerFor]='menu' matTooltip='Show More' (click)='$event.stopPropagation()'>
+      <button mat-icon-button [matMenuTriggerFor]='menu' #menuTrigger="matMenuTrigger" matTooltip='Show More' (click)='$event.stopPropagation()'>
         <mat-icon>more_vert</mat-icon>
       </button>
-      <mat-menu #menu='matMenu'>
+      <mat-menu #menu='matMenu' >
         <button mat-menu-item
-                (click)='favoriteBookmark($event)'>{{bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}}</button>
+                (click)='favoriteBookmark($event); menuTrigger.closeMenu()'>
+          {{bookmark.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}}
+        </button>
         <button mat-menu-item
-                (click)='archiveBookmark($event)'>{{bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'}}</button>
-        <button mat-menu-item (click)='openTagDialog($event)'>Edit Tags</button>
-        <button mat-menu-item (click)='deleteBookmark($event)'>Delete</button>
+                (click)='archiveBookmark($event); menuTrigger.closeMenu()'>
+          {{bookmark.isArchived ? 'Remove from Archive' : 'Add to Archive'}}
+        </button>
+        <button mat-menu-item (click)='openTagDialog($event); menuTrigger.closeMenu()'>Edit Tags</button>
+        <button mat-menu-item (click)='deleteBookmark($event); menuTrigger.closeMenu()'>Delete</button>
       </mat-menu>
     </div>
   </div>

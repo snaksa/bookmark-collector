@@ -25,10 +25,18 @@
     color: $accent-color;
   }
 
+  .border-primary {
+    border-color: $primary-color;
+  }
+
   .mat-raised-button, .mat-fab {
     &.mat-primary {
       color: #FFF;
     }
+  }
+
+  mat-dialog-container {
+    border-top: 8px solid $primary-color;
   }
 
   a {

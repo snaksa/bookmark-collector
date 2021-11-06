@@ -1,9 +1,13 @@
-<div>
-  <h3>New Bookmark</h3>
-  <mat-form-field appearance="outline">
-    <mat-label>https://...</mat-label>
-    <input matInput [formControl]="inputControl">
-  </mat-form-field>
-  <button mat-raised-button (click)="close()">Close</button>
-  <button mat-raised-button color="primary" (click)="add()">Add</button>
-</div>
+<app-dialog-container>
+  <app-dialog-title>New Bookmark</app-dialog-title>
+  <app-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput [formControl]="inputControl">
+    </mat-form-field>
+  </app-dialog-content>
+  <app-dialog-actions>
+    <app-dialog-action (onClick)="close()">Close</app-dialog-action>
+    <app-dialog-action color="primary" (onClick)="add()">Save</app-dialog-action>
+  </app-dialog-actions>
+</app-dialog-container>

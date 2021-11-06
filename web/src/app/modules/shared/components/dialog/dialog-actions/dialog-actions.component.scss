@@ -1,7 +1,13 @@
+@import "variables";
+
 :host {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   padding-top: 16px;
+
+  @media screen and (max-width: $small-screen) {
+    justify-content: center;
+  }
 }
