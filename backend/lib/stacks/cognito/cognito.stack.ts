@@ -100,7 +100,7 @@ export class CognitoStack extends BaseStack {
       );
     } else {
       // attach the triggers
-      new AwsCustomResource(this, "UpdateUserPool", {
+      new AwsCustomResource(this, "UpdateUserPool2", {
         resourceType: "Custom::UpdateUserPool",
         onCreate: {
           region: this.region,
