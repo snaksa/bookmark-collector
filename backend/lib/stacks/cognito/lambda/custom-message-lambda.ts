@@ -20,7 +20,6 @@ export class CustomMessageLambda extends NodejsFunction {
     if (props.userPoolArn) {
       const invokeCognitoTriggerPermission = {
         principal: new ServicePrincipal("cognito-idp.amazonaws.com"),
-        sourceArn: props.userPoolArn,
       };
 
       this.addPermission(
