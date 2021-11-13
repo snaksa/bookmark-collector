@@ -10,6 +10,7 @@ import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { ConfirmComponent } from './confirm/confirm.component';
 
 const routes = [
   {
@@ -19,6 +20,10 @@ const routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'confirm',
+    component: ConfirmComponent
   }
 ];
 
@@ -29,7 +34,8 @@ const routes = [
     AuthenticationRedirectButtonComponent,
     AuthenticationFormComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmComponent
   ],
   imports: [
     CommonModule,

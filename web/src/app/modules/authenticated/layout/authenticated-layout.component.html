@@ -1,3 +1,11 @@
+<mat-toolbar class="toolbar" color="primary">
+  <mat-icon class="menu"  (click)='openSidenav()' *ngIf='isHandset === true'>menu</mat-icon>
+  <div></div>
+  <button mat-flat-button color='accent' (click)='logout()'>
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+</mat-toolbar>
+
 <mat-sidenav-container *ngIf='currentUser.id; else loading' class='sidenav-container'>
   <mat-sidenav
     [mode]="isHandset ? 'over' : 'side'"
@@ -5,20 +13,11 @@
     class='sidenav'
     #sidenav
   >
-    <mat-toolbar class="toolbar" color="primary">
-      @Sinilinx Logo
-    </mat-toolbar>
+
     <app-sidenav></app-sidenav>
   </mat-sidenav>
 
   <mat-sidenav-content class='sidenav-content'>
-    <mat-toolbar class="toolbar" color="primary">
-      <mat-icon class="menu" (click)='openSidenav()' *ngIf='isHandset === true'>menu</mat-icon>
-      <div></div>
-      <button mat-flat-button color='accent' (click)='logout()'>
-        <mat-icon>exit_to_app</mat-icon>
-      </button>
-    </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

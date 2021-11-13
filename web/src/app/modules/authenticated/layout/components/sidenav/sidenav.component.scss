@@ -7,7 +7,7 @@
   text-decoration: none;
 
   &.link:hover {
-    background-color: rgba(255, 152, 0, 1);
+    background-color: rgba(255, 152, 0, 0.1);
     cursor: pointer;
   }
 
@@ -32,8 +32,7 @@
 }
 
 .active {
-  font-weight: 500;
-  background-color: rgba(255, 152, 0, 1);
+  background-color: rgba(255, 152, 0, 0.1);
 
   .icon {
     color: #000;

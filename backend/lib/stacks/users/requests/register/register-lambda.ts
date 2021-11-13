@@ -2,6 +2,7 @@ import { Construct } from "@aws-cdk/core";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { ITable } from "@aws-cdk/aws-dynamodb";
 import * as path from "path";
+import { Policy, PolicyStatement } from "@aws-cdk/aws-iam";
 
 interface RegisterLambdaProps {
   dbStore: ITable;
@@ -21,5 +22,16 @@ export class RegisterLambda extends NodejsFunction {
     });
 
     props.dbStore.grantReadWriteData(this);
+
+    this.role?.attachInlinePolicy(
+      new Policy(this, "register-user-send-email-ses", {
+        statements: [
+          new PolicyStatement({
+            actions: ["ses:SendEmail", "ses:SendRawEmail"],
+            resources: ["*"],
+          }),
+        ],
+      })
+    );
   }
 }

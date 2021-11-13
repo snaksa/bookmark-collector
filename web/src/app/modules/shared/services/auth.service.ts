@@ -32,6 +32,12 @@ interface RegisterResponse {
   };
 }
 
+interface ConfirmUserResponse {
+  data: {
+    id: string;
+  };
+}
+
 interface UserResponse {
   data: {
     id: string;
@@ -143,9 +149,7 @@ export class AuthService {
         password
       })
       .pipe(
-        map((response) => {
-          this.router.navigateByUrl('login');
-        })
+        map((response) => true)
       );
   }
 
@@ -173,6 +177,17 @@ export class AuthService {
         map((response) => {
           return response;
         })
+      );
+  }
+
+  public confirmUser(username: string, code: string) {
+    return this.http
+      .post<ConfirmUserResponse>(`${environment.apiBaseUrl}/auth/confirm`, {
+        username,
+        code
+      })
+      .pipe(
+        map((response) => true)
       );
   }
 

@@ -1,4 +1,5 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
+import * as AWS from "aws-sdk";
 import User from "../../../../shared/models/user.model";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, {
@@ -92,6 +93,32 @@ class RegisterLambdaHandler extends BaseHandler {
           1
         )
       );
+
+      // Create sendEmail params
+      // const params = {
+      //   Destination: {
+      //     ToAddresses: [this.input.email],
+      //   },
+      //   Message: {
+      //     Body: {
+      //       Text: {
+      //         Charset: "UTF-8",
+      //         Data: "Your account was created successfully",
+      //       },
+      //     },
+      //     Subject: {
+      //       Charset: "UTF-8",
+      //       Data: "Welcome to Sinilinx",
+      //     },
+      //   },
+      //   Source: "hi@sinilinx.com",
+      //   ReplyToAddresses: ["hi@sinilinx.com"],
+      // };
+      //
+      // // Create the promise and SES service object
+      // await new AWS.SES({ apiVersion: "2010-12-01" })
+      //   .sendEmail(params)
+      //   .promise();
 
       return {
         statusCode: ApiGatewayResponseCodes.CREATED,

@@ -27,7 +27,8 @@ export class AuthInterceptor implements HttpInterceptor {
     const blacklist = [
       'auth/login',
       'auth/register',
-      'auth/refresh'
+      'auth/refresh',
+      'auth/confirm',
     ];
 
     // if the requested URL does not require authentication skip the headers

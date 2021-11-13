@@ -7,7 +7,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   generalError = '';
@@ -16,15 +16,15 @@ export class RegisterComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required])
     },
     {
-      updateOn: 'submit',
+      updateOn: 'submit'
     }
   );
 
   constructor(private authService: AuthService, private router: Router, private titleService: Title) {
-    this.titleService.setTitle('Sign Up | Sinilinx')
+    this.titleService.setTitle('Sign Up | Sinilinx');
   }
 
   get firstNameControl() {
@@ -57,9 +57,12 @@ export class RegisterComponent {
         this.passwordControl.value
       )
       .subscribe({
+        next: () => {
+          this.generalError = 'Confirmation email was sent!';
+        },
         error: (error) => {
           this.generalError = error.message;
-        },
+        }
       });
   }
 

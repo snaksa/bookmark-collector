@@ -1,0 +1,17 @@
+<app-authentication-wrapper>
+  <app-authentication-wrapper-side>
+    <img src='/assets/images/logo.webp' class='logo' alt='logo'>
+    <div class='actions'>
+      <div *ngIf='confirmed'>
+        <div>Account confirmed</div>
+        <a routerLink='/login' class='simple-link'>Sign In here</a>
+      </div>
+      <div *ngIf='!confirmed'>
+        <div>Confirming account...</div>
+      </div>
+    </div>
+  </app-authentication-wrapper-side>
+  <app-authentication-wrapper-side class='cover'>
+    <img src='assets/images/register-cover.webp' alt='Login image' class='image'>
+  </app-authentication-wrapper-side>
+</app-authentication-wrapper>

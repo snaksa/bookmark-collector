@@ -1,4 +1,8 @@
-import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
+import {
+  UserPool,
+  UserPoolClient,
+  UserPoolOperation,
+} from "@aws-cdk/aws-cognito";
 import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { SsmHelper } from "../../shared/helpers";
@@ -9,7 +13,7 @@ import {
   AwsCustomResourcePolicy,
   PhysicalResourceId,
 } from "@aws-cdk/custom-resources";
-import { CognitoConfirmationLambda } from "./lambda/cognito-confirmation-lambda";
+import { CustomMessageLambda } from "./lambda/custom-message-lambda";
 
 export class CognitoStack extends BaseStack {
   constructor(
@@ -20,11 +24,14 @@ export class CognitoStack extends BaseStack {
   ) {
     super(scope, id, buildConfig, props);
 
-    const confirmationLambda = new CognitoConfirmationLambda(
+    const confirmationLambda = new CustomMessageLambda(
       this,
-      "CognitoConfirmation",
+      "CustomMessageLambda",
       {
         userPoolArn: buildConfig.userPoolArn,
+        domain: buildConfig.isProd
+          ? this.domain
+          : `${buildConfig.env}.${this.domain}`,
       }
     );
 
@@ -54,7 +61,7 @@ export class CognitoStack extends BaseStack {
           requireSymbols: false,
         },
         lambdaTriggers: {
-          preSignUp: confirmationLambda,
+          customMessage: confirmationLambda,
         },
       });
 
@@ -102,7 +109,7 @@ export class CognitoStack extends BaseStack {
           parameters: {
             UserPoolId: buildConfig.userPoolId,
             LambdaConfig: {
-              PreSignUp: confirmationLambda.functionArn,
+              CustomMessage: confirmationLambda.functionArn,
             },
           },
           physicalResourceId: PhysicalResourceId.of(buildConfig.userPoolId),

@@ -1,0 +1,34 @@
+@import "variables";
+
+.image {
+  width: 100%;
+  border-left: 1px solid #ccc;
+}
+
+.logo {
+  width: 150px;
+
+  @media screen and (max-width: $small-screen) {
+    width: 100%;
+    max-width: 150px;
+  }
+}
+
+.actions {
+  div {
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
+.cover {
+  @media screen and (max-width: $small-screen) {
+    display: none;
+  }
+}
+
+button {
+  width: 200px;
+  height: 50px;
+  border-radius: 32px;
+}
