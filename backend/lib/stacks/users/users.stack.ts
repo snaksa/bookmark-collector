@@ -12,6 +12,8 @@ import { ChangePasswordLambda } from "./requests/change-password/change-password
 import { RefreshLambda } from "./requests/refresh/refresh-lambda";
 import { BuildConfig } from "../../shared/services/environment.service";
 import { ConfirmUserLambda } from "./requests/confirm-user/confirm-user-lambda";
+import { ForgotPasswordLambda } from "./requests/forgot-password/forgot-password-lambda";
+import { ResetPasswordLambda } from "./requests/reset-password/reset-password-lambda";
 
 export class UsersStack extends BaseStack {
   dbStore: ITable;
@@ -109,6 +111,50 @@ export class UsersStack extends BaseStack {
           new ConfirmUserLambda(
             this,
             buildConfig.envSpecific("confirm-user-lambda"),
+            {
+              cognitoClientId: this.cognitoClientId,
+            }
+          )
+        )
+      );
+
+    auth
+      .addResource("forgot-password", {
+        defaultCorsPreflightOptions: {
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowMethods: Cors.ALL_METHODS,
+          allowHeaders: ["*"],
+          disableCache: true,
+        },
+      })
+      .addMethod(
+        ApiGatewayRequestMethods.POST,
+        new LambdaIntegration(
+          new ForgotPasswordLambda(
+            this,
+            buildConfig.envSpecific("forgot-password-lambda"),
+            {
+              cognitoClientId: this.cognitoClientId,
+            }
+          )
+        )
+      );
+
+    auth
+      .addResource("reset-password", {
+        defaultCorsPreflightOptions: {
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowMethods: Cors.ALL_METHODS,
+          allowHeaders: ["*"],
+          disableCache: true,
+        },
+      })
+      .addMethod(
+        ApiGatewayRequestMethods.POST,
+        new LambdaIntegration(
+          new ResetPasswordLambda(
+            this,
+            buildConfig.envSpecific("reset-password-lambda"),
             {
               cognitoClientId: this.cognitoClientId,
             }

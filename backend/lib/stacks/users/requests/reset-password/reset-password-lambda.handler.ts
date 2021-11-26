@@ -7,46 +7,47 @@ import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-re
 import { Validator } from "../../../../shared/validators/validator";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 
-interface ConfirmUserEventData {
+interface ResetPasswordEventData {
   username: string;
-  code: string;
+  password: string;
+  confirmationCode: string;
 }
 
 interface Env {
   cognitoClientId: string;
 }
 
-class ConfirmUserHandler extends BaseHandler {
-  private input: ConfirmUserEventData;
+class ResetPasswordHandler extends BaseHandler {
+  private input: ResetPasswordEventData;
 
   private env: Env = {
     cognitoClientId: process.env.cognitoClientId ?? "",
   };
 
   parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as ConfirmUserEventData;
+    this.input = JSON.parse(event.body) as ResetPasswordEventData;
   }
 
   validate() {
     return (
       Validator.notEmpty(this.input.username) &&
-      Validator.notEmpty(this.input.code)
+      Validator.notEmpty(this.input.password) &&
+      Validator.notEmpty(this.input.confirmationCode)
     );
   }
 
   async run(): Promise<Response> {
-    const data = {
+    const resetPasswordData = {
       ClientId: this.env.cognitoClientId,
       Username: this.input.username,
-      ConfirmationCode: this.input.code,
+      Password: this.input.password,
+      ConfirmationCode: this.input.confirmationCode,
     };
 
     try {
       const cognitoIdentity = new AWS.CognitoIdentityServiceProvider();
-      await cognitoIdentity.confirmSignUp(data).promise();
+      await cognitoIdentity.confirmForgotPassword(resetPasswordData).promise();
     } catch (err) {
-      console.log(err);
-      console.log(err.code); // containing exception code
       throw new GenericException();
     }
 
@@ -61,4 +62,4 @@ class ConfirmUserHandler extends BaseHandler {
   }
 }
 
-export const handler = new ConfirmUserHandler().create();
+export const handler = new ResetPasswordHandler().create();
