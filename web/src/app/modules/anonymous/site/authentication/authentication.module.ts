@@ -11,6 +11,8 @@ import { RouterModule } from '@angular/router';
 import { CoreModule } from '../../../core/core.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { RecoverComponent } from './recover/recover.component';
+import { ResetComponent } from './reset/reset.component';
 
 const routes = [
   {
@@ -24,6 +26,14 @@ const routes = [
   {
     path: 'confirm',
     component: ConfirmComponent
+  },
+  {
+    path: 'recover',
+    component: RecoverComponent
+  },
+  {
+    path: 'reset-password',
+    component: ResetComponent
   }
 ];
 
@@ -35,7 +45,9 @@ const routes = [
     AuthenticationFormComponent,
     LoginComponent,
     RegisterComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    RecoverComponent,
+    ResetComponent
   ],
   imports: [
     CommonModule,

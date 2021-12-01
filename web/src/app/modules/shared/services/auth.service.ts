@@ -38,6 +38,12 @@ interface ConfirmUserResponse {
   };
 }
 
+interface RecoverAccountResponse {
+  data: {
+    success: string;
+  };
+}
+
 interface UserResponse {
   data: {
     id: string;
@@ -185,6 +191,28 @@ export class AuthService {
       .post<ConfirmUserResponse>(`${environment.apiBaseUrl}/auth/confirm`, {
         username,
         code
+      })
+      .pipe(
+        map((response) => true)
+      );
+  }
+
+  public recoverAccount(username: string) {
+    return this.http
+      .post<RecoverAccountResponse>(`${environment.apiBaseUrl}/auth/forgot-password`, {
+        username
+      })
+      .pipe(
+        map((response) => true)
+      );
+  }
+
+  public resetPassword(username: string, password: string, confirmationCode: string) {
+    return this.http
+      .post<RecoverAccountResponse>(`${environment.apiBaseUrl}/auth/reset-password`, {
+        username,
+        password,
+        confirmationCode
       })
       .pipe(
         map((response) => true)

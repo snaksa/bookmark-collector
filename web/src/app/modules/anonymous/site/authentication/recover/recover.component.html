@@ -4,7 +4,7 @@
   </app-authentication-wrapper-side>
   <app-authentication-wrapper-side>
     <img src="/assets/images/logo.webp" class='logo' alt='logo'>
-    <app-authentication-form title="Sign In" [formGroup]="loginFormGroup" (submit)="onSubmit()">
+    <app-authentication-form title="Recover Account" [formGroup]="recoverFormGroup" (submit)="onSubmit()">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com">
@@ -12,18 +12,11 @@
           Email is required
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input type="password" matInput formControlName="password">
-        <mat-error *ngIf="passwordControl.hasError('required')">
-          Password is required
-        </mat-error>
-      </mat-form-field>
       <span *ngIf='generalError' class="error">{{this.generalError}}</span>
-      <button mat-raised-button color="primary" type="submit">Sign In</button>
+      <button mat-raised-button color="primary" type="submit">Send Recovery Email</button>
     </app-authentication-form>
     <div class='actions'>
-      <div>Forgot Password? <a routerLink="/recover" class="simple-link">Recover here</a></div>
+      <div>Already have an account? <a routerLink="/login" class="simple-link">Sign In here</a></div>
       <div>Don't have an account? <a routerLink="/register" class="simple-link">Sign Up here</a></div>
     </div>
   </app-authentication-wrapper-side>

@@ -29,6 +29,8 @@ export class AuthInterceptor implements HttpInterceptor {
       'auth/register',
       'auth/refresh',
       'auth/confirm',
+      'auth/forgot-password',
+      'auth/reset-password'
     ];
 
     // if the requested URL does not require authentication skip the headers
