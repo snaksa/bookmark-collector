@@ -17,7 +17,7 @@ export const handler = (event: any, context: any, callback: any) => {
     event.response.emailSubject = "Reset Your Password | Sinilinx";
     event.response.emailMessage = `
       Reset your password<br>
-      Please click <a href="https://${domain}/confirm?code=${code}&username=${username}">HERE</a> to reset your password<br>
+      Please click <a href="https://${domain}/reset-password?code=${code}&username=${username}">HERE</a> to reset your password<br>
       <a href="https://${domain}/reset-password?code=${code}&username=${username}">https://${domain}/reset-password?code=${code}&username=${username}</a>
     `;
   }
