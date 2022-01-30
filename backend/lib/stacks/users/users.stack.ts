@@ -1,6 +1,7 @@
-import { StackProps, Construct } from "@aws-cdk/core";
-import { ITable } from "@aws-cdk/aws-dynamodb";
-import { Cors, IRestApi, LambdaIntegration } from "@aws-cdk/aws-apigateway";
+import { Construct } from "constructs";
+import { StackProps } from "aws-cdk-lib";
+import { ITable } from "aws-cdk-lib/aws-dynamodb";
+import { Cors, IRestApi, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { LoginLambda } from "./requests/login/login-lambda";
 import { RegisterLambda } from "./requests/register/register-lambda";
 import { AwsResources } from "../../shared/enums/aws-resources";

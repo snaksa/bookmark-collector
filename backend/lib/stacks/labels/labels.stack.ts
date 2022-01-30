@@ -1,5 +1,6 @@
-import { StackProps, Construct } from "@aws-cdk/core";
-import { Cors, LambdaIntegration } from "@aws-cdk/aws-apigateway";
+import { Construct } from "constructs";
+import { StackProps } from "aws-cdk-lib";
+import { Cors, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { CreateLambda } from "./requests/create/create-lambda";
 import { ListLambda } from "./requests/list/list-lambda";
 import { DeleteLambda } from "./requests/delete/delete-lambda";

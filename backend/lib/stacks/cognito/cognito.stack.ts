@@ -1,9 +1,10 @@
+import { Construct } from "constructs";
 import {
   UserPool,
   UserPoolClient,
   UserPoolOperation,
-} from "@aws-cdk/aws-cognito";
-import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
+} from "aws-cdk-lib/aws-cognito";
+import { RemovalPolicy, StackProps } from "aws-cdk-lib";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
@@ -12,7 +13,7 @@ import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
   PhysicalResourceId,
-} from "@aws-cdk/custom-resources";
+} from "aws-cdk-lib/custom-resources";
 import { CustomMessageLambda } from "./lambda/custom-message-lambda";
 
 export class CognitoStack extends BaseStack {

@@ -1,16 +1,17 @@
+import { Construct } from "constructs";
 import {
   AuthorizationType,
   IRestApi,
   MethodOptions,
-} from "@aws-cdk/aws-apigateway";
-import { ITable } from "@aws-cdk/aws-dynamodb";
-import { Construct, Stack, StackProps } from "@aws-cdk/core";
+} from "aws-cdk-lib/aws-apigateway";
+import { ITable } from "aws-cdk-lib/aws-dynamodb";
+import { Stack, StackProps } from "aws-cdk-lib";
 import { AwsResources } from "../shared/enums/aws-resources";
 import { ApiGatewayHelper, SsmHelper } from "../shared/helpers";
 import { DynamoDbHelper } from "../shared/helpers/dynamodbdb-helper";
-import { IHostedZone } from "@aws-cdk/aws-route53";
+import { IHostedZone } from "aws-cdk-lib/aws-route53";
 import { Route53Helper } from "../shared/helpers/route53-helper";
-import { ICertificate } from "@aws-cdk/aws-certificatemanager";
+import { ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 import { CertificateManagerHelper } from "../shared/helpers/certificate-manager-helper";
 import { BuildConfig } from "../shared/services/environment.service";
 

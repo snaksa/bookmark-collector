@@ -1,5 +1,5 @@
-import { IRestApi, RestApi } from "@aws-cdk/aws-apigateway";
-import { Stack } from "@aws-cdk/core";
+import { IRestApi, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { Stack } from "aws-cdk-lib";
 
 export class ApiGatewayHelper {
   static getRestApi(

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import "source-map-support/register";
-import * as cdk from "@aws-cdk/core";
+import * as cdk from "aws-cdk-lib";
 import { DbStack } from "../lib/stacks/db/db.stack";
 import { CognitoStack } from "../lib/stacks/cognito/cognito.stack";
 import { ApiGatewayStack } from "../lib/stacks/api-gateway/api-gateway.stack";

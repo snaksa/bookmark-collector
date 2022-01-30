@@ -1,4 +1,4 @@
-import { Construct } from "@aws-cdk/core";
+import { Construct } from "constructs";
 
 export interface BuildConfig {
   env: string;

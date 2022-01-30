@@ -1,6 +1,7 @@
-import { StackProps, Construct, Duration } from "@aws-cdk/core";
-import { Cors, LambdaIntegration } from "@aws-cdk/aws-apigateway";
-import { Queue } from "@aws-cdk/aws-sqs";
+import { Construct } from "constructs";
+import { StackProps, Duration } from "aws-cdk-lib";
+import { Cors, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Queue } from "aws-cdk-lib/aws-sqs";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { CreateLambda } from "./requests/create/create-lambda";

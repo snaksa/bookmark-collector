@@ -1,5 +1,11 @@
-import { Construct, RemovalPolicy, Stack } from "@aws-cdk/core";
-import { BillingMode, ITable, Table, TableProps } from "@aws-cdk/aws-dynamodb";
+import { RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import {
+  BillingMode,
+  ITable,
+  Table,
+  TableProps,
+} from "aws-cdk-lib/aws-dynamodb";
 import { SsmHelper } from "./ssm-helper";
 
 export class DynamoDbHelper {

@@ -1,5 +1,5 @@
-import { Construct } from "@aws-cdk/core";
-import { StringParameter } from "@aws-cdk/aws-ssm";
+import { Construct } from "constructs";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 export class SsmHelper {
   static prefix = "BookmarkCollectorParameters";

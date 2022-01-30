@@ -1,16 +1,17 @@
-import { Construct, StackProps } from "@aws-cdk/core";
+import { Construct } from "constructs";
+import { StackProps } from "aws-cdk-lib";
 import {
   AuthorizationType,
   CfnAuthorizer,
   Cors,
   RestApi,
   SecurityPolicy,
-} from "@aws-cdk/aws-apigateway";
+} from "aws-cdk-lib/aws-apigateway";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { SsmHelper } from "../../shared/helpers";
 import { BaseStack } from "../base.stack";
-import { ARecord, RecordTarget } from "@aws-cdk/aws-route53";
-import { ApiGateway } from "@aws-cdk/aws-route53-targets";
+import { ARecord, RecordTarget } from "aws-cdk-lib/aws-route53";
+import { ApiGateway } from "aws-cdk-lib/aws-route53-targets";
 import { BuildConfig } from "../../shared/services/environment.service";
 
 export class ApiGatewayStack extends BaseStack {

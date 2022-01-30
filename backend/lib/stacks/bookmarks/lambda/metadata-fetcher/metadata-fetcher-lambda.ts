@@ -1,9 +1,10 @@
-import { Construct, Duration } from "@aws-cdk/core";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { ITable } from "@aws-cdk/aws-dynamodb";
+import { Construct } from "constructs";
+import { Duration } from "aws-cdk-lib";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { ITable } from "aws-cdk-lib/aws-dynamodb";
+import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { Queue } from "aws-cdk-lib/aws-sqs";
 import * as path from "path";
-import { SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
-import { Queue } from "@aws-cdk/aws-sqs";
 
 interface MetadataFetcherLambdaProps {
   dbStore: ITable;

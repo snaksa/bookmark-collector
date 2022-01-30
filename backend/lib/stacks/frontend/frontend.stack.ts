@@ -1,9 +1,10 @@
-import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
-import { Bucket } from "@aws-cdk/aws-s3";
-import { Source, BucketDeployment } from "@aws-cdk/aws-s3-deployment";
-import { CloudFrontTarget } from "@aws-cdk/aws-route53-targets";
-import { Distribution, ViewerProtocolPolicy } from "@aws-cdk/aws-cloudfront";
-import { S3Origin } from "@aws-cdk/aws-cloudfront-origins";
+import { Construct } from "constructs";
+import { RemovalPolicy, StackProps } from "aws-cdk-lib";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Source, BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
+import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
+import { Distribution, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { BaseStack } from "../base.stack";
 import { Route53Helper } from "../../shared/helpers/route53-helper";
 import { BuildConfig } from "../../shared/services/environment.service";

@@ -1,11 +1,12 @@
-import { Construct, Stack } from "@aws-cdk/core";
+import { Stack } from "aws-cdk-lib";
+import { Construct } from "constructs";
 import {
   ARecord,
   HostedZone,
   IAliasRecordTarget,
   IHostedZone,
   RecordTarget,
-} from "@aws-cdk/aws-route53";
+} from "aws-cdk-lib/aws-route53";
 
 export class Route53Helper {
   static getHostedZoneFromAttributes(

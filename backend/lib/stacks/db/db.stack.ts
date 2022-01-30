@@ -1,12 +1,13 @@
-import { AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
-import { Construct, RemovalPolicy, StackProps } from "@aws-cdk/core";
-import { EventSourceMapping, StartingPosition } from "@aws-cdk/aws-lambda";
+import { Construct } from "constructs";
+import { AttributeType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
+import { RemovalPolicy, StackProps } from "aws-cdk-lib";
+import { EventSourceMapping, StartingPosition } from "aws-cdk-lib/aws-lambda";
 import { DynamoDbHelper } from "../../shared/helpers/dynamodbdb-helper";
 import { AwsResources } from "../../shared/enums/aws-resources";
 import { StreamLambda } from "./lambda/stream-lambda";
 import { BaseStack } from "../base.stack";
 import { BuildConfig } from "../../shared/services/environment.service";
-import { PolicyStatement } from "@aws-cdk/aws-iam";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 export class DbStack extends BaseStack {
   constructor(

@@ -1,5 +1,5 @@
-import { Construct } from "@aws-cdk/core";
-import { Certificate, ICertificate } from "@aws-cdk/aws-certificatemanager";
+import { Construct } from "constructs";
+import { Certificate, ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 
 export class CertificateManagerHelper {
   static getCertificateFromArn(

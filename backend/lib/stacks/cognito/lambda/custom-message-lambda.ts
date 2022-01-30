@@ -1,6 +1,6 @@
-import { Construct } from "@aws-cdk/core";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { ServicePrincipal } from "@aws-cdk/aws-iam";
+import { Construct } from "constructs";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 
 interface CustomMessageLambdaProps {

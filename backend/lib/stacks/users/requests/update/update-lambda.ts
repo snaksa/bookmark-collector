@@ -1,7 +1,7 @@
-import { Construct } from "@aws-cdk/core";
-import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
-import { ITable } from "@aws-cdk/aws-dynamodb";
-import { Policy, PolicyStatement } from "@aws-cdk/aws-iam";
+import { Construct } from "constructs";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { ITable } from "aws-cdk-lib/aws-dynamodb";
+import { Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 
 interface ListLambdaProps {
