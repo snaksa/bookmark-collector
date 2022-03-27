@@ -1,50 +1,30 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, {
-  RequestEventType,
   Response,
 } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
+import { SingleLambdaInput } from "./single-lambda.input";
 
-interface Env {
-  dbStore: string;
-}
-
-class SingleLambdaHandler extends BaseHandler {
-  private labelRepository: LabelRepository;
-
-  private userId: string;
-  private labelId: string;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-  };
-
-  constructor() {
-    super();
-
-    this.labelRepository = new LabelRepository(this.env.dbStore);
-  }
-
-  parseEvent(event: RequestEventType) {
-    this.userId = event.requestContext.authorizer.claims.sub;
-    this.labelId = event.pathParameters.id;
+class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
+  constructor(private readonly labelRepository: LabelRepository) {
+    super(SingleLambdaInput);
   }
 
   authorize(): boolean {
     return !!this.userId;
   }
 
-  async run(): Promise<Response> {
-    const label = await this.labelRepository.findOne(this.labelId, this.userId);
+  async run(input: SingleLambdaInput): Promise<Response> {
+    const label = await this.labelRepository.findOne(input.id, this.userId);
 
     if (!label) {
-      throw new NotFoundException(`Label with ID "${this.labelId}" not found`);
+      throw new NotFoundException(`Label with ID "${input.id}" not found`);
     }
 
     const labelBookmarks = await this.labelRepository.findBookmarks(
-      this.labelId
+      input.id
     );
 
     const bookmarks = labelBookmarks.map(
@@ -75,4 +55,6 @@ class SingleLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new SingleLambdaHandler().create();
+export const handler = new SingleLambdaHandler(
+  new LabelRepository(process.env.dbStore ?? "")
+).create();

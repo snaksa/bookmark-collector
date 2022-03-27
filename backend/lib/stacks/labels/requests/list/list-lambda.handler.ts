@@ -1,32 +1,13 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, {
-  RequestEventType,
   Response,
 } from "../../../../shared/base-handler";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 
-interface Env {
-  dbStore: string;
-}
-
 class ListLambdaHandler extends BaseHandler {
-  private labelRepository: LabelRepository;
-
-  private userId: string;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-  };
-
-  constructor() {
+  constructor(private readonly labelRepository: LabelRepository) {
     super();
-
-    this.labelRepository = new LabelRepository(this.env.dbStore);
-  }
-
-  parseEvent(event: RequestEventType) {
-    this.userId = event.requestContext.authorizer.claims.sub;
   }
 
   authorize(): boolean {
@@ -47,4 +28,6 @@ class ListLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new ListLambdaHandler().create();
+export const handler = new ListLambdaHandler(
+  new LabelRepository(process.env.dbStore ?? ""),
+).create();

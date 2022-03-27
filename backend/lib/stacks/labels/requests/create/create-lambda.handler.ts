@@ -4,59 +4,26 @@ import BaseHandler, {
   RequestEventType,
   Response,
 } from "../../../../shared/base-handler";
-import { Validator } from "../../../../shared/validators/validator";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
+import { CreateLambdaInput } from "./create-lambda.input";
 
-interface CreateEventData {
-  label: string;
-  color: string;
-}
-
-interface Env {
-  dbStore: string;
-}
-
-class CreateLambdaHandler extends BaseHandler {
-  private labelRepository: LabelRepository;
-
-  private input: CreateEventData;
-  private userId: string;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-  };
-
-  constructor() {
-    super();
-
-    this.labelRepository = new LabelRepository(this.env.dbStore);
-  }
-
-  parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as CreateEventData;
-    this.userId = event.requestContext.authorizer.claims.sub;
-  }
-
-  validate() {
-    return (
-      this.input &&
-      Validator.notEmpty(this.input.label) &&
-      Validator.notEmpty(this.input.color)
-    );
+class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
+  constructor(private readonly labelRepository: LabelRepository) {
+    super(CreateLambdaInput);
   }
 
   authorize(): boolean {
     return !!this.userId;
   }
 
-  async run(): Promise<Response> {
+  async run(input: CreateLambdaInput): Promise<Response> {
     const label = new Label(
       uuid_v4(),
       this.userId,
-      this.input.label,
-      this.input.color
+      input.label,
+      input.color
     );
     const save = await this.labelRepository.save(label);
 
@@ -73,4 +40,6 @@ class CreateLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new CreateLambdaHandler().create();
+export const handler = new CreateLambdaHandler(
+  new LabelRepository(process.env.dbStore || ""),
+).create();

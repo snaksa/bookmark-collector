@@ -13,6 +13,7 @@
     "deploy": "cdk deploy -c env=dev",
     "build:web": "npm run --prefix ../web build -- --configuration development",
     "deploy-all": "npm run build:web && cdk deploy '*' --require-approval never -c env=dev",
+    "deploy-backend": "cdk deploy '*' --require-approval never -c env=dev",
     "destroy": "cdk destroy --all -c env=dev",
     "prettier": "prettier --write 'lib/**/*.ts'",
     "eslint": "eslint 'lib/**/*.ts'"
@@ -42,6 +43,7 @@
     "aws-cdk-lib": "^2.0.0",
     "aws-sdk": "^2.868.0",
     "cheerio": "^1.0.0-rc.9",
+    "class-validator": "^0.13.2",
     "constructs": "^10.0.0",
     "node-fetch": "^2.6.1",
     "source-map-support": "^0.5.16",
