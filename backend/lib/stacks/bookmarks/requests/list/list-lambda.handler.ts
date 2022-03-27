@@ -1,66 +1,25 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
+import { ListLambdaInput } from "./list-lambda.input";
 
-interface Env {
-  dbStore: string;
-  reversedDbStore: string;
-  dbStoreGSI1: string;
-}
+class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
+  protected isLogged: boolean = true;
 
-class ListLambdaHandler extends BaseHandler {
-  private bookmarkRepository: BookmarkRepository;
-
-  private userId: string;
-  private favorites: boolean;
-  private archived: boolean;
-  private excludeArchived: boolean;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-    reversedDbStore: process.env.reversedDbStore ?? "",
-    dbStoreGSI1: process.env.dbStoreGSI1 ?? "",
-  };
-
-  constructor() {
-    super();
-
-    this.bookmarkRepository = new BookmarkRepository(
-      this.env.dbStore,
-      this.env.reversedDbStore,
-      this.env.dbStoreGSI1
-    );
+  constructor(private readonly bookmarkRepository: BookmarkRepository) {
+    super(ListLambdaInput);
   }
 
-  parseEvent(event: RequestEventType) {
-    this.userId = event.requestContext.authorizer.claims.sub;
+  async run(input: ListLambdaInput, userId: string): Promise<Response> {
 
-    this.favorites = false;
-    this.archived = false;
-    this.excludeArchived = false;
+    // TODO: handle separately path and query inputs
 
-    const queryParams = event.queryStringParameters;
-    if (queryParams) {
-      this.favorites = queryParams.favorites === "1";
-      this.archived = queryParams.archived === "1";
-      this.excludeArchived = queryParams.excludeArchived === "1";
-    }
-  }
-
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(): Promise<Response> {
     const result = await this.bookmarkRepository.findAll(
-      this.userId,
-      this.favorites,
-      this.archived,
-      this.excludeArchived
+      userId,
+      input.favorites,
+      input.archived,
+      input.excludeArchived
     );
 
     const bookmarks = result.map((bookmark: Bookmark) => bookmark.toObject());
@@ -76,4 +35,10 @@ class ListLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new ListLambdaHandler().create();
+export const handler = new ListLambdaHandler(
+  new BookmarkRepository(
+    process.env.dbStore ?? '',
+    process.env.reversedDbStore ?? '',
+    process.env.dbStoreGSI1 ?? '',
+  ),
+).create();

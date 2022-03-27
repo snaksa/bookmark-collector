@@ -1,95 +1,43 @@
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
-import { Validator } from "../../../../shared/validators/validator";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Label from "../../../../shared/models/label.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
+import { UpdateLambdaInput } from "./update-lambda.input";
 
-interface UpdateEventData {
-  url: string;
-  labelIds: string[];
-  newLabels: string[];
-  isFavorite: boolean;
-  isArchived: boolean;
-}
+class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
+  protected isLogged: boolean = true;
 
-interface Env {
-  dbStore: string;
-  reversedDbStore: string;
-}
-
-class UpdateLambdaHandler extends BaseHandler {
-  private bookmarkRepository: BookmarkRepository;
-  private labelRepository: LabelRepository;
-
-  private input: UpdateEventData;
-  private userId: string;
-  private bookmarkId: string;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-    reversedDbStore: process.env.reversedDbStore ?? "",
-  };
-
-  constructor() {
-    super();
-
-    this.bookmarkRepository = new BookmarkRepository(
-      this.env.dbStore,
-      this.env.reversedDbStore
-    );
-    this.labelRepository = new LabelRepository(this.env.dbStore);
+  constructor(
+    private readonly bookmarkRepository: BookmarkRepository,
+    private readonly labelRepository: LabelRepository,
+  ) {
+    super(UpdateLambdaInput);
   }
 
-  parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as UpdateEventData;
-    this.userId = event.requestContext.authorizer.claims.sub;
-    this.bookmarkId = event.pathParameters.id;
-  }
-
-  validate() {
-    return (
-      this.input &&
-      (Validator.notEmpty(this.input.url) ||
-        Validator.notNull(this.input.labelIds) ||
-        "isFavorite" in this.input ||
-        "isArchived" in this.input)
-    );
-  }
-
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(): Promise<Response> {
+  async run(input: UpdateLambdaInput, userId: string): Promise<Response> {
     const bookmark = await this.bookmarkRepository.findOne(
-      this.bookmarkId,
-      this.userId
+      input.query.id,
+      userId
     );
 
     if (!bookmark) {
       throw new NotFoundException(
-        `Bookmark with ID "${this.bookmarkId}" not found`
+        `Bookmark with ID "${input.query.id}" not found`
       );
     }
 
-    if (this.input.url) bookmark.bookmarkUrl = this.input.url;
+    bookmark.bookmarkUrl = input.body.url;
+    bookmark.isFavorite = input.body.isFavorite;
+    bookmark.isArchived = input.body.isArchived;
 
-    if ("isFavorite" in this.input) bookmark.isFavorite = this.input.isFavorite;
-    if ("isArchived" in this.input) bookmark.isArchived = this.input.isArchived;
-
-    if (this.input.url) bookmark.bookmarkUrl = this.input.url;
-
-    if (this.input.labelIds) {
-      const newLabelIds = this.input.labelIds;
+    if (input.body.labelIds) {
+      const newLabelIds = input.body.labelIds;
       const bookmarkLabels =
-        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
+        await this.bookmarkRepository.findBookmarkLabelRecords(input.query.id);
 
       const oldBookmarkLabels = bookmarkLabels.map(
         (bl: BookmarkLabel) => bl.labelId
@@ -97,7 +45,7 @@ class UpdateLambdaHandler extends BaseHandler {
 
       const labels = await this.labelRepository.findByIds(
         newLabelIds,
-        this.userId
+        userId
       );
       const created: Promise<boolean>[] = [];
       labels.forEach((label) => {
@@ -106,7 +54,7 @@ class UpdateLambdaHandler extends BaseHandler {
           const bookmarkLabel = new BookmarkLabel(
             label.labelId,
             bookmark.bookmarkId,
-            this.userId,
+            userId,
             label.title,
             label.color,
             bookmark.bookmarkUrl,
@@ -138,13 +86,13 @@ class UpdateLambdaHandler extends BaseHandler {
 
     await this.bookmarkRepository.update(bookmark);
 
-    if (this.input.newLabels) {
+    if (input.body.newLabels) {
       const created: Promise<boolean>[] = [];
-      for (let i = 0; i < this.input.newLabels.length; i++) {
+      for (let i = 0; i < input.body.newLabels.length; i++) {
         const label = new Label(
           uuid_v4(),
-          this.userId,
-          this.input.newLabels[i],
+          userId,
+          input.body.newLabels[i],
           "grey"
         );
 
@@ -154,7 +102,7 @@ class UpdateLambdaHandler extends BaseHandler {
           const bookmarkLabel = new BookmarkLabel(
             label.labelId,
             bookmark.bookmarkId,
-            this.userId,
+            userId,
             label.title,
             label.color,
             bookmark.bookmarkUrl,
@@ -175,12 +123,12 @@ class UpdateLambdaHandler extends BaseHandler {
     }
 
     // if labels are not passed include them to the object
-    if (!this.input.labelIds) {
+    if (!input.body.labelIds) {
       const bookmarkLabels =
-        await this.bookmarkRepository.findBookmarkLabelRecords(this.bookmarkId);
+        await this.bookmarkRepository.findBookmarkLabelRecords(input.query.id);
       bookmarkLabels.forEach((label) =>
         bookmark.addLabel(
-          new Label(label.labelId, this.userId, label.title, label.color)
+          new Label(label.labelId, userId, label.title, label.color)
         )
       );
     }
@@ -194,4 +142,10 @@ class UpdateLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new UpdateLambdaHandler().create();
+export const handler = new UpdateLambdaHandler(
+  new BookmarkRepository(
+    process.env.dbStore ?? '',
+    process.env.reversedDbStore ?? '',
+  ),
+  new LabelRepository(process.env.dbStore ?? '')
+).create();
