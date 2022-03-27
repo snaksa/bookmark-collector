@@ -56,51 +56,49 @@ export interface RequestEventType {
 }
 
 export default abstract class BaseHandler<T extends BaseInput = { type: InputType.NONE }> {
-  private input: T;
-  protected userId: string;
+  protected isLogged: boolean = false;
 
-  constructor(inputCreator?: { new(): T }) {
-    if (inputCreator) {
-      this.input = new inputCreator();
-    }
-  }
+  constructor(private readonly inputCreator?: { new(): T }) { }
 
-  protected parseEvent(event: RequestEventType): void {
-    if (event.requestContext.authorizer?.claims) {
-      this.userId = event.requestContext.authorizer.claims.sub;
-    }
-
-    if (this.input) {
+  protected parseEvent(event: RequestEventType): T | null {
+    if (this.inputCreator) {
+      const input = new this.inputCreator();
       let data: Record<string, any> = {};
-      if (this.input.type === InputType.BODY && event.body) {
+      if (input.type === InputType.BODY && event.body) {
         data = JSON.parse(event.body);
-        Object.keys(data).forEach(key => this.input[key] = data[key]);
-      } else if (this.input.type === InputType.QUERY && event.pathParameters) {
+        Object.keys(data).forEach(key => input[key] = data[key]);
+      } else if (input.type === InputType.QUERY && event.pathParameters) {
         data = event.pathParameters;
-        Object.keys(data).forEach(key => this.input[key] = data[key]);
-      } else if (this.input.type === InputType.QUERY_BODY) {
+        Object.keys(data).forEach(key => input[key] = data[key]);
+      } else if (input.type === InputType.QUERY_BODY) {
         const query = event.pathParameters ?? {};
-        Object.keys(query).forEach(key => this.input['query'][key] = query[key]);
+        Object.keys(query).forEach(key => input['query'][key] = query[key]);
 
         const body = event.body ? JSON.parse(event.body) : {};
-        Object.keys(body).forEach(key => this.input['body'][key] = body[key]);
-
-        console.log('QUERY_BODY input: ', this.input);
+        Object.keys(body).forEach(key => input['body'][key] = body[key]);
       }
+
+      return input;
     }
+
+    return null;
   }
 
-  private async validate(): Promise<boolean> {
-    if (this.input) {
-      const valid = await validate(this.input);
+  protected getRequestUser(event: RequestEventType) {
+    return event.requestContext.authorizer?.claims?.sub;
+  }
+
+  private async validate(input: T | null): Promise<boolean> {
+    if (input) {
+      const valid = await validate(input);
       return valid.length === 0;
     }
 
     return true;
   }
 
-  protected authorize(): boolean {
-    return true;
+  protected authorize(userId?: string): boolean {
+    return !!userId;
   }
 
   protected format(data: Response): RequestResponse {
@@ -141,28 +139,29 @@ export default abstract class BaseHandler<T extends BaseInput = { type: InputTyp
     }
   };
 
-  protected async run(input?: T): Promise<Response> {
+  protected async run(input: T | null, userId?: string): Promise<Response> {
     throw new Error("Not implemented");
   }
 
   public create() {
     return async (event: RequestEventType): Promise<RequestResponse> => {
-      this.parseEvent(event);
+      const input = this.parseEvent(event);
+      const userId = this.getRequestUser(event);
 
       try {
-        const valid = await this.validate();
+        const valid = await this.validate(input);
         if (!valid) {
           Logger.error("Input parameters not valid");
           Logger.error(event);
           throw new InvalidInputParametersException();
         }
 
-        if (!this.authorize()) {
+        if (this.isLogged && !this.authorize(userId)) {
           Logger.error("Unauthorized access");
           throw new UnauthorizedException();
         }
 
-        const result: Response = await this.run(this.input);
+        const result: Response = await this.run(input, userId);
         Logger.info("Successful execution");
         Logger.info(result);
         return this.format(result);

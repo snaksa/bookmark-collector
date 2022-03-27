@@ -1,27 +1,22 @@
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
 
 class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
+  protected isLogged: boolean = true;
+
   constructor(private readonly labelRepository: LabelRepository) {
     super(CreateLambdaInput);
   }
 
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(input: CreateLambdaInput): Promise<Response> {
+  async run(input: CreateLambdaInput, userId: string): Promise<Response> {
     const label = new Label(
       uuid_v4(),
-      this.userId,
+      userId,
       input.label,
       input.color
     );

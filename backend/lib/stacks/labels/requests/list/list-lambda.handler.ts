@@ -6,16 +6,14 @@ import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 
 class ListLambdaHandler extends BaseHandler {
+  protected isLogged: boolean = true;
+
   constructor(private readonly labelRepository: LabelRepository) {
     super();
   }
 
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(): Promise<Response> {
-    const labels: Label[] = await this.labelRepository.findAll(this.userId);
+  async run(input, userId: string): Promise<Response> {
+    const labels: Label[] = await this.labelRepository.findAll(userId);
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,

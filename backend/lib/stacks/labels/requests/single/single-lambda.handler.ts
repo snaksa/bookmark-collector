@@ -8,16 +8,14 @@ import { NotFoundException } from "../../../../shared/exceptions/not-found-excep
 import { SingleLambdaInput } from "./single-lambda.input";
 
 class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
+  protected isLogged: boolean = true;
+
   constructor(private readonly labelRepository: LabelRepository) {
     super(SingleLambdaInput);
   }
 
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(input: SingleLambdaInput): Promise<Response> {
-    const label = await this.labelRepository.findOne(input.id, this.userId);
+  async run(input: SingleLambdaInput, userId: string): Promise<Response> {
+    const label = await this.labelRepository.findOne(input.id, userId);
 
     if (!label) {
       throw new NotFoundException(`Label with ID "${input.id}" not found`);
@@ -31,7 +29,7 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
       (labelBookmark) =>
         new Bookmark(
           labelBookmark.bookmarkId,
-          this.userId,
+          userId,
           labelBookmark.bookmarkUrl,
           labelBookmark.isFavorite,
           labelBookmark.isArchived,

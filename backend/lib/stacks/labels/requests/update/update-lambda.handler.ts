@@ -7,16 +7,14 @@ import { NotFoundException } from "../../../../shared/exceptions/not-found-excep
 import { UpdateLambdaInput } from "./update-lambda.input";
 
 class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
+  protected isLogged: boolean = true;
+  
   constructor(private readonly labelRepository: LabelRepository) {
     super(UpdateLambdaInput);
   }
 
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(input: UpdateLambdaInput): Promise<Response> {
-    const label = await this.labelRepository.findOne(input.query.id, this.userId);
+  async run(input: UpdateLambdaInput, userId: string): Promise<Response> {
+    const label = await this.labelRepository.findOne(input.query.id, userId);
 
     if (!label) {
       throw new NotFoundException(`Label with ID "${input.query.id}" not found`);

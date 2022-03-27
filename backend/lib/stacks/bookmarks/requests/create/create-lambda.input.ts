@@ -4,11 +4,9 @@ import { BodyInput } from '../../../../shared/base-handler';
 export class CreateLambdaInput extends BodyInput {
     @IsNotEmpty()
     @IsString()
-    @MinLength(3)
-    @MaxLength(15)
-    public label: string;
+    public url: string;
 
     @IsOptional()
-    @IsString()
-    public color: string = '#000';
+    @IsString({ each: true })
+    public labelIds: string[] = [];
 }

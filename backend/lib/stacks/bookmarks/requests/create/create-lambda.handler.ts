@@ -1,77 +1,43 @@
 import { v4 as uuid_v4 } from "uuid";
 import { SQS } from "aws-sdk";
-
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
-import { Validator } from "../../../../shared/validators/validator";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
+import { CreateLambdaInput } from "./create-lambda.input";
 
-interface CreateEventData {
-  url: string;
-  labelIds: string[];
-}
+class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
+  protected isLogged: boolean = true;
 
-interface Env {
-  dbStore: string;
-  queueUrl: string;
-}
-
-class CreateLambdaHandler extends BaseHandler {
-  private bookmarkRepository: BookmarkRepository;
-  private labelRepository: LabelRepository;
-
-  private input: CreateEventData;
-  private userId: string;
-
-  private env: Env = {
-    dbStore: process.env.dbStore ?? "",
-    queueUrl: process.env.queueUrl ?? "",
-  };
-
-  constructor() {
-    super();
-
-    this.bookmarkRepository = new BookmarkRepository(this.env.dbStore);
-    this.labelRepository = new LabelRepository(this.env.dbStore);
+  constructor(
+    private readonly sqsService: SQS,
+    private readonly bookmarkRepository: BookmarkRepository,
+    private readonly labelRepository: LabelRepository,
+    private readonly queueUrl: string,
+  ) {
+    super(CreateLambdaInput);
   }
 
-  parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as CreateEventData;
-    this.userId = event.requestContext.authorizer.claims.sub;
-  }
-
-  validate() {
-    return this.input && Validator.notEmpty(this.input.url);
-  }
-
-  authorize(): boolean {
-    return !!this.userId;
-  }
-
-  async run(): Promise<Response> {
-    let url = this.input.url;
+  async run(input: CreateLambdaInput, userId: string): Promise<Response> {
+    let url = input.url;
     if (url.indexOf("http") !== 0) {
       url = `https://${url}`;
     }
 
-    const bookmark = new Bookmark(uuid_v4(), this.userId, url, false, false);
+    const bookmark = new Bookmark(uuid_v4(), userId, url, false, false);
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {
       throw new GenericException();
     }
 
-    if (this.input.labelIds) {
+    if (input.labelIds) {
       const labels = await this.labelRepository.findByIds(
-        this.input.labelIds,
-        this.userId
+        input.labelIds,
+        userId
       );
 
       const bookmarkLabels: Promise<boolean>[] = [];
@@ -80,7 +46,7 @@ class CreateLambdaHandler extends BaseHandler {
         const bookmarkLabel = new BookmarkLabel(
           label.labelId,
           bookmark.bookmarkId,
-          this.userId,
+          userId,
           label.title,
           label.color,
           bookmark.bookmarkUrl,
@@ -96,8 +62,7 @@ class CreateLambdaHandler extends BaseHandler {
       await Promise.all(bookmarkLabels);
     }
 
-    const sqs = new SQS({ apiVersion: "2012-11-05" });
-    await sqs
+    await this.sqsService
       .sendMessage({
         MessageAttributes: {
           bookmarkId: {
@@ -110,7 +75,7 @@ class CreateLambdaHandler extends BaseHandler {
           },
         },
         MessageBody: "Fetch metadata",
-        QueueUrl: this.env.queueUrl,
+        QueueUrl: this.queueUrl,
       })
       .promise();
 
@@ -123,4 +88,9 @@ class CreateLambdaHandler extends BaseHandler {
   }
 }
 
-export const handler = new CreateLambdaHandler().create();
+export const handler = new CreateLambdaHandler(
+  new SQS({ apiVersion: "2012-11-05" }),
+  new BookmarkRepository(process.env.dbStore ?? ''),
+  new LabelRepository(process.env.dbStore ?? ''),
+  process.env.queueUrl ?? '',
+).create();

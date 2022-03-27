@@ -4,16 +4,14 @@ import { LabelRepository } from "../../../../shared/repositories/label.repositor
 import { DeleteLambdaInput } from "./delete-lambda.input";
 
 class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
+  protected isLogged: boolean = true;
+
   constructor(private readonly labelRepository: LabelRepository) {
     super(DeleteLambdaInput);
   }
 
-  authorize(): boolean {
-    return this.userId ? true : false;
-  }
-
-  async run(input: DeleteLambdaInput): Promise<Response> {
-    await this.labelRepository.deleteById(input.id, this.userId);
+  async run(input: DeleteLambdaInput, userId: string): Promise<Response> {
+    await this.labelRepository.deleteById(input.id, userId);
 
     return {
       statusCode: ApiGatewayResponseCodes.NO_CONTENT,
