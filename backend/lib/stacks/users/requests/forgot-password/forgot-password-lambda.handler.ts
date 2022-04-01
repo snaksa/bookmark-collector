@@ -1,44 +1,25 @@
 import * as AWS from "aws-sdk";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import { Validator } from "../../../../shared/validators/validator";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
+import { ForgotPasswordLambdaInput } from "./change-password-lambda.input";
 
-interface ForgotPasswordEventData {
-  username: string;
-}
-
-interface Env {
-  cognitoClientId: string;
-}
-
-class ForgotPasswordHandler extends BaseHandler {
-  private input: ForgotPasswordEventData;
-
-  private env: Env = {
-    cognitoClientId: process.env.cognitoClientId ?? "",
-  };
-
-  parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as ForgotPasswordEventData;
+class ForgotPasswordHandler extends BaseHandler<ForgotPasswordLambdaInput> {
+  constructor(
+    private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
+    private readonly cognitoClientId: string,
+  ) {
+    super(ForgotPasswordLambdaInput);
   }
 
-  validate() {
-    return Validator.notEmpty(this.input.username);
-  }
-
-  async run(): Promise<Response> {
-    const forgotPasswordData = {
-      ClientId: this.env.cognitoClientId,
-      Username: this.input.username,
-    };
-
+  async run(input: ForgotPasswordLambdaInput): Promise<Response> {
     try {
-      const cognitoIdentity = new AWS.CognitoIdentityServiceProvider();
-      await cognitoIdentity.forgotPassword(forgotPasswordData).promise();
+      await this.cognitoIdentity
+        .forgotPassword({
+          ClientId: this.cognitoClientId,
+          Username: input.username,
+        })
+        .promise();
     } catch (err) {
       throw new GenericException();
     }
@@ -54,4 +35,7 @@ class ForgotPasswordHandler extends BaseHandler {
   }
 }
 
-export const handler = new ForgotPasswordHandler().create();
+export const handler = new ForgotPasswordHandler(
+  new AWS.CognitoIdentityServiceProvider(),
+  process.env.cognitoClientId ?? '',
+).create();

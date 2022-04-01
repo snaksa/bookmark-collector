@@ -1,52 +1,29 @@
 import * as AWS from "aws-sdk";
-import BaseHandler, {
-  RequestEventType,
-  Response,
-} from "../../../../shared/base-handler";
+import BaseHandler, { Response, } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import { Validator } from "../../../../shared/validators/validator";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
+import { ConfirmPasswordLambdaInput } from "./change-password-lambda.input";
 
-interface ConfirmUserEventData {
-  username: string;
-  code: string;
-}
+class ConfirmUserHandler extends BaseHandler<ConfirmPasswordLambdaInput> {
+  constructor(
+    private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
+    private readonly cognitoClientId: string,
 
-interface Env {
-  cognitoClientId: string;
-}
-
-class ConfirmUserHandler extends BaseHandler {
-  private input: ConfirmUserEventData;
-
-  private env: Env = {
-    cognitoClientId: process.env.cognitoClientId ?? "",
-  };
-
-  parseEvent(event: RequestEventType) {
-    this.input = JSON.parse(event.body) as ConfirmUserEventData;
+  ) {
+    super(ConfirmPasswordLambdaInput);
   }
 
-  validate() {
-    return (
-      Validator.notEmpty(this.input.username) &&
-      Validator.notEmpty(this.input.code)
-    );
-  }
-
-  async run(): Promise<Response> {
-    const data = {
-      ClientId: this.env.cognitoClientId,
-      Username: this.input.username,
-      ConfirmationCode: this.input.code,
-    };
-
+  async run(input: ConfirmPasswordLambdaInput): Promise<Response> {
     try {
-      const cognitoIdentity = new AWS.CognitoIdentityServiceProvider();
-      await cognitoIdentity.confirmSignUp(data).promise();
+      await this.cognitoIdentity
+        .confirmSignUp({
+          ClientId: this.cognitoClientId,
+          Username: input.username,
+          ConfirmationCode: input.code,
+        })
+        .promise();
     } catch (err) {
       console.log(err);
-      console.log(err.code); // containing exception code
       throw new GenericException();
     }
 
@@ -61,4 +38,7 @@ class ConfirmUserHandler extends BaseHandler {
   }
 }
 
-export const handler = new ConfirmUserHandler().create();
+export const handler = new ConfirmUserHandler(
+  new AWS.CognitoIdentityServiceProvider(),
+  process.env.cognitoClientId ?? '',
+).create();

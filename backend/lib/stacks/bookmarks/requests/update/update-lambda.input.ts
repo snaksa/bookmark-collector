@@ -7,7 +7,7 @@ class UpdateLambdaQueryInput {
 }
 
 class UpdateLambdaBodyInput {
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     public url: string;
 

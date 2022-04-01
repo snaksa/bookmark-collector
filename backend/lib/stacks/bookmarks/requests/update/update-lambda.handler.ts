@@ -30,7 +30,10 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       );
     }
 
-    bookmark.bookmarkUrl = input.body.url;
+    if (input.body.url) {
+      bookmark.bookmarkUrl = input.body.url;
+    }
+
     bookmark.isFavorite = input.body.isFavorite;
     bookmark.isArchived = input.body.isArchived;
 
