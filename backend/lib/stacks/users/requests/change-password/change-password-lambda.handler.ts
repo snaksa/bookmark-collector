@@ -16,7 +16,7 @@ class ChangePasswordLambdaHandler extends BaseHandler<ChangePasswordLambdaInput>
     super(ChangePasswordLambdaInput);
   }
 
-  async run(input: ChangePasswordLambdaInput, userId: string): Promise<Response> {
+  async run(request: ChangePasswordLambdaInput, userId: string): Promise<Response> {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException(`User with ID "${userId}" not found`);
@@ -28,7 +28,7 @@ class ChangePasswordLambdaHandler extends BaseHandler<ChangePasswordLambdaInput>
     await this.cognitoIdentity
       .adminSetUserPassword({
         Username: user.email,
-        Password: input.newPassword,
+        Password: request.body.newPassword,
         UserPoolId: this.userPoolId,
         Permanent: true,
       })

@@ -8,15 +8,15 @@ import { Bookmark } from '../../../shared/models/bookmark.model';
   providedIn: 'root',
 })
 export class BookmarksService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public getBookmarks(onlyFavorites = false, onlyArchived = false, excludeArchived = true) {
     return this.http
       .get<{ data: Bookmark[] }>(`${environment.apiBaseUrl}/bookmarks`, {
         params: {
-          favorites: onlyFavorites ? 1 : 0,
-          archived: onlyArchived ? 1 : 0,
-          excludeArchived: excludeArchived ? 1 : 0,
+          favorites: onlyFavorites,
+          archived: onlyArchived,
+          excludeArchived: excludeArchived,
         },
       })
       .pipe(

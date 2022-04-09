@@ -1,7 +1,6 @@
 import { Construct } from "constructs";
 import { StackProps } from "aws-cdk-lib";
-import { ITable } from "aws-cdk-lib/aws-dynamodb";
-import { Cors, IRestApi, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Cors, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { LoginLambda } from "./requests/login/login-lambda";
 import { RegisterLambda } from "./requests/register/register-lambda";
 import { AwsResources } from "../../shared/enums/aws-resources";
@@ -17,11 +16,6 @@ import { ForgotPasswordLambda } from "./requests/forgot-password/forgot-password
 import { ResetPasswordLambda } from "./requests/reset-password/reset-password-lambda";
 
 export class UsersStack extends BaseStack {
-  dbStore: ITable;
-  dbStoreGSI1: ITable;
-  api: IRestApi;
-  cognitoClientId: string;
-
   constructor(
     scope: Construct,
     id: string,

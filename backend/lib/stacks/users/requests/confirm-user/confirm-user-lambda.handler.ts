@@ -2,24 +2,24 @@ import * as AWS from "aws-sdk";
 import BaseHandler, { Response, } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
-import { ConfirmPasswordLambdaInput } from "./change-password-lambda.input";
+import { ConfirmUserLambdaInput } from "./confirm-user-lambda.input";
 
-class ConfirmUserHandler extends BaseHandler<ConfirmPasswordLambdaInput> {
+class ConfirmUserHandler extends BaseHandler<ConfirmUserLambdaInput> {
   constructor(
     private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
     private readonly cognitoClientId: string,
 
   ) {
-    super(ConfirmPasswordLambdaInput);
+    super(ConfirmUserLambdaInput);
   }
 
-  async run(input: ConfirmPasswordLambdaInput): Promise<Response> {
+  async run(request: ConfirmUserLambdaInput): Promise<Response> {
     try {
       await this.cognitoIdentity
         .confirmSignUp({
           ClientId: this.cognitoClientId,
-          Username: input.username,
-          ConfirmationCode: input.code,
+          Username: request.body.username,
+          ConfirmationCode: request.body.code,
         })
         .promise();
     } catch (err) {

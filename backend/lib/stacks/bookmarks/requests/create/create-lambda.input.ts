@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { BodyInput } from '../../../../shared/base-handler';
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { LambdaInput } from '../../../../shared/base-handler';
 
-export class CreateLambdaInput extends BodyInput {
+export class CreateLambdaBodyInput {
     @IsNotEmpty()
     @IsString()
     public url: string;
@@ -9,4 +9,9 @@ export class CreateLambdaInput extends BodyInput {
     @IsOptional()
     @IsString({ each: true })
     public labelIds: string[] = [];
+}
+
+export class CreateLambdaInput extends LambdaInput {
+    @ValidateNested()
+    body: CreateLambdaBodyInput = new CreateLambdaBodyInput();
 }

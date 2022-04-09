@@ -21,8 +21,8 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
     super(CreateLambdaInput);
   }
 
-  async run(input: CreateLambdaInput, userId: string): Promise<Response> {
-    let url = input.url;
+  async run(request: CreateLambdaInput, userId: string): Promise<Response> {
+    let url = request.body.url;
     if (url.indexOf("http") !== 0) {
       url = `https://${url}`;
     }
@@ -34,9 +34,9 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
       throw new GenericException();
     }
 
-    if (input.labelIds) {
+    if (request.body.labelIds) {
       const labels = await this.labelRepository.findByIds(
-        input.labelIds,
+        request.body.labelIds,
         userId
       );
 

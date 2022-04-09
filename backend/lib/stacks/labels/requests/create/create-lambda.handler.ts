@@ -13,12 +13,12 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
     super(CreateLambdaInput);
   }
 
-  async run(input: CreateLambdaInput, userId: string): Promise<Response> {
+  async run(request: CreateLambdaInput, userId: string): Promise<Response> {
     const label = new Label(
       uuid_v4(),
       userId,
-      input.label,
-      input.color
+      request.body.label,
+      request.body.color
     );
     const save = await this.labelRepository.save(label);
 

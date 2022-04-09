@@ -6,29 +6,10 @@ import { ExceptionCodes } from "./enums/exception-codes";
 import { InvalidInputParametersException } from "./exceptions/invalid-input-parameters-exception";
 import { UnauthorizedException } from "./exceptions/unauthorized-exception";
 
-enum InputType {
-  QUERY,
-  BODY,
-  QUERY_BODY,
-  NONE,
-}
-
-export interface BaseInput {
-  type: InputType
-}
-
-export class BodyInput implements BaseInput {
-  type: InputType = InputType.BODY;
-}
-
-export class QueryInput implements BaseInput {
-  type: InputType = InputType.QUERY;
-}
-
-export class QueryBodyInput implements BaseInput {
-  type: InputType = InputType.QUERY_BODY;
-  protected query: any;
-  protected body: any;
+export class LambdaInput {
+  path: Record<string, any> = {};
+  query: Record<string, any> = {};
+  body: Record<string, any> = {};
 }
 
 export interface Response {
@@ -55,7 +36,7 @@ export interface RequestEventType {
   body: string;
 }
 
-export default abstract class BaseHandler<T extends BaseInput = { type: InputType.NONE }> {
+export default abstract class BaseHandler<T extends LambdaInput = { path: {}, query: {}, body: {} }> {
   protected isLogged: boolean = false;
 
   constructor(private readonly inputCreator?: { new(): T }) { }
@@ -63,20 +44,36 @@ export default abstract class BaseHandler<T extends BaseInput = { type: InputTyp
   protected parseEvent(event: RequestEventType): T | null {
     if (this.inputCreator) {
       const input = new this.inputCreator();
-      let data: Record<string, any> = {};
-      if (input.type === InputType.BODY && event.body) {
-        data = JSON.parse(event.body);
-        Object.keys(data).forEach(key => input[key] = data[key]);
-      } else if (input.type === InputType.QUERY && event.pathParameters) {
-        data = event.pathParameters;
-        Object.keys(data).forEach(key => input[key] = data[key]);
-      } else if (input.type === InputType.QUERY_BODY) {
-        const query = event.pathParameters ?? {};
-        Object.keys(query).forEach(key => input['query'][key] = query[key]);
-
-        const body = event.body ? JSON.parse(event.body) : {};
-        Object.keys(body).forEach(key => input['body'][key] = body[key]);
+      if (input.path) {
+        const path = event.pathParameters ?? {};
+        console.log('current path params: ', path);
+        Object.keys(path).forEach(key => {
+          if (input.path) {
+            input.path[key] = path[key]
+          }
+        });
+        console.log('parsed path params: ', input.path);
       }
+
+      if (input.query) {
+        const query = event.queryStringParameters ?? {};
+        Object.keys(query).forEach(key => {
+          if (input.query) {
+            input.query[key] = query[key]
+          }
+        });
+      }
+
+      if (input.body) {
+        const body = event.body ? JSON.parse(event.body) : {};
+        Object.keys(body).forEach(key => {
+          if (input.body) {
+            input.body[key] = body[key];
+          }
+        });
+      }
+
+
 
       return input;
     }

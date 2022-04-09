@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { QueryBodyInput } from '../../../../shared/base-handler';
+import { LambdaInput } from '../../../../shared/base-handler';
 
-class UpdateLambdaQueryInput {
+class UpdateLambdaPathInput {
     @IsNotEmpty()
     id: string;
 }
@@ -28,9 +28,10 @@ class UpdateLambdaBodyInput {
     isArchived: boolean = false;
 }
 
-export class UpdateLambdaInput extends QueryBodyInput {
+
+export class UpdateLambdaInput extends LambdaInput {
     @ValidateNested()
-    query: UpdateLambdaQueryInput = new UpdateLambdaQueryInput();
+    path: UpdateLambdaPathInput = new UpdateLambdaPathInput();
 
     @ValidateNested()
     body: UpdateLambdaBodyInput = new UpdateLambdaBodyInput();

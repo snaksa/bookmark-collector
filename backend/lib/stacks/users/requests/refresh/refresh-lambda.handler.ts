@@ -12,14 +12,14 @@ class RefreshTokenHandler extends BaseHandler<RefreshLambdaInput> {
     super(RefreshLambdaInput);
   }
 
-  async run(input: RefreshLambdaInput): Promise<Response> {
+  async run(request: RefreshLambdaInput): Promise<Response> {
     try {
       const authenticationDetails = await this.cognitoIdentity
         .initiateAuth({
           AuthFlow: "REFRESH_TOKEN_AUTH",
           ClientId: this.cognitoClientId,
           AuthParameters: {
-            REFRESH_TOKEN: input.refreshToken,
+            REFRESH_TOKEN: request.body.refreshToken,
           },
         })
         .promise();

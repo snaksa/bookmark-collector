@@ -1,8 +1,13 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { BodyInput } from '../../../../shared/base-handler';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { LambdaInput } from '../../../../shared/base-handler';
 
-export class RefreshLambdaInput extends BodyInput {
+export class RefreshLambdaBodyInput {
     @IsNotEmpty()
     @IsString()
     public refreshToken: string;
+}
+
+export class RefreshLambdaInput extends LambdaInput {
+    @ValidateNested()
+    body: RefreshLambdaBodyInput = new RefreshLambdaBodyInput();
 }

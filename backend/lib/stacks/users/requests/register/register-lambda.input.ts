@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { BodyInput } from '../../../../shared/base-handler';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { LambdaInput } from '../../../../shared/base-handler';
 
-export class RegisterLambdaInput extends BodyInput {
+export class RegisterLambdaBodyInput {
     @IsNotEmpty()
     @IsString()
     public firstName: string;
@@ -17,4 +17,9 @@ export class RegisterLambdaInput extends BodyInput {
     @IsNotEmpty()
     @IsString()
     public password: string;
+}
+
+export class RegisterLambdaInput extends LambdaInput {
+    @ValidateNested()
+    body: RegisterLambdaBodyInput = new RegisterLambdaBodyInput();
 }

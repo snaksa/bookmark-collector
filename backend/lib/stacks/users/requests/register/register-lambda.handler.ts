@@ -15,9 +15,9 @@ class RegisterLambdaHandler extends BaseHandler<RegisterLambdaInput> {
     super(RegisterLambdaInput);
   }
 
-  async run(input: RegisterLambdaInput): Promise<Response> {
+  async run(request: RegisterLambdaInput): Promise<Response> {
     // check if user with the provided email already exists
-    const userExists = await this.userRepository.userExists(input.email);
+    const userExists = await this.userRepository.userExists(request.body.email);
 
     if (userExists) {
       throw new Error("User with this email already exists");
@@ -28,12 +28,12 @@ class RegisterLambdaHandler extends BaseHandler<RegisterLambdaInput> {
       const signUpResponse = await this.cognitoIdentity
         .signUp({
           ClientId: this.cognitoClientId,
-          Username: input.email,
-          Password: input.password,
+          Username: request.body.email,
+          Password: request.body.password,
           UserAttributes: [
             {
               Name: "email",
-              Value: input.email,
+              Value: request.body.email,
             },
           ],
         })
@@ -44,9 +44,9 @@ class RegisterLambdaHandler extends BaseHandler<RegisterLambdaInput> {
       await this.userRepository.save(
         new User(
           userSub,
-          input.email,
-          input.firstName,
-          input.lastName,
+          request.body.email,
+          request.body.firstName,
+          request.body.lastName,
           1
         )
       );

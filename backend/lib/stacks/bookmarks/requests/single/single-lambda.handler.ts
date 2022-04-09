@@ -12,20 +12,20 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
     super(SingleLambdaInput);
   }
 
-  async run(input: SingleLambdaInput, userId: string): Promise<Response> {
+  async run(request: SingleLambdaInput, userId: string): Promise<Response> {
     const bookmark = await this.bookmarkRepository.findOne(
-      input.id,
+      request.path.id,
       userId
     );
 
     if (!bookmark) {
       throw new NotFoundException(
-        `Bookmark with ID "${input.id}" not found`
+        `Bookmark with ID "${request.path.id}" not found`
       );
     }
 
     const bookmarkLabels =
-      await this.bookmarkRepository.findBookmarkLabelRecords(input.id);
+      await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
 
     bookmarkLabels.forEach((label) =>
       bookmark.addLabel(

@@ -1,16 +1,21 @@
-import { IsBoolean, IsOptional } from "class-validator";
-import { QueryInput } from "../../../../shared/base-handler";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { LambdaInput } from "../../../../shared/base-handler";
 
-export class ListLambdaInput extends QueryInput {
+export class ListLambdaQueryInput {
     @IsOptional()
-    @IsBoolean()
-    favorites: boolean;
-    
+    @IsString()
+    favorites: string;
+
     @IsOptional()
-    @IsBoolean()
-    archived: boolean;
-    
+    @IsString()
+    archived: string;
+
     @IsOptional()
-    @IsBoolean()
-    excludeArchived: boolean;
+    @IsString()
+    excludeArchived: string;
+}
+
+export class ListLambdaInput extends LambdaInput {
+    @ValidateNested()
+    query: ListLambdaQueryInput = new ListLambdaQueryInput();
 }

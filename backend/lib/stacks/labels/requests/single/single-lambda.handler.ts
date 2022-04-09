@@ -14,15 +14,15 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
     super(SingleLambdaInput);
   }
 
-  async run(input: SingleLambdaInput, userId: string): Promise<Response> {
-    const label = await this.labelRepository.findOne(input.id, userId);
+  async run(request: SingleLambdaInput, userId: string): Promise<Response> {
+    const label = await this.labelRepository.findOne(request.path.id, userId);
 
     if (!label) {
-      throw new NotFoundException(`Label with ID "${input.id}" not found`);
+      throw new NotFoundException(`Label with ID "${request.path.id}" not found`);
     }
 
     const labelBookmarks = await this.labelRepository.findBookmarks(
-      input.id
+      request.path.id
     );
 
     const bookmarks = labelBookmarks.map(

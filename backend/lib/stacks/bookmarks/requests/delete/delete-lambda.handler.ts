@@ -11,8 +11,8 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
     super(DeleteLambdaInput);
   }
 
-  async run(input: DeleteLambdaInput): Promise<Response> {
-    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(input.id);
+  async run(request: DeleteLambdaInput): Promise<Response> {
+    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(request.path.id);
 
     // TODO: check if the bookmark belongs to the current user
     const deleteBookmarkRecords: Promise<Bookmark>[] = [];

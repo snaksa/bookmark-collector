@@ -2,7 +2,7 @@ import * as AWS from "aws-sdk";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
-import { ForgotPasswordLambdaInput } from "./change-password-lambda.input";
+import { ForgotPasswordLambdaInput } from "./forgot-password-lambda.input";
 
 class ForgotPasswordHandler extends BaseHandler<ForgotPasswordLambdaInput> {
   constructor(
@@ -12,12 +12,12 @@ class ForgotPasswordHandler extends BaseHandler<ForgotPasswordLambdaInput> {
     super(ForgotPasswordLambdaInput);
   }
 
-  async run(input: ForgotPasswordLambdaInput): Promise<Response> {
+  async run(request: ForgotPasswordLambdaInput): Promise<Response> {
     try {
       await this.cognitoIdentity
         .forgotPassword({
           ClientId: this.cognitoClientId,
-          Username: input.username,
+          Username: request.body.username,
         })
         .promise();
     } catch (err) {

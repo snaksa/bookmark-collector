@@ -10,8 +10,8 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
     super(DeleteLambdaInput);
   }
 
-  async run(input: DeleteLambdaInput, userId: string): Promise<Response> {
-    await this.labelRepository.deleteById(input.id, userId);
+  async run(request: DeleteLambdaInput, userId: string): Promise<Response> {
+    await this.labelRepository.deleteById(request.path.id, userId);
 
     return {
       statusCode: ApiGatewayResponseCodes.NO_CONTENT,

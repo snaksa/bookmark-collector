@@ -4,7 +4,6 @@ import { Cors, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { CreateLambda } from "./requests/create/create-lambda";
 import { ListLambda } from "./requests/list/list-lambda";
 import { DeleteLambda } from "./requests/delete/delete-lambda";
-import { UpdateLambda } from "./requests/update/update-lambda";
 import { BaseStack } from "../base.stack";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { SingleLambda } from "./requests/single/single-lambda";
@@ -64,16 +63,6 @@ export class LabelsStack extends BaseStack {
       ApiGatewayRequestMethods.DELETE,
       new LambdaIntegration(
         new DeleteLambda(this, buildConfig.envSpecific("delete-lambda"), {
-          dbStore: this.dbStore,
-        })
-      ),
-      this.authorization
-    );
-
-    singleLabel.addMethod(
-      ApiGatewayRequestMethods.PUT,
-      new LambdaIntegration(
-        new UpdateLambda(this, buildConfig.envSpecific("update-lambda"), {
           dbStore: this.dbStore,
         })
       ),

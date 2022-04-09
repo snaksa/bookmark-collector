@@ -18,15 +18,15 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
     super(UpdateLambdaInput);
   }
 
-  async run(input: UpdateLambdaInput, userId: string): Promise<Response> {
+  async run(request: UpdateLambdaInput, userId: string): Promise<Response> {
     const user: User | null = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException(`User with ID "${userId}" not found`);
     }
 
-    if (input.email && input.email !== user.email) {
+    if (request.body.email && request.body.email !== user.email) {
       // check if user with the provided email already exists
-      const userExistsInDb = await this.userRepository.userExists(input.email);
+      const userExistsInDb = await this.userRepository.userExists(request.body.email);
 
       if (userExistsInDb) {
         throw new UserAlreadyExistsException();
@@ -41,22 +41,22 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
           UserAttributes: [
             {
               Name: "email",
-              Value: input.email,
+              Value: request.body.email,
             },
           ],
         })
         .promise();
 
-      user.GSI1 = input.email;
-      user.email = input.email;
+      user.GSI1 = request.body.email;
+      user.email = request.body.email;
     }
 
-    if (input.firstName) {
-      user.firstName = input.firstName;
+    if (request.body.firstName) {
+      user.firstName = request.body.firstName;
     }
 
-    if (input.lastName) {
-      user.lastName = input.lastName;
+    if (request.body.lastName) {
+      user.lastName = request.body.lastName;
     }
 
     await this.userRepository.update(user);

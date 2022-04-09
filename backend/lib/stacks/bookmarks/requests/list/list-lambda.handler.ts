@@ -11,15 +11,12 @@ class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
     super(ListLambdaInput);
   }
 
-  async run(input: ListLambdaInput, userId: string): Promise<Response> {
-
-    // TODO: handle separately path and query inputs
-
+  async run(request: ListLambdaInput, userId: string): Promise<Response> {
     const result = await this.bookmarkRepository.findAll(
       userId,
-      input.favorites,
-      input.archived,
-      input.excludeArchived
+      request.query.favorites === 'true',
+      request.query.archived === 'true',
+      request.query.excludeArchived === 'true'
     );
 
     const bookmarks = result.map((bookmark: Bookmark) => bookmark.toObject());

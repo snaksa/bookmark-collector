@@ -4,7 +4,7 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { WrongCredentialsException } from "../../../../shared/exceptions/wrong-credentials-exception";
-import { LoginLambdaInput } from "./login.input";
+import { LoginLambdaInput } from "./login-lambda.input";
 
 class LoginHandler extends BaseHandler<LoginLambdaInput> {
   constructor(
@@ -14,13 +14,13 @@ class LoginHandler extends BaseHandler<LoginLambdaInput> {
     super(LoginLambdaInput);
   }
 
-  async run(input: LoginLambdaInput): Promise<Response> {
+  async run(request: LoginLambdaInput): Promise<Response> {
     const authenticationData = {
       AuthFlow: "USER_PASSWORD_AUTH",
       ClientId: this.cognitoClientId,
       AuthParameters: {
-        USERNAME: input.email,
-        PASSWORD: input.password,
+        USERNAME: request.body.email,
+        PASSWORD: request.body.password,
       },
     };
 

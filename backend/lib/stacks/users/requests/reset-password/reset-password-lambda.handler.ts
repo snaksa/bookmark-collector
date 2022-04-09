@@ -17,9 +17,9 @@ class ResetPasswordHandler extends BaseHandler<ResetPasswordLambdaInput> {
       await this.cognitoIdentity
         .confirmForgotPassword({
           ClientId: this.cognitoClientId,
-          Username: input.username,
-          Password: input.password,
-          ConfirmationCode: input.confirmationCode,
+          Username: input.body.username,
+          Password: input.body.password,
+          ConfirmationCode: input.body.confirmationCode,
         })
         .promise();
     } catch (err) {

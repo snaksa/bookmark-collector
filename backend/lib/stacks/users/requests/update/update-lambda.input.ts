@@ -1,7 +1,7 @@
-import { IsOptional, IsString } from 'class-validator';
-import { BodyInput } from '../../../../shared/base-handler';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { LambdaInput } from '../../../../shared/base-handler';
 
-export class UpdateLambdaInput extends BodyInput {
+export class UpdateLambdaBodyInput {
     @IsOptional()
     @IsString()
     public firstName: string;
@@ -13,4 +13,9 @@ export class UpdateLambdaInput extends BodyInput {
     @IsOptional()
     @IsString()
     public email: string;
+}
+
+export class UpdateLambdaInput extends LambdaInput {
+    @ValidateNested()
+    body: UpdateLambdaBodyInput = new UpdateLambdaBodyInput();
 }
