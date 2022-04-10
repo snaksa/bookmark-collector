@@ -47,7 +47,6 @@ export default class Label implements Model {
 
     return {
       ...result,
-      userId: this.userId,
       title: this.title,
       entityType: Label.ENTITY_TYPE,
     };
