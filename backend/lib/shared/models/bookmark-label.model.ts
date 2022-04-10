@@ -18,14 +18,12 @@ export default class BookmarkLabel implements Model {
   isFavorite: boolean;
   isArchived: boolean;
   title: string;
-  color: string;
 
   constructor(
     labelId: string,
     bookmarkId: string,
     userId: string,
     title = "",
-    color = "",
     bookmarkUrl = "",
     isFavorite = false,
     isArchived = false,
@@ -41,7 +39,6 @@ export default class BookmarkLabel implements Model {
     this.bookmarkId = bookmarkId;
     this.userId = userId;
     this.title = title;
-    this.color = color;
     this.bookmarkUrl = bookmarkUrl;
     this.isFavorite = isFavorite;
     this.isArchived = isArchived;
@@ -59,7 +56,6 @@ export default class BookmarkLabel implements Model {
       bookmarkImage: this.bookmarkImage,
       bookmarkCreatedAt: this.bookmarkCreatedAt,
       title: this.title,
-      color: this.color,
     };
   }
 
@@ -79,7 +75,6 @@ export default class BookmarkLabel implements Model {
       bookmarkId: this.bookmarkId,
       userId: this.userId,
       title: this.title,
-      color: this.color,
       bookmarkUrl: this.bookmarkUrl,
       bookmarkTitle: this.bookmarkTitle,
       bookmarkImage: this.bookmarkImage,
@@ -97,7 +92,6 @@ export default class BookmarkLabel implements Model {
       o.bookmarkId,
       o.userId,
       o.title,
-      o.color,
       o.bookmarkUrl,
       o.isFavorite,
       o.isArchived,

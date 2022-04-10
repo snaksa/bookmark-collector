@@ -6,42 +6,33 @@ export default class Label implements Model {
 
   pk: string;
   sk: string;
-  GSI1: string;
   entityType: string = Label.ENTITY_TYPE;
 
-  labelId: string;
+  id: string;
   userId: string;
   title: string;
-  color: string;
 
   bookmarks: Bookmark[] = [];
 
-  constructor(id: string, userId: string, title: string, color: string) {
+  constructor(id: string, userId: string, title: string) {
     this.pk = `USER#${userId}`;
     this.sk = `LABEL#${id}`;
 
-    this.labelId = id;
+    this.id = id;
     this.userId = userId;
     this.title = title;
-    this.color = color;
   }
 
   public setBookmarks(bookmarks: Bookmark[]): void {
     this.bookmarks = bookmarks;
   }
 
-  public toObject(includeBookmarks = false) {
-    const label: any = {
-      id: this.labelId,
+  public toObject() {
+    return {
+      id: this.id,
       title: this.title,
-      color: this.color,
+      bookmarks: this.bookmarks.map((bookmark) => bookmark.toObject()),
     };
-
-    if (includeBookmarks) {
-      label.bookmarks = this.bookmarks.map((bookmark) => bookmark.toObject());
-    }
-
-    return label;
   }
 
   public toDynamoDbObject(removeKeys = false): Partial<Label> {
@@ -56,15 +47,16 @@ export default class Label implements Model {
 
     return {
       ...result,
-      labelId: this.labelId,
       userId: this.userId,
       title: this.title,
-      color: this.color,
       entityType: Label.ENTITY_TYPE,
     };
   }
 
   public static fromDynamoDb(o: Label): Label {
-    return new Label(o.labelId, o.userId, o.title, o.color);
+    const userId = o.pk.split('#')[1];
+    const labelId = o.sk.split('#')[1];
+
+    return new Label(labelId, userId, o.title);
   }
 }

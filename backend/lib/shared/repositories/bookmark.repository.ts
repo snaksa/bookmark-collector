@@ -8,14 +8,14 @@ export class BookmarkRepository {
     private dbStore: string,
     private reversedDbStore: string = "",
     private dbStoreGSI1: string = ""
-  ) {}
+  ) { }
 
   async save(bookmark: Bookmark): Promise<boolean> {
     return new QueryBuilder<Bookmark>().table(this.dbStore).create(bookmark);
   }
 
   async saveLabel(bookmarkLabel: BookmarkLabel): Promise<boolean> {
-    return new QueryBuilder<BookmarkLabel>()
+    return await new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
       .create(bookmarkLabel);
   }
@@ -96,7 +96,8 @@ export class BookmarkRepository {
       .index(this.dbStoreGSI1)
       .where({
         GSI1: `USER#${userId}`,
-      });
+      })
+      .sortKeyBeginsWith('BOOKMARK');
 
     if (onlyFavorites) {
       console.log("Include only favorites");
@@ -141,7 +142,6 @@ export class BookmarkRepository {
           record.labelId,
           record.userId,
           record.title,
-          record.color
         );
         bookmarks[record.bookmarkId].addLabel(label);
       }

@@ -1,13 +1,13 @@
-import { v4 as uuid_v4 } from "uuid";
 import { SQS } from "aws-sdk";
+import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Bookmark from "../../../../shared/models/bookmark.model";
 import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
+import Bookmark from "../../../../shared/models/bookmark.model";
 
 class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
   protected isLogged: boolean = true;
@@ -44,11 +44,10 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
       labels.forEach((label) => {
         bookmark.addLabel(label);
         const bookmarkLabel = new BookmarkLabel(
-          label.labelId,
+          label.id,
           bookmark.bookmarkId,
           userId,
           label.title,
-          label.color,
           bookmark.bookmarkUrl,
           bookmark.isFavorite,
           bookmark.isArchived,

@@ -34,8 +34,8 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       bookmark.bookmarkUrl = request.body.url;
     }
 
-    bookmark.isFavorite = request.body.isFavorite;
-    bookmark.isArchived = request.body.isArchived;
+    if ("isFavorite" in request.body) bookmark.isFavorite = request.body.isFavorite;
+    if ("isArchived" in request.body) bookmark.isArchived = request.body.isArchived;
 
     if (request.body.labelIds) {
       const newLabelIds = request.body.labelIds;
@@ -50,16 +50,16 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
         newLabelIds,
         userId
       );
+
       const created: Promise<boolean>[] = [];
       labels.forEach((label) => {
-        const index = oldBookmarkLabels.indexOf(label.labelId);
+        const index = oldBookmarkLabels.indexOf(label.id);
         if (index === -1) {
           const bookmarkLabel = new BookmarkLabel(
-            label.labelId,
+            label.id,
             bookmark.bookmarkId,
             userId,
             label.title,
-            label.color,
             bookmark.bookmarkUrl,
             bookmark.isFavorite,
             bookmark.isArchived,
@@ -96,18 +96,16 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
           uuid_v4(),
           userId,
           request.body.newLabels[i],
-          "grey"
         );
 
         const success = await this.labelRepository.save(label);
 
         if (success) {
           const bookmarkLabel = new BookmarkLabel(
-            label.labelId,
+            label.id,
             bookmark.bookmarkId,
             userId,
             label.title,
-            label.color,
             bookmark.bookmarkUrl,
             bookmark.isFavorite,
             bookmark.isArchived,
@@ -131,7 +129,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
         await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
       bookmarkLabels.forEach((label) =>
         bookmark.addLabel(
-          new Label(label.labelId, userId, label.title, label.color)
+          new Label(label.labelId, userId, label.title)
         )
       );
     }

@@ -18,9 +18,7 @@ class ListLambdaHandler extends BaseHandler {
     return {
       statusCode: ApiGatewayResponseCodes.OK,
       body: {
-        data: labels.map((label: Label) =>
-          Label.fromDynamoDb(label).toObject()
-        ),
+        data: labels.map((label: Label) => label.toObject()),
       },
     };
   }

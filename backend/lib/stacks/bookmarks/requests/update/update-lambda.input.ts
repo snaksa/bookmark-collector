@@ -21,11 +21,11 @@ class UpdateLambdaBodyInput {
 
     @IsOptional()
     @IsBoolean()
-    isFavorite: boolean = false;
+    isFavorite: boolean;
 
     @IsOptional()
     @IsBoolean()
-    isArchived: boolean = false;
+    isArchived: boolean;
 }
 
 

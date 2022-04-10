@@ -1,3 +1,4 @@
+import { v4 as uuid_v4 } from "uuid";
 import BookmarkLabel from "../models/bookmark-label.model";
 import Label from "../models/label.model";
 import { QueryBuilder } from "../services/query-builder";
@@ -7,18 +8,6 @@ export class LabelRepository {
 
   async save(label: Label): Promise<boolean> {
     return new QueryBuilder<Label>().table(this.dbStore).create(label);
-  }
-
-  async update(label: Label): Promise<Label> {
-    const updated = await new QueryBuilder<Label>()
-      .table(this.dbStore)
-      .where({
-        pk: `USER#${label.userId}`,
-        sk: `LABEL#${label.labelId}`,
-      })
-      .update(label.toDynamoDbObject(true));
-
-    return Label.fromDynamoDb(updated);
   }
 
   async deleteById(labelId: string, userId: string): Promise<Label> {
@@ -41,17 +30,6 @@ export class LabelRepository {
       .one();
 
     return label ? Label.fromDynamoDb(label) : null;
-  }
-
-  async findByIds(labelIds: string[], userId: string): Promise<Label[]> {
-    const labels: Promise<Label | null>[] = [];
-    for (let i = 0; i < labelIds.length; i++) {
-      labels.push(this.findOne(labelIds[i], userId));
-    }
-
-    return (await Promise.all(labels))
-      .filter((label): label is Label => label !== null)
-      .map((label: Label) => Label.fromDynamoDb(label));
   }
 
   async findAll(userId: string): Promise<Label[]> {
@@ -89,5 +67,16 @@ export class LabelRepository {
       .update(bookmarkLabel.toDynamoDbObject(true));
 
     return BookmarkLabel.fromDynamoDb(updated);
+  }
+
+  async findByIds(labelIds: string[], userId: string): Promise<Label[]> {
+    const labels: Promise<Label | null>[] = [];
+    for (let i = 0; i < labelIds.length; i++) {
+      labels.push(this.findOne(labelIds[i], userId));
+    }
+
+    return (await Promise.all(labels))
+      .filter((label): label is Label => label !== null)
+      .map((label: Label) => Label.fromDynamoDb(label));
   }
 }

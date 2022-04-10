@@ -1,10 +1,10 @@
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
+import Label from "../../../../shared/models/label.model";
 
 class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
   protected isLogged: boolean = true;
@@ -18,7 +18,6 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
       uuid_v4(),
       userId,
       request.body.label,
-      request.body.color
     );
     const save = await this.labelRepository.save(label);
 

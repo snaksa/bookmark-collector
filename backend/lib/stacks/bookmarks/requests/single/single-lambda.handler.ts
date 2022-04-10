@@ -29,7 +29,7 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
 
     bookmarkLabels.forEach((label) =>
       bookmark.addLabel(
-        new Label(label.labelId, userId, label.title, label.color)
+        new Label(label.labelId, userId, label.title)
       )
     );
 

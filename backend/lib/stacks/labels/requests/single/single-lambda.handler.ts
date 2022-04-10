@@ -1,7 +1,5 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, {
-  Response,
-} from "../../../../shared/base-handler";
+import BaseHandler, { Response, } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
@@ -47,7 +45,7 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
     return {
       statusCode: ApiGatewayResponseCodes.OK,
       body: {
-        data: label.toObject(true),
+        data: label.toObject(),
       },
     };
   }
