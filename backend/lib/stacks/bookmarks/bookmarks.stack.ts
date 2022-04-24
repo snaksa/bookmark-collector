@@ -57,9 +57,6 @@ export class BookmarksStack extends BaseStack {
       new LambdaIntegration(
         new ListLambda(this, buildConfig.envSpecific("list-lambda"), {
           dbStore: this.dbStore,
-          dbStoreGSI1: buildConfig.envSpecific(
-            AwsResources.DB_STORE_TABLE_GSI1
-          ),
           reversedDbStore: buildConfig.envSpecific(
             AwsResources.DB_STORE_TABLE_REVERSED
           ),

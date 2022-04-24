@@ -8,7 +8,6 @@ export class BookmarkRepository {
   constructor(
     private dbStore: string,
     private reversedDbStore: string = "",
-    private dbStoreGSI1: string = ""
   ) { }
 
   async save(bookmark: Bookmark): Promise<boolean> {

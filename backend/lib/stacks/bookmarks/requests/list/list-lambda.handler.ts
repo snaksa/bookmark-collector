@@ -45,6 +45,5 @@ export const handler = new ListLambdaHandler(
   new BookmarkRepository(
     process.env.dbStore ?? '',
     process.env.reversedDbStore ?? '',
-    process.env.dbStoreGSI1 ?? '',
   ),
 ).create();
