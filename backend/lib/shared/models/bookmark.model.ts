@@ -52,6 +52,10 @@ export default class Bookmark implements Model {
     this.labels.push(label);
   }
 
+  public addLabels(labels: Label[]): void {
+    this.labels = labels;
+  }
+
   public removeLabel(labelId: string): void {
     this.labels = this.labels.filter((label) => label.id !== labelId);
   }

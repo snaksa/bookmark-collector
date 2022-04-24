@@ -1,6 +1,7 @@
 import BookmarkLabel from "../models/bookmark-label.model";
 import Bookmark from "../models/bookmark.model";
 import Label from "../models/label.model";
+import PaginatedResult from "../models/pagination.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class BookmarkRepository {
@@ -71,7 +72,7 @@ export class BookmarkRepository {
   }
 
   async findBookmarkLabelRecords(bookmarkId: string): Promise<BookmarkLabel[]> {
-    const result = await new QueryBuilder<BookmarkLabel>()
+    const records = await new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
       .index(this.reversedDbStore)
       .sortKeyBeginsWith("LABEL#", "pk")
@@ -80,25 +81,34 @@ export class BookmarkRepository {
       })
       .all();
 
-    return result.map((bookmarkLabel: BookmarkLabel) =>
+    return records.map((bookmarkLabel: BookmarkLabel) =>
       BookmarkLabel.fromDynamoDb(bookmarkLabel)
     );
   }
 
   async findAll(
     userId: string,
+    cursor: string,
+    limit: number = 10,
     onlyFavorites = false,
     onlyArchived = false,
     excludeArchived = false
-  ): Promise<Bookmark[]> {
-    const query = new QueryBuilder<BookmarkLabel>()
+  ): Promise<PaginatedResult<Bookmark>> {
+    const query = new QueryBuilder<Bookmark>()
       .table(this.dbStore)
-      .index(this.dbStoreGSI1)
       .where({
-        GSI1: `USER#${userId}`,
+        pk: `USER#${userId}`,
       })
-      .sortKeyBeginsWith('BOOKMARK');
+      .sortKeyBeginsWith('BOOKMARK')
+      .setLimit(limit)
+      .setSort(false);
 
+    if (cursor) {
+      query.setCursor({
+        pk: `USER#${userId}`,
+        sk: `BOOKMARK#${cursor}`,
+      });
+    }
     if (onlyFavorites) {
       console.log("Include only favorites");
       query.filter({
@@ -120,34 +130,45 @@ export class BookmarkRepository {
       });
     }
 
-    const records: BookmarkLabel[] = await query.all();
+    const records = await query.all();
+    const newCursor = records.length ? records[records.length - 1].bookmarkId : '';
 
-    const bookmarks: { [key: string]: Bookmark } = {};
-    records.forEach((record: BookmarkLabel) => {
-      if (!(record.bookmarkId in bookmarks)) {
-        bookmarks[record.bookmarkId] = new Bookmark(
-          record.bookmarkId,
-          record.userId,
-          record.bookmarkUrl,
-          record.isFavorite,
-          record.isArchived,
-          record.bookmarkTitle,
-          record.bookmarkImage,
-          record.bookmarkCreatedAt
-        );
-      }
-
-      if (record.entityType === BookmarkLabel.ENTITY_TYPE) {
-        const label = new Label(
-          record.labelId,
-          record.userId,
-          record.title,
-        );
-        bookmarks[record.bookmarkId].addLabel(label);
-      }
+    const bookmarks = records.map((record: Bookmark) => {
+      return new Bookmark(
+        record.bookmarkId,
+        record.userId,
+        record.bookmarkUrl,
+        record.isFavorite,
+        record.isArchived,
+        record.bookmarkTitle,
+        record.bookmarkImage,
+        record.bookmarkCreatedAt
+      );
     });
 
-    return Object.values(bookmarks);
+    return new PaginatedResult(bookmarks, newCursor);
+  }
+
+  async findLabels(id: string): Promise<Label[]> {
+    const query = new QueryBuilder<BookmarkLabel>()
+      .table(this.dbStore)
+      .index(this.reversedDbStore)
+      .where({
+        sk: `BOOKMARK#${id}`,
+      })
+      .sortKeyBeginsWith('LABEL', 'pk');
+
+    const records: BookmarkLabel[] = await query.all();
+
+    const labels = records.map((record: BookmarkLabel) => {
+      return new Label(
+        record.labelId,
+        record.userId,
+        record.title,
+      );
+    });
+
+    return labels;
   }
 
   async deleteByKeys(pk: string, sk: string): Promise<Bookmark> {

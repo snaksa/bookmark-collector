@@ -14,19 +14,28 @@ class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
   async run(request: ListLambdaInput, userId: string): Promise<Response> {
     const result = await this.bookmarkRepository.findAll(
       userId,
+      request.query.cursor,
+      +request.query.limit,
       request.query.favorites === 'true',
       request.query.archived === 'true',
       request.query.excludeArchived === 'true'
     );
 
-    const bookmarks = result.map((bookmark: Bookmark) => bookmark.toObject());
+    const getLabels = result.records.map(async (bookmark, index) => {
+      const labels = await this.bookmarkRepository.findLabels(bookmark.bookmarkId);
+      bookmark.addLabels(labels);
+      result.records[index] = bookmark;
+    });
+
+    await Promise.all(getLabels);
+
+    const bookmarks = result.records.map((bookmark: Bookmark) => bookmark.toObject());
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
       body: {
-        data: bookmarks.sort((a, b) => {
-          return b.createdAt - a.createdAt;
-        }),
+        cursor: result.cursor,
+        data: bookmarks,
       },
     };
   }

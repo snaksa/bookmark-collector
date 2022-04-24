@@ -27,7 +27,8 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
       url = `https://${url}`;
     }
 
-    const bookmark = new Bookmark(uuid_v4(), userId, url, false, false);
+    const id = `${new Date().getTime()}-${uuid_v4()}`;
+    const bookmark = new Bookmark(id, userId, url, false, false);
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {

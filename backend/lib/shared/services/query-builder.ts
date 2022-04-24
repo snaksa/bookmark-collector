@@ -1,5 +1,7 @@
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { DynamoDbHelper, LoggerHelper as Logger } from "../helpers";
 import { Model } from "../models/base.model";
+import PaginatedResult from "../models/pagination.model";
 
 export class QueryBuilder<T extends Model> {
   db: DynamoDbHelper;
@@ -24,6 +26,15 @@ export class QueryBuilder<T extends Model> {
 
   // sortKey attribute name
   fieldBeginsWith: string;
+
+  // paginated cursor value
+  cursor: Record<string, string>;
+
+  // page limit value
+  limit: number;
+
+  // sort direction
+  sort: boolean = true; // ASC = true, DESC = false
 
   constructor() {
     this.db = new DynamoDbHelper();
@@ -84,6 +95,22 @@ export class QueryBuilder<T extends Model> {
 
     return this;
   }
+
+  setCursor(cursor: Record<string, string>): QueryBuilder<T> {
+    this.cursor = cursor;;
+    return this;
+  }
+
+  setLimit(limit: number): QueryBuilder<T> {
+    this.limit = limit;
+    return this;
+  }
+
+  setSort(asc: boolean): QueryBuilder<T> {
+    this.sort = asc;
+    return this;
+  }
+
 
   async one(): Promise<T | null> {
     if (!this.tableName) Error("Table name not specified");
@@ -170,14 +197,32 @@ export class QueryBuilder<T extends Model> {
         : undefined,
     };
 
-    const result = await this.db.getAll(params);
-
-    if (result.$response.error) {
-      Logger.error(result.$response.error);
-      throw Error("Could not get records");
+    if (this.limit) {
+      console.log('set limit: ', this.limit);
+      params['Limit'] = this.limit;
     }
 
-    return result.Items as T[];
+    console.log('set sort ASC: ', this.sort);
+    params['ScanIndexForward'] = this.sort;
+
+    if (this.cursor) {
+      console.log('cursor: ', this.conditions);
+      params['ExclusiveStartKey'] = this.cursor;
+    }
+
+    const result: T[] = [];
+    let dbResult;
+    do {
+      dbResult = await this.db.getAll(params);
+      if (this.limit && result.length + dbResult.Items.length > this.limit) {
+        result.push(...dbResult.Items.slice(0, this.limit - result.length));
+      } else {
+        result.push(...dbResult.Items);
+      }
+      params['ExclusiveStartKey'] = dbResult.LastEvaluatedKey;
+    } while (this.limit && result.length < this.limit && dbResult.LastEvaluatedKey);
+
+    return result;
   }
 
   async create(item: T): Promise<boolean> {

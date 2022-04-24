@@ -4,7 +4,7 @@ import Label from "../models/label.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class LabelRepository {
-  constructor(private dbStore: string) {}
+  constructor(private dbStore: string) { }
 
   async save(label: Label): Promise<boolean> {
     return new QueryBuilder<Label>().table(this.dbStore).create(label);
@@ -45,14 +45,14 @@ export class LabelRepository {
   }
 
   async findBookmarks(labelId: string): Promise<BookmarkLabel[]> {
-    const result = await new QueryBuilder<BookmarkLabel>()
+    const records = await new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
       .where({
         pk: `LABEL#${labelId}`,
       })
       .all();
 
-    return result.map((bookmarkLabel: BookmarkLabel) =>
+    return records.map((bookmarkLabel: BookmarkLabel) =>
       BookmarkLabel.fromDynamoDb(bookmarkLabel)
     );
   }

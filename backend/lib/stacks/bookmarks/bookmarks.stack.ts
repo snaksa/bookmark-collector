@@ -60,6 +60,9 @@ export class BookmarksStack extends BaseStack {
           dbStoreGSI1: buildConfig.envSpecific(
             AwsResources.DB_STORE_TABLE_GSI1
           ),
+          reversedDbStore: buildConfig.envSpecific(
+            AwsResources.DB_STORE_TABLE_REVERSED
+          ),
         })
       ),
       this.authorization
