@@ -4,10 +4,10 @@ import BaseHandler, { Response, } from "../../../../shared/base-handler";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { ChangePasswordLambdaInput } from "./change-password-lambda.input";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class ChangePasswordLambdaHandler extends BaseHandler<ChangePasswordLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(
     private readonly cognitoIdentity: CognitoIdentityServiceProvider,
     private readonly userRepository: UserRepository,

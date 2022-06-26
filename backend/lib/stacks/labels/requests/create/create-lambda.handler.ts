@@ -5,10 +5,10 @@ import { LabelRepository } from "../../../../shared/repositories/label.repositor
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
 import Label from "../../../../shared/models/label.model";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(private readonly labelRepository: LabelRepository) {
     super(CreateLambdaInput);
   }

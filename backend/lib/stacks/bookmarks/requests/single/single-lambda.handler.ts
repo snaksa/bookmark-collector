@@ -4,10 +4,10 @@ import { BookmarkRepository } from "../../../../shared/repositories/bookmark.rep
 import Label from "../../../../shared/models/label.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { SingleLambdaInput } from "./single-lambda.input";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(private readonly bookmarkRepository: BookmarkRepository) {
     super(SingleLambdaInput);
   }

@@ -3,10 +3,10 @@ import BaseHandler, { Response } from "../../../../shared/base-handler";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { ListLambdaInput } from "./list-lambda.input";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(private readonly bookmarkRepository: BookmarkRepository) {
     super(ListLambdaInput);
   }

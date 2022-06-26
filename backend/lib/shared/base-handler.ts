@@ -36,8 +36,10 @@ export interface RequestEventType {
   body: string;
 }
 
-export default abstract class BaseHandler<T extends LambdaInput = { path: {}, query: {}, body: {} }> {
-  protected isLogged: boolean = false;
+export default abstract class BaseHandler<
+  T extends LambdaInput = { path: {}; query: {}; body: {} }
+> {
+  protected isLogged = false;
 
   constructor(private readonly inputCreator?: { new(): T }) { }
 

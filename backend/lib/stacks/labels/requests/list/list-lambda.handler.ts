@@ -4,10 +4,10 @@ import BaseHandler, {
 } from "../../../../shared/base-handler";
 import Label from "../../../../shared/models/label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class ListLambdaHandler extends BaseHandler {
-  protected isLogged: boolean = true;
-
   constructor(private readonly labelRepository: LabelRepository) {
     super();
   }

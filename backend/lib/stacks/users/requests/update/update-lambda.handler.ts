@@ -6,10 +6,10 @@ import { UserRepository } from "../../../../shared/repositories/user.repository"
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { UserAlreadyExistsException } from "../../../../shared/exceptions/user-already-exists-exception";
 import { UpdateLambdaInput } from "./update-lambda.input";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(
     private readonly cognitoIdentity: CognitoIdentityServiceProvider,
     private readonly userRepository: UserRepository,

@@ -7,10 +7,10 @@ import { LabelRepository } from "../../../../shared/repositories/label.repositor
 import Label from "../../../../shared/models/label.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { UpdateLambdaInput } from "./update-lambda.input";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
-  protected isLogged: boolean = true;
-
   constructor(
     private readonly bookmarkRepository: BookmarkRepository,
     private readonly labelRepository: LabelRepository,

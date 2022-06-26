@@ -2,10 +2,10 @@ import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-re
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
+import IsLogged from "../../../../shared/decorators/is-logged";
 
+@IsLogged
 class SingleLambdaHandler extends BaseHandler {
-  protected isLogged: boolean = true;
-
   constructor(private readonly userRepository: UserRepository) {
     super();
   }
