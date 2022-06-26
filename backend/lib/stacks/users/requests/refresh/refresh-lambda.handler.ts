@@ -7,7 +7,7 @@ import { RefreshLambdaInput } from "./refresh-lambda.input";
 class RefreshTokenHandler extends BaseHandler<RefreshLambdaInput> {
   constructor(
     private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
-    private readonly cognitoClientId: string,
+    private readonly cognitoClientId: string
   ) {
     super(RefreshLambdaInput);
   }
@@ -40,5 +40,5 @@ class RefreshTokenHandler extends BaseHandler<RefreshLambdaInput> {
 
 export const handler = new RefreshTokenHandler(
   new AWS.CognitoIdentityServiceProvider(),
-  process.env.cognitoClientId ?? ''
+  process.env.cognitoClientId ?? ""
 ).create();

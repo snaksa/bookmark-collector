@@ -45,11 +45,14 @@ function getObject(object: AttributeMap): Model | null {
   }
 }
 
-async function updateBookmarkLabelsByBookmark(bookmark: Bookmark, labelRepository: LabelRepository, bookmarkRepository: BookmarkRepository) {
-  const bookmarkLabels =
-    await bookmarkRepository.findBookmarkLabelRecords(
-      bookmark.bookmarkId
-    );
+async function updateBookmarkLabelsByBookmark(
+  bookmark: Bookmark,
+  labelRepository: LabelRepository,
+  bookmarkRepository: BookmarkRepository
+) {
+  const bookmarkLabels = await bookmarkRepository.findBookmarkLabelRecords(
+    bookmark.bookmarkId
+  );
 
   const updated: Promise<BookmarkLabel>[] = [];
   for (let i = 0; i < bookmarkLabels.length; i++) {
@@ -67,10 +70,12 @@ async function updateBookmarkLabelsByBookmark(bookmark: Bookmark, labelRepositor
   await Promise.all(updated);
 }
 
-async function deleteBookmarkLabels(label: Label, labelRepository: LabelRepository, bookmarkRepository: BookmarkRepository) {
-  const bookmarkLabels = await labelRepository.findBookmarks(
-    label.id
-  );
+async function deleteBookmarkLabels(
+  label: Label,
+  labelRepository: LabelRepository,
+  bookmarkRepository: BookmarkRepository
+) {
+  const bookmarkLabels = await labelRepository.findBookmarks(label.id);
 
   const updated: Promise<Bookmark>[] = [];
   for (let i = 0; i < bookmarkLabels.length; i++) {
@@ -85,7 +90,11 @@ async function deleteBookmarkLabels(label: Label, labelRepository: LabelReposito
   await Promise.all(updated);
 }
 
-async function run(event: StreamLambdaEventType, labelRepository: LabelRepository, bookmarkRepository: BookmarkRepository): Promise<RequestResponse> {
+async function run(
+  event: StreamLambdaEventType,
+  labelRepository: LabelRepository,
+  bookmarkRepository: BookmarkRepository
+): Promise<RequestResponse> {
   const records: StreamEvent[] = [];
   event.Records.map((record) => {
     const object = getObject(
@@ -93,7 +102,7 @@ async function run(event: StreamLambdaEventType, labelRepository: LabelRepositor
         ? record.dynamodb.OldImage
         : record.dynamodb.NewImage
     );
-    
+
     if (object) {
       const streamEvent: StreamEvent = {
         type: record.eventName,
@@ -110,28 +119,37 @@ async function run(event: StreamLambdaEventType, labelRepository: LabelRepositor
       record.type === StreamEventTypes.REMOVE &&
       record.object.entityType === Label.ENTITY_TYPE
     ) {
-      await deleteBookmarkLabels(record.object as Label, labelRepository, bookmarkRepository);
+      await deleteBookmarkLabels(
+        record.object as Label,
+        labelRepository,
+        bookmarkRepository
+      );
     }
     if (
       record.type === StreamEventTypes.MODIFY &&
       record.object.entityType === Bookmark.ENTITY_TYPE
     ) {
-      await updateBookmarkLabelsByBookmark(record.object as Bookmark, labelRepository, bookmarkRepository);
+      await updateBookmarkLabelsByBookmark(
+        record.object as Bookmark,
+        labelRepository,
+        bookmarkRepository
+      );
     }
   }
 
   return {
     statusCode: ApiGatewayResponseCodes.OK,
-    body: '',
+    body: "",
     headers: {},
   };
 }
 
-export const handler = (event) => run(
-  event,
-  new LabelRepository(process.env.dbStore ?? ''),
-  new BookmarkRepository(
-    process.env.dbStore ?? '',
-    process.env.reversedDbStore ?? ''
-  )
-);
+export const handler = (event) =>
+  run(
+    event,
+    new LabelRepository(process.env.dbStore ?? ""),
+    new BookmarkRepository(
+      process.env.dbStore ?? "",
+      process.env.reversedDbStore ?? ""
+    )
+  );

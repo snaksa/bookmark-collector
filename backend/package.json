@@ -15,8 +15,10 @@
     "deploy-all": "npm run build:web && cdk deploy '*' --require-approval never -c env=dev",
     "deploy-backend": "cdk deploy '*' --require-approval never -c env=dev",
     "destroy": "cdk destroy --all -c env=dev",
-    "prettier": "prettier --write 'lib/**/*.ts'",
-    "eslint": "eslint 'lib/**/*.ts'"
+    "prettier": "prettier --check lib/**/*.ts",
+    "prettier:fix": "prettier --write 'lib/**/*.ts'",
+    "lint": "eslint 'lib/**/*.ts'",
+    "lint:fix": "eslint --fix 'lib/**/*.ts'"
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.87.1",

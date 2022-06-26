@@ -10,7 +10,7 @@ class RegisterLambdaHandler extends BaseHandler<RegisterLambdaInput> {
   constructor(
     private readonly cognitoIdentity: CognitoIdentityServiceProvider,
     private readonly userRepository: UserRepository,
-    private readonly cognitoClientId: string,
+    private readonly cognitoClientId: string
   ) {
     super(RegisterLambdaInput);
   }
@@ -69,8 +69,8 @@ class RegisterLambdaHandler extends BaseHandler<RegisterLambdaInput> {
 export const handler = new RegisterLambdaHandler(
   new CognitoIdentityServiceProvider(),
   new UserRepository(
-    process.env.dbStore ?? '',
-    process.env.userIndexByEmail ?? ''
+    process.env.dbStore ?? "",
+    process.env.userIndexByEmail ?? ""
   ),
-  process.env.cognitoClientId ?? '',
+  process.env.cognitoClientId ?? ""
 ).create();

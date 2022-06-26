@@ -4,7 +4,7 @@ import Label from "../models/label.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class LabelRepository {
-  constructor(private dbStore: string) { }
+  constructor(private dbStore: string) {}
 
   async save(label: Label): Promise<boolean> {
     return new QueryBuilder<Label>().table(this.dbStore).create(label);

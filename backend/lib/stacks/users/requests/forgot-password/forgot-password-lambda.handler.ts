@@ -7,7 +7,7 @@ import { ForgotPasswordLambdaInput } from "./forgot-password-lambda.input";
 class ForgotPasswordHandler extends BaseHandler<ForgotPasswordLambdaInput> {
   constructor(
     private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
-    private readonly cognitoClientId: string,
+    private readonly cognitoClientId: string
   ) {
     super(ForgotPasswordLambdaInput);
   }
@@ -37,5 +37,5 @@ class ForgotPasswordHandler extends BaseHandler<ForgotPasswordLambdaInput> {
 
 export const handler = new ForgotPasswordHandler(
   new AWS.CognitoIdentityServiceProvider(),
-  process.env.cognitoClientId ?? '',
+  process.env.cognitoClientId ?? ""
 ).create();

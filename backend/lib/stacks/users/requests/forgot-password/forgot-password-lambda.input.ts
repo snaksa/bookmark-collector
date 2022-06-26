@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { LambdaInput } from '../../../../shared/base-handler';
+import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { LambdaInput } from "../../../../shared/base-handler";
 
 export class ForgotPasswordLambdaBodyInput {
-    @IsNotEmpty()
-    @IsString()
-    public username: string;
+  @IsNotEmpty()
+  @IsString()
+  public username: string;
 }
 
 export class ForgotPasswordLambdaInput extends LambdaInput {
-    @ValidateNested()
-    body: ForgotPasswordLambdaBodyInput = new ForgotPasswordLambdaBodyInput();
+  @ValidateNested()
+  body: ForgotPasswordLambdaBodyInput = new ForgotPasswordLambdaBodyInput();
 }

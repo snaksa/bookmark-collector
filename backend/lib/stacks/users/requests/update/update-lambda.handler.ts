@@ -13,7 +13,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
   constructor(
     private readonly cognitoIdentity: CognitoIdentityServiceProvider,
     private readonly userRepository: UserRepository,
-    private readonly cognitoUserPoolId: string,
+    private readonly cognitoUserPoolId: string
   ) {
     super(UpdateLambdaInput);
   }
@@ -26,7 +26,9 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
 
     if (request.body.email && request.body.email !== user.email) {
       // check if user with the provided email already exists
-      const userExistsInDb = await this.userRepository.userExists(request.body.email);
+      const userExistsInDb = await this.userRepository.userExists(
+        request.body.email
+      );
 
       if (userExistsInDb) {
         throw new UserAlreadyExistsException();
@@ -73,8 +75,8 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
 export const handler = new UpdateLambdaHandler(
   new CognitoIdentityServiceProvider(),
   new UserRepository(
-    process.env.dbStore ?? '',
-    process.env.userIndexByEmail ?? ''
+    process.env.dbStore ?? "",
+    process.env.userIndexByEmail ?? ""
   ),
-  process.env.cognitoUserPoolId ?? '',
+  process.env.cognitoUserPoolId ?? ""
 ).create();

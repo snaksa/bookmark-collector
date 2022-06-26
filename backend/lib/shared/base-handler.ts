@@ -1,4 +1,4 @@
-import { validate } from 'class-validator';
+import { validate } from "class-validator";
 import { ApiGatewayResponseCodes } from "./enums/api-gateway-response-codes";
 import { LoggerHelper as Logger } from "./helpers/logger-helper";
 import { BaseException } from "./exceptions/base-exception";
@@ -41,41 +41,39 @@ export default abstract class BaseHandler<
 > {
   protected isLogged = false;
 
-  constructor(private readonly inputCreator?: { new(): T }) { }
+  constructor(private readonly inputCreator?: { new (): T }) {}
 
   protected parseEvent(event: RequestEventType): T | null {
     if (this.inputCreator) {
       const input = new this.inputCreator();
       if (input.path) {
         const path = event.pathParameters ?? {};
-        console.log('current path params: ', path);
-        Object.keys(path).forEach(key => {
+        console.log("current path params: ", path);
+        Object.keys(path).forEach((key) => {
           if (input.path) {
-            input.path[key] = path[key]
+            input.path[key] = path[key];
           }
         });
-        console.log('parsed path params: ', input.path);
+        console.log("parsed path params: ", input.path);
       }
 
       if (input.query) {
         const query = event.queryStringParameters ?? {};
-        Object.keys(query).forEach(key => {
+        Object.keys(query).forEach((key) => {
           if (input.query) {
-            input.query[key] = query[key]
+            input.query[key] = query[key];
           }
         });
       }
 
       if (input.body) {
         const body = event.body ? JSON.parse(event.body) : {};
-        Object.keys(body).forEach(key => {
+        Object.keys(body).forEach((key) => {
           if (input.body) {
             input.body[key] = body[key];
           }
         });
       }
-
-
 
       return input;
     }

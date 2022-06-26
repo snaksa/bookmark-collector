@@ -26,5 +26,5 @@ class SingleLambdaHandler extends BaseHandler {
 }
 
 export const handler = new SingleLambdaHandler(
-  new UserRepository(process.env.dbStore ?? '')
+  new UserRepository(process.env.dbStore ?? "")
 ).create();

@@ -16,20 +16,24 @@ class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
       userId,
       request.query.cursor,
       +request.query.limit,
-      request.query.favorites === 'true',
-      request.query.archived === 'true',
-      request.query.excludeArchived === 'true'
+      request.query.favorites === "true",
+      request.query.archived === "true",
+      request.query.excludeArchived === "true"
     );
 
     const getLabels = result.records.map(async (bookmark, index) => {
-      const labels = await this.bookmarkRepository.findLabels(bookmark.bookmarkId);
+      const labels = await this.bookmarkRepository.findLabels(
+        bookmark.bookmarkId
+      );
       bookmark.addLabels(labels);
       result.records[index] = bookmark;
     });
 
     await Promise.all(getLabels);
 
-    const bookmarks = result.records.map((bookmark: Bookmark) => bookmark.toObject());
+    const bookmarks = result.records.map((bookmark: Bookmark) =>
+      bookmark.toObject()
+    );
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,
@@ -43,7 +47,7 @@ class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
 
 export const handler = new ListLambdaHandler(
   new BookmarkRepository(
-    process.env.dbStore ?? '',
-    process.env.reversedDbStore ?? '',
-  ),
+    process.env.dbStore ?? "",
+    process.env.reversedDbStore ?? ""
+  )
 ).create();

@@ -34,7 +34,7 @@ export class QueryBuilder<T extends Model> {
   limit: number;
 
   // sort direction
-  sort: boolean = true; // ASC = true, DESC = false
+  sort = true; // ASC = true, DESC = false
 
   constructor() {
     this.db = new DynamoDbHelper();
@@ -97,7 +97,7 @@ export class QueryBuilder<T extends Model> {
   }
 
   setCursor(cursor: Record<string, string>): QueryBuilder<T> {
-    this.cursor = cursor;;
+    this.cursor = cursor;
     return this;
   }
 
@@ -110,7 +110,6 @@ export class QueryBuilder<T extends Model> {
     this.sort = asc;
     return this;
   }
-
 
   async one(): Promise<T | null> {
     if (!this.tableName) Error("Table name not specified");
@@ -198,16 +197,16 @@ export class QueryBuilder<T extends Model> {
     };
 
     if (this.limit) {
-      console.log('set limit: ', this.limit);
-      params['Limit'] = this.limit;
+      console.log("set limit: ", this.limit);
+      params["Limit"] = this.limit;
     }
 
-    console.log('set sort ASC: ', this.sort);
-    params['ScanIndexForward'] = this.sort;
+    console.log("set sort ASC: ", this.sort);
+    params["ScanIndexForward"] = this.sort;
 
     if (this.cursor) {
-      console.log('cursor: ', this.conditions);
-      params['ExclusiveStartKey'] = this.cursor;
+      console.log("cursor: ", this.conditions);
+      params["ExclusiveStartKey"] = this.cursor;
     }
 
     const result: T[] = [];
@@ -219,8 +218,12 @@ export class QueryBuilder<T extends Model> {
       } else {
         result.push(...dbResult.Items);
       }
-      params['ExclusiveStartKey'] = dbResult.LastEvaluatedKey;
-    } while (this.limit && result.length < this.limit && dbResult.LastEvaluatedKey);
+      params["ExclusiveStartKey"] = dbResult.LastEvaluatedKey;
+    } while (
+      this.limit &&
+      result.length < this.limit &&
+      dbResult.LastEvaluatedKey
+    );
 
     return result;
   }

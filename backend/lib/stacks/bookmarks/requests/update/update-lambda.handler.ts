@@ -13,7 +13,7 @@ import IsLogged from "../../../../shared/decorators/is-logged";
 class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
   constructor(
     private readonly bookmarkRepository: BookmarkRepository,
-    private readonly labelRepository: LabelRepository,
+    private readonly labelRepository: LabelRepository
   ) {
     super(UpdateLambdaInput);
   }
@@ -34,8 +34,10 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       bookmark.bookmarkUrl = request.body.url;
     }
 
-    if ("isFavorite" in request.body) bookmark.isFavorite = request.body.isFavorite;
-    if ("isArchived" in request.body) bookmark.isArchived = request.body.isArchived;
+    if ("isFavorite" in request.body)
+      bookmark.isFavorite = request.body.isFavorite;
+    if ("isArchived" in request.body)
+      bookmark.isArchived = request.body.isArchived;
 
     if (request.body.labelIds) {
       const newLabelIds = request.body.labelIds;
@@ -46,10 +48,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
         (bl: BookmarkLabel) => bl.labelId
       );
 
-      const labels = await this.labelRepository.findByIds(
-        newLabelIds,
-        userId
-      );
+      const labels = await this.labelRepository.findByIds(newLabelIds, userId);
 
       const created: Promise<boolean>[] = [];
       labels.forEach((label) => {
@@ -92,11 +91,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
     if (request.body.newLabels) {
       const created: Promise<boolean>[] = [];
       for (let i = 0; i < request.body.newLabels.length; i++) {
-        const label = new Label(
-          uuid_v4(),
-          userId,
-          request.body.newLabels[i],
-        );
+        const label = new Label(uuid_v4(), userId, request.body.newLabels[i]);
 
         const success = await this.labelRepository.save(label);
 
@@ -128,9 +123,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       const bookmarkLabels =
         await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
       bookmarkLabels.forEach((label) =>
-        bookmark.addLabel(
-          new Label(label.labelId, userId, label.title)
-        )
+        bookmark.addLabel(new Label(label.labelId, userId, label.title))
       );
     }
 
@@ -145,8 +138,8 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
 
 export const handler = new UpdateLambdaHandler(
   new BookmarkRepository(
-    process.env.dbStore ?? '',
-    process.env.reversedDbStore ?? '',
+    process.env.dbStore ?? "",
+    process.env.reversedDbStore ?? ""
   ),
-  new LabelRepository(process.env.dbStore ?? '')
+  new LabelRepository(process.env.dbStore ?? "")
 ).create();

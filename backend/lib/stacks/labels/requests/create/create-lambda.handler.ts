@@ -14,11 +14,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
   }
 
   async run(request: CreateLambdaInput, userId: string): Promise<Response> {
-    const label = new Label(
-      uuid_v4(),
-      userId,
-      request.body.label,
-    );
+    const label = new Label(uuid_v4(), userId, request.body.label);
     const save = await this.labelRepository.save(label);
 
     if (!save) {
@@ -35,5 +31,5 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
 }
 
 export const handler = new CreateLambdaHandler(
-  new LabelRepository(process.env.dbStore || ""),
+  new LabelRepository(process.env.dbStore || "")
 ).create();

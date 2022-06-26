@@ -16,7 +16,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
     private readonly sqsService: SQS,
     private readonly bookmarkRepository: BookmarkRepository,
     private readonly labelRepository: LabelRepository,
-    private readonly queueUrl: string,
+    private readonly queueUrl: string
   ) {
     super(CreateLambdaInput);
   }
@@ -90,7 +90,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
 
 export const handler = new CreateLambdaHandler(
   new SQS({ apiVersion: "2012-11-05" }),
-  new BookmarkRepository(process.env.dbStore ?? ''),
-  new LabelRepository(process.env.dbStore ?? ''),
-  process.env.queueUrl ?? '',
+  new BookmarkRepository(process.env.dbStore ?? ""),
+  new LabelRepository(process.env.dbStore ?? ""),
+  process.env.queueUrl ?? ""
 ).create();

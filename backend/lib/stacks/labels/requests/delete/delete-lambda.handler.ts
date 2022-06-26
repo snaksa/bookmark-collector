@@ -21,5 +21,5 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
 }
 
 export const handler = new DeleteLambdaHandler(
-  new LabelRepository(process.env.dbStore ?? ''),
+  new LabelRepository(process.env.dbStore ?? "")
 ).create();

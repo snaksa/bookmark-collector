@@ -2,7 +2,7 @@ import User from "../models/user.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class UserRepository {
-  constructor(private dbStore: string, private userIndexByEmail: string = "") { }
+  constructor(private dbStore: string, private userIndexByEmail: string = "") {}
 
   async userExists(email: string): Promise<boolean> {
     const result = await new QueryBuilder<User>()

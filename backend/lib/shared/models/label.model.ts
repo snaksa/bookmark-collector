@@ -53,8 +53,8 @@ export default class Label implements Model {
   }
 
   public static fromDynamoDb(o: Label): Label {
-    const userId = o.pk.split('#')[1];
-    const labelId = o.sk.split('#')[1];
+    const userId = o.pk.split("#")[1];
+    const labelId = o.sk.split("#")[1];
 
     return new Label(labelId, userId, o.title);
   }

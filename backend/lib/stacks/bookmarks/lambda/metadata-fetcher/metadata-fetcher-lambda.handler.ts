@@ -23,7 +23,10 @@ interface MetadataFetcherLambdaRequestEvent extends RequestEventType {
   Records: RecordType[];
 }
 
-async function run(event: MetadataFetcherLambdaRequestEvent, bookmarkRepository: BookmarkRepository): Promise<RequestResponse> {
+async function run(
+  event: MetadataFetcherLambdaRequestEvent,
+  bookmarkRepository: BookmarkRepository
+): Promise<RequestResponse> {
   const records: { bookmarkId: string; userId: string }[] = [];
   event.Records.forEach((record: RecordType) => {
     const attributes = record.messageAttributes;
@@ -42,8 +45,8 @@ async function run(event: MetadataFetcherLambdaRequestEvent, bookmarkRepository:
     if (!bookmark) {
       return {
         statusCode: ApiGatewayResponseCodes.NOT_FOUND,
-        body: '',
-        headers: {}
+        body: "",
+        headers: {},
       };
     }
 
@@ -79,9 +82,10 @@ async function run(event: MetadataFetcherLambdaRequestEvent, bookmarkRepository:
 
   return {
     statusCode: ApiGatewayResponseCodes.OK,
-    body: '',
+    body: "",
     headers: {},
   };
 }
 
-export const handler = (event) => run(event, new BookmarkRepository(process.env.dbStore ?? ''));
+export const handler = (event) =>
+  run(event, new BookmarkRepository(process.env.dbStore ?? ""));

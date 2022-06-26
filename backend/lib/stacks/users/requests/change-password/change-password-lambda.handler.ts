@@ -1,6 +1,6 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response, } from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { UserRepository } from "../../../../shared/repositories/user.repository";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { ChangePasswordLambdaInput } from "./change-password-lambda.input";
@@ -11,12 +11,15 @@ class ChangePasswordLambdaHandler extends BaseHandler<ChangePasswordLambdaInput>
   constructor(
     private readonly cognitoIdentity: CognitoIdentityServiceProvider,
     private readonly userRepository: UserRepository,
-    private readonly userPoolId: string,
+    private readonly userPoolId: string
   ) {
     super(ChangePasswordLambdaInput);
   }
 
-  async run(request: ChangePasswordLambdaInput, userId: string): Promise<Response> {
+  async run(
+    request: ChangePasswordLambdaInput,
+    userId: string
+  ): Promise<Response> {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException(`User with ID "${userId}" not found`);
@@ -43,6 +46,6 @@ class ChangePasswordLambdaHandler extends BaseHandler<ChangePasswordLambdaInput>
 
 export const handler = new ChangePasswordLambdaHandler(
   new CognitoIdentityServiceProvider(),
-  new UserRepository(process.env.dbStore ?? ''),
-  process.env.userPoolId ?? '',
+  new UserRepository(process.env.dbStore ?? ""),
+  process.env.userPoolId ?? ""
 ).create();

@@ -12,7 +12,9 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
   }
 
   async run(request: DeleteLambdaInput): Promise<Response> {
-    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(request.path.id);
+    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(
+      request.path.id
+    );
 
     // TODO: check if the bookmark belongs to the current user
     const deleteBookmarkRecords: Promise<Bookmark>[] = [];
@@ -35,5 +37,5 @@ export const handler = new DeleteLambdaHandler(
   new BookmarkRepository(
     process.env.dbStore ?? "",
     process.env.reversedDbStore ?? ""
-  ),
+  )
 ).create();

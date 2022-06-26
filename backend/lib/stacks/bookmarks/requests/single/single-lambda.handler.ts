@@ -28,9 +28,7 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
       await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
 
     bookmarkLabels.forEach((label) =>
-      bookmark.addLabel(
-        new Label(label.labelId, userId, label.title)
-      )
+      bookmark.addLabel(new Label(label.labelId, userId, label.title))
     );
 
     return {
@@ -44,7 +42,7 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
 
 export const handler = new SingleLambdaHandler(
   new BookmarkRepository(
-    process.env.dbStore ?? '',
-    process.env.reversedDbStore ?? '',
-  ),
+    process.env.dbStore ?? "",
+    process.env.reversedDbStore ?? ""
+  )
 ).create();

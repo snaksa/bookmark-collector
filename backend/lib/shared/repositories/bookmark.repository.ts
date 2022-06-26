@@ -5,10 +5,7 @@ import PaginatedResult from "../models/pagination.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class BookmarkRepository {
-  constructor(
-    private dbStore: string,
-    private reversedDbStore: string = "",
-  ) { }
+  constructor(private dbStore: string, private reversedDbStore: string = "") {}
 
   async save(bookmark: Bookmark): Promise<boolean> {
     return new QueryBuilder<Bookmark>().table(this.dbStore).create(bookmark);
@@ -88,7 +85,7 @@ export class BookmarkRepository {
   async findAll(
     userId: string,
     cursor: string,
-    limit: number = 10,
+    limit = 10,
     onlyFavorites = false,
     onlyArchived = false,
     excludeArchived = false
@@ -98,7 +95,7 @@ export class BookmarkRepository {
       .where({
         pk: `USER#${userId}`,
       })
-      .sortKeyBeginsWith('BOOKMARK')
+      .sortKeyBeginsWith("BOOKMARK")
       .setLimit(limit)
       .setSort(false);
 
@@ -130,7 +127,9 @@ export class BookmarkRepository {
     }
 
     const records = await query.all();
-    const newCursor = records.length ? records[records.length - 1].bookmarkId : '';
+    const newCursor = records.length
+      ? records[records.length - 1].bookmarkId
+      : "";
 
     const bookmarks = records.map((record: Bookmark) => {
       return new Bookmark(
@@ -155,16 +154,12 @@ export class BookmarkRepository {
       .where({
         sk: `BOOKMARK#${id}`,
       })
-      .sortKeyBeginsWith('LABEL', 'pk');
+      .sortKeyBeginsWith("LABEL", "pk");
 
     const records: BookmarkLabel[] = await query.all();
 
     const labels = records.map((record: BookmarkLabel) => {
-      return new Label(
-        record.labelId,
-        record.userId,
-        record.title,
-      );
+      return new Label(record.labelId, record.userId, record.title);
     });
 
     return labels;

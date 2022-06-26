@@ -1,5 +1,5 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
-import BaseHandler, { Response, } from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import Bookmark from "../../../../shared/models/bookmark.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
@@ -16,7 +16,9 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
     const label = await this.labelRepository.findOne(request.path.id, userId);
 
     if (!label) {
-      throw new NotFoundException(`Label with ID "${request.path.id}" not found`);
+      throw new NotFoundException(
+        `Label with ID "${request.path.id}" not found`
+      );
     }
 
     const labelBookmarks = await this.labelRepository.findBookmarks(

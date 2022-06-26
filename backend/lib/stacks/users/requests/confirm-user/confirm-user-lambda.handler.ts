@@ -1,5 +1,5 @@
 import * as AWS from "aws-sdk";
-import BaseHandler, { Response, } from "../../../../shared/base-handler";
+import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { ConfirmUserLambdaInput } from "./confirm-user-lambda.input";
@@ -7,8 +7,7 @@ import { ConfirmUserLambdaInput } from "./confirm-user-lambda.input";
 class ConfirmUserHandler extends BaseHandler<ConfirmUserLambdaInput> {
   constructor(
     private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
-    private readonly cognitoClientId: string,
-
+    private readonly cognitoClientId: string
   ) {
     super(ConfirmUserLambdaInput);
   }
@@ -40,5 +39,5 @@ class ConfirmUserHandler extends BaseHandler<ConfirmUserLambdaInput> {
 
 export const handler = new ConfirmUserHandler(
   new AWS.CognitoIdentityServiceProvider(),
-  process.env.cognitoClientId ?? '',
+  process.env.cognitoClientId ?? ""
 ).create();

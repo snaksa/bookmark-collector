@@ -7,7 +7,7 @@ import { ResetPasswordLambdaInput } from "./reset-password-lambda.input";
 class ResetPasswordHandler extends BaseHandler<ResetPasswordLambdaInput> {
   constructor(
     private readonly cognitoIdentity: AWS.CognitoIdentityServiceProvider,
-    private readonly cognitoClientId: string,
+    private readonly cognitoClientId: string
   ) {
     super(ResetPasswordLambdaInput);
   }
@@ -39,5 +39,5 @@ class ResetPasswordHandler extends BaseHandler<ResetPasswordLambdaInput> {
 
 export const handler = new ResetPasswordHandler(
   new AWS.CognitoIdentityServiceProvider(),
-  process.env.cognitoClientId ?? '',
+  process.env.cognitoClientId ?? ""
 ).create();
