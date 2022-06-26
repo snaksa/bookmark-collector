@@ -4,9 +4,9 @@ import {
   IsString,
   ValidateNested,
 } from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { Input, LambdaInput } from "../../../../shared/base-handler";
 
-export class CreateLambdaBodyInput {
+export class CreateLambdaBodyInput extends Input {
   @IsNotEmpty()
   @IsString()
   public url: string;

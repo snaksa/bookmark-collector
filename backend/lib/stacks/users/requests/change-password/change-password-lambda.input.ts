@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { Input, LambdaInput } from "../../../../shared/base-handler";
 
-export class ChangePasswordLambdaBodyInput {
+export class ChangePasswordLambdaBodyInput extends Input {
   @IsNotEmpty()
   @IsString()
   public oldPassword: string;

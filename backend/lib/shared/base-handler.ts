@@ -6,10 +6,12 @@ import { ExceptionCodes } from "./enums/exception-codes";
 import { InvalidInputParametersException } from "./exceptions/invalid-input-parameters-exception";
 import { UnauthorizedException } from "./exceptions/unauthorized-exception";
 
+export class Input {}
+
 export class LambdaInput {
-  path: Record<string, any> = {};
-  query: Record<string, any> = {};
-  body: Record<string, any> = {};
+  path: Input = {};
+  query: Input = {};
+  body: Input = {};
 }
 
 export interface Response {
@@ -37,7 +39,11 @@ export interface RequestEventType {
 }
 
 export default abstract class BaseHandler<
-  T extends LambdaInput = { path: {}; query: {}; body: {} }
+  T extends LambdaInput = {
+    path: Record<string, unknown>;
+    query: Record<string, unknown>;
+    body: Record<string, unknown>;
+  }
 > {
   protected isLogged = false;
 
@@ -81,7 +87,7 @@ export default abstract class BaseHandler<
     return null;
   }
 
-  protected getRequestUser(event: RequestEventType) {
+  protected getRequestUser(event: RequestEventType): string {
     return event.requestContext.authorizer?.claims?.sub;
   }
 
@@ -162,7 +168,7 @@ export default abstract class BaseHandler<
         Logger.info("Successful execution");
         Logger.info(result);
         return this.format(result);
-      } catch (err: any) {
+      } catch (err) {
         Logger.error(err.message);
 
         if (err instanceof BaseException) {

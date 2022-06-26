@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, ValidateNested } from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { Input, LambdaInput } from "../../../../shared/base-handler";
 
-export class LoginLambdaBodyInput {
+export class LoginLambdaBodyInput extends Input {
   @IsNotEmpty()
   @IsEmail()
   email: string;

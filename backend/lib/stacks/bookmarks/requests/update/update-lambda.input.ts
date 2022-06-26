@@ -5,14 +5,14 @@ import {
   IsString,
   ValidateNested,
 } from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { Input, LambdaInput } from "../../../../shared/base-handler";
 
-class UpdateLambdaPathInput {
+class UpdateLambdaPathInput extends Input {
   @IsNotEmpty()
   id: string;
 }
 
-class UpdateLambdaBodyInput {
+class UpdateLambdaBodyInput extends Input {
   @IsOptional()
   @IsString()
   public url: string;

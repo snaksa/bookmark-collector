@@ -1,12 +1,7 @@
-import {
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { Input, LambdaInput } from "../../../../shared/base-handler";
 
-export class ListLambdaQueryInput {
+export class ListLambdaQueryInput extends Input {
   @IsOptional()
   @IsString()
   favorites: string;

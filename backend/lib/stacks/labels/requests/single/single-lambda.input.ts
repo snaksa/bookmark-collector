@@ -1,7 +1,7 @@
 import { IsNotEmpty, ValidateNested } from "class-validator";
-import { LambdaInput } from "../../../../shared/base-handler";
+import { LambdaInput, Input } from "../../../../shared/base-handler";
 
-export class SingleLambdaPathInput {
+export class SingleLambdaPathInput implements Input {
   @IsNotEmpty()
   id: string;
 }
