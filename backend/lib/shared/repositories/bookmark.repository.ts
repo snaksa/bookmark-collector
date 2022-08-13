@@ -1,6 +1,6 @@
-import BookmarkLabel from "../models/bookmark-label.model";
-import Bookmark from "../models/bookmark.model";
-import Label from "../models/label.model";
+import Bookmark from "../../stacks/bookmarks/models/bookmark.model";
+import BookmarkLabel from "../../stacks/bookmarks/models/bookmark-label.model";
+import Label from "../../stacks/labels/models/label.model";
 import PaginatedResult from "../models/pagination.model";
 import { QueryBuilder } from "../services/query-builder";
 
@@ -128,19 +128,18 @@ export class BookmarkRepository {
 
     const records = await query.all();
     const newCursor = records.length
-      ? records[records.length - 1].bookmarkId
+      ? records[records.length - 1].id
       : "";
 
     const bookmarks = records.map((record: Bookmark) => {
       return new Bookmark(
-        record.bookmarkId,
+        record.id,
         record.userId,
-        record.bookmarkUrl,
+        record.url,
         record.isFavorite,
-        record.isArchived,
-        record.bookmarkTitle,
-        record.bookmarkImage,
-        record.bookmarkCreatedAt
+        record.title,
+        record.image,
+        record.createdOn
       );
     });
 
@@ -159,7 +158,7 @@ export class BookmarkRepository {
     const records: BookmarkLabel[] = await query.all();
 
     const labels = records.map((record: BookmarkLabel) => {
-      return new Label(record.labelId, record.userId, record.title);
+      return new Label(record.labelId, record.userId, record.labelTitle);
     });
 
     return labels;

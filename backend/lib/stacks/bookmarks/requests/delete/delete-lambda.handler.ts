@@ -1,6 +1,6 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Bookmark from "../../../../shared/models/bookmark.model";
+import Bookmark from "../../models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { DeleteLambdaInput } from "./delete-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";
@@ -16,9 +16,10 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
       request.path.id
     );
 
-    // TODO: check if the bookmark belongs to the current user
     const deleteBookmarkRecords: Promise<Bookmark>[] = [];
     bookmarks.forEach((bookmark) =>
+      // TODO: check if the bookmark belongs to the current user
+
       deleteBookmarkRecords.push(
         this.bookmarkRepository.deleteByKeys(bookmark.pk, bookmark.sk)
       )

@@ -4,7 +4,7 @@ import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
-import Label from "../../../../shared/models/label.model";
+import Label from "../../models/label.model";
 import IsLogged from "../../../../shared/decorators/is-logged";
 
 @IsLogged
@@ -15,6 +15,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
 
   async run(request: CreateLambdaInput, userId: string): Promise<Response> {
     const label = new Label(uuid_v4(), userId, request.body.label);
+    
     const save = await this.labelRepository.save(label);
 
     if (!save) {

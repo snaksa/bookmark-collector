@@ -2,12 +2,12 @@ import { SQS } from "aws-sdk";
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
-import Bookmark from "../../../../shared/models/bookmark.model";
+import Bookmark from "../../models/bookmark.model";
+import BookmarkLabel from "../../models/bookmark-label.model";
 import IsLogged from "../../../../shared/decorators/is-logged";
 
 @IsLogged
@@ -28,7 +28,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
     }
 
     const id = `${new Date().getTime()}-${uuid_v4()}`;
-    const bookmark = new Bookmark(id, userId, url, false, false);
+    const bookmark = new Bookmark(id, userId, url, false);
     const save = await this.bookmarkRepository.save(bookmark);
 
     if (!save) {
@@ -46,15 +46,14 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
         bookmark.addLabel(label);
         const bookmarkLabel = new BookmarkLabel(
           label.id,
-          bookmark.bookmarkId,
+          bookmark.id,
           userId,
           label.title,
-          bookmark.bookmarkUrl,
+          bookmark.url,
           bookmark.isFavorite,
-          bookmark.isArchived,
-          bookmark.bookmarkTitle,
-          bookmark.bookmarkImage,
-          bookmark.bookmarkCreatedAt
+          bookmark.title,
+          bookmark.image,
+          bookmark.createdOn
         );
         bookmarkLabels.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
       });
@@ -67,7 +66,7 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
         MessageAttributes: {
           bookmarkId: {
             DataType: "String",
-            StringValue: bookmark.bookmarkId,
+            StringValue: bookmark.id,
           },
           userId: {
             DataType: "String",

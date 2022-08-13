@@ -1,6 +1,6 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Bookmark from "../../../../shared/models/bookmark.model";
+import Bookmark from "../../models/bookmark.model";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
 import { ListLambdaInput } from "./list-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";
@@ -23,7 +23,7 @@ class ListLambdaHandler extends BaseHandler<ListLambdaInput> {
 
     const getLabels = result.records.map(async (bookmark, index) => {
       const labels = await this.bookmarkRepository.findLabels(
-        bookmark.bookmarkId
+        bookmark.id
       );
       bookmark.addLabels(labels);
       result.records[index] = bookmark;

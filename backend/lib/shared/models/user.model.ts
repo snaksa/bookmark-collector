@@ -1,11 +1,12 @@
-import { Model } from "./base.model";
+import { Model } from "./model";
+import { ModelTypesEnum } from "../enums/model-types.enum";
 
 export default class User implements Model {
-  static ENTITY_TYPE = "user";
+  static ENTITY_TYPE = ModelTypesEnum.USER;
 
   pk: string;
   sk = "USER";
-  entityType = "user";
+  entityType = User.ENTITY_TYPE;
   GSI1: string;
 
   id: string;

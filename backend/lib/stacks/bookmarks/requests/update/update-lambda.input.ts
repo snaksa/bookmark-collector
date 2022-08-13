@@ -14,10 +14,6 @@ class UpdateLambdaPathInput extends Input {
 
 class UpdateLambdaBodyInput extends Input {
   @IsOptional()
-  @IsString()
-  public url: string;
-
-  @IsOptional()
   @IsString({ each: true })
   public labelIds: string[];
 
@@ -28,10 +24,6 @@ class UpdateLambdaBodyInput extends Input {
   @IsOptional()
   @IsBoolean()
   isFavorite: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  isArchived: boolean;
 }
 
 export class UpdateLambdaInput extends LambdaInput {

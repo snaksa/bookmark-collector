@@ -1,6 +1,6 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { DynamoDbHelper, LoggerHelper as Logger } from "../helpers";
-import { Model } from "../models/base.model";
+import { Model } from "../models/model";
 import PaginatedResult from "../models/pagination.model";
 
 export class QueryBuilder<T extends Model> {

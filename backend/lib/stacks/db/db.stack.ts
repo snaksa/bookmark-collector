@@ -52,18 +52,6 @@ export class DbStack extends BaseStack {
           type: AttributeType.STRING,
         },
       });
-
-      store.addGlobalSecondaryIndex({
-        indexName: buildConfig.envSpecific(AwsResources.DB_STORE_TABLE_GSI1),
-        partitionKey: {
-          name: "GSI1",
-          type: AttributeType.STRING,
-        },
-        sortKey: {
-          name: "sk",
-          type: AttributeType.STRING,
-        },
-      });
     } else {
       store = this.dbStore;
     }

@@ -9,7 +9,6 @@ import { DeleteLambda } from "./requests/delete/delete-lambda";
 import { ListLambda } from "./requests/list/list-lambda";
 import { BaseStack } from "../base.stack";
 import { UpdateLambda } from "./requests/update/update-lambda";
-import { SingleLambda } from "./requests/single/single-lambda";
 import { MetadataFetcherLambda } from "./lambda/metadata-fetcher/metadata-fetcher-lambda";
 import { BuildConfig } from "../../shared/services/environment.service";
 
@@ -73,19 +72,6 @@ export class BookmarksStack extends BaseStack {
         disableCache: true,
       },
     });
-
-    singleBookmark.addMethod(
-      ApiGatewayRequestMethods.GET,
-      new LambdaIntegration(
-        new SingleLambda(this, buildConfig.envSpecific("single-lambda"), {
-          dbStore: this.dbStore,
-          reversedDbStore: buildConfig.envSpecific(
-            AwsResources.DB_STORE_TABLE_REVERSED
-          ),
-        })
-      ),
-      this.authorization
-    );
 
     singleBookmark.addMethod(
       ApiGatewayRequestMethods.PUT,

@@ -1,7 +1,7 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
-import Bookmark from "../../../../shared/models/bookmark.model";
+import Bookmark from '../../../bookmarks/models/bookmark.model';
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { SingleLambdaInput } from "./single-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";
@@ -30,17 +30,17 @@ class SingleLambdaHandler extends BaseHandler<SingleLambdaInput> {
         new Bookmark(
           labelBookmark.bookmarkId,
           userId,
-          labelBookmark.bookmarkUrl,
+          labelBookmark.url,
           labelBookmark.isFavorite,
-          labelBookmark.isArchived,
           labelBookmark.bookmarkTitle,
-          labelBookmark.bookmarkImage,
-          labelBookmark.bookmarkCreatedAt
+          labelBookmark.image,
+          labelBookmark.createdOn
         )
     );
+    
     label.setBookmarks(
       bookmarks.sort((a, b) => {
-        return b.bookmarkCreatedAt - a.bookmarkCreatedAt;
+        return b.createdOn - a.createdOn;
       })
     );
 

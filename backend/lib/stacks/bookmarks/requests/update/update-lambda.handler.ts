@@ -2,9 +2,9 @@ import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
-import BookmarkLabel from "../../../../shared/models/bookmark-label.model";
 import { LabelRepository } from "../../../../shared/repositories/label.repository";
-import Label from "../../../../shared/models/label.model";
+import Label from "../../../labels/models/label.model";
+import BookmarkLabel from "../../../bookmarks/models/bookmark-label.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { UpdateLambdaInput } from "./update-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";
@@ -30,14 +30,9 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       );
     }
 
-    if (request.body.url) {
-      bookmark.bookmarkUrl = request.body.url;
-    }
-
-    if ("isFavorite" in request.body)
+    if ("isFavorite" in request.body) {
       bookmark.isFavorite = request.body.isFavorite;
-    if ("isArchived" in request.body)
-      bookmark.isArchived = request.body.isArchived;
+    }
 
     if (request.body.labelIds) {
       const newLabelIds = request.body.labelIds;
@@ -56,15 +51,14 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
         if (index === -1) {
           const bookmarkLabel = new BookmarkLabel(
             label.id,
-            bookmark.bookmarkId,
+            bookmark.id,
             userId,
             label.title,
-            bookmark.bookmarkUrl,
+            bookmark.url,
             bookmark.isFavorite,
-            bookmark.isArchived,
-            bookmark.bookmarkTitle,
-            bookmark.bookmarkImage,
-            bookmark.bookmarkCreatedAt
+            bookmark.title,
+            bookmark.image,
+            bookmark.createdOn
           );
           created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
         } else {
@@ -78,7 +72,7 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       oldBookmarkLabels.forEach((labelId: string) => {
         bookmark.removeLabel(labelId);
         deleted.push(
-          this.bookmarkRepository.removeLabel(bookmark.bookmarkId, labelId)
+          this.bookmarkRepository.removeLabel(bookmark.id, labelId)
         );
       });
 
@@ -98,15 +92,14 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
         if (success) {
           const bookmarkLabel = new BookmarkLabel(
             label.id,
-            bookmark.bookmarkId,
+            bookmark.id,
             userId,
             label.title,
-            bookmark.bookmarkUrl,
+            bookmark.url,
             bookmark.isFavorite,
-            bookmark.isArchived,
-            bookmark.bookmarkTitle,
-            bookmark.bookmarkImage,
-            bookmark.bookmarkCreatedAt
+            bookmark.title,
+            bookmark.image,
+            bookmark.createdOn
           );
 
           created.push(this.bookmarkRepository.saveLabel(bookmarkLabel));
@@ -118,14 +111,11 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
       await Promise.all(created);
     }
 
-    // if labels are not passed include them to the object
-    if (!request.body.labelIds) {
-      const bookmarkLabels =
-        await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
-      bookmarkLabels.forEach((label) =>
-        bookmark.addLabel(new Label(label.labelId, userId, label.title))
-      );
-    }
+    const bookmarkLabels =
+      await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
+    bookmarkLabels.forEach((bookmarkLabel) =>
+      bookmark.addLabel(new Label(bookmarkLabel.labelId, userId, bookmarkLabel.labelTitle))
+    );
 
     return {
       statusCode: ApiGatewayResponseCodes.OK,

@@ -1,6 +1,6 @@
 import { v4 as uuid_v4 } from "uuid";
-import BookmarkLabel from "../models/bookmark-label.model";
-import Label from "../models/label.model";
+import BookmarkLabel from "../../stacks/bookmarks/models/bookmark-label.model";
+import Label from "../../stacks/labels/models/label.model";
 import { QueryBuilder } from "../services/query-builder";
 
 export class LabelRepository {

@@ -36,38 +36,9 @@ function getObject(object: AttributeMap): Model | null {
   switch (unmarshalledObject.entityType) {
     case Label.ENTITY_TYPE:
       return Label.fromDynamoDb(unmarshalledObject as Label);
-    case BookmarkLabel.ENTITY_TYPE:
-      return BookmarkLabel.fromDynamoDb(unmarshalledObject as BookmarkLabel);
-    case Bookmark.ENTITY_TYPE:
-      return Bookmark.fromDynamoDb(unmarshalledObject as Bookmark);
     default:
       return null;
   }
-}
-
-async function updateBookmarkLabelsByBookmark(
-  bookmark: Bookmark,
-  labelRepository: LabelRepository,
-  bookmarkRepository: BookmarkRepository
-) {
-  const bookmarkLabels = await bookmarkRepository.findBookmarkLabelRecords(
-    bookmark.bookmarkId
-  );
-
-  const updated: Promise<BookmarkLabel>[] = [];
-  for (let i = 0; i < bookmarkLabels.length; i++) {
-    const bl = bookmarkLabels[i];
-    bl.bookmarkUrl = bookmark.bookmarkUrl;
-    bl.isFavorite = bookmark.isFavorite;
-    bl.isArchived = bookmark.isArchived;
-    bl.bookmarkTitle = bookmark.bookmarkTitle;
-    bl.bookmarkImage = bookmark.bookmarkImage;
-    bl.bookmarkCreatedAt = bookmark.bookmarkCreatedAt;
-
-    updated.push(labelRepository.updateBookmarks(bl));
-  }
-
-  await Promise.all(updated);
 }
 
 async function deleteBookmarkLabels(
@@ -121,16 +92,6 @@ async function run(
     ) {
       await deleteBookmarkLabels(
         record.object as Label,
-        labelRepository,
-        bookmarkRepository
-      );
-    }
-    if (
-      record.type === StreamEventTypes.MODIFY &&
-      record.object.entityType === Bookmark.ENTITY_TYPE
-    ) {
-      await updateBookmarkLabelsByBookmark(
-        record.object as Bookmark,
         labelRepository,
         bookmarkRepository
       );
