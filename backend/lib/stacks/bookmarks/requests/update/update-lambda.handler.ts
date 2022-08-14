@@ -1,8 +1,8 @@
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
-import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { BookmarkRepository } from "../../repositories/bookmark.repository";
+import { LabelRepository } from "../../../labels/repositories/label.repository";
 import Label from "../../../labels/models/label.model";
 import BookmarkLabel from "../../../bookmarks/models/bookmark-label.model";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
@@ -37,10 +37,10 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
     if (request.body.labelIds) {
       const newLabelIds = request.body.labelIds;
       const bookmarkLabels =
-        await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
+        await this.bookmarkRepository.findLabels(request.path.id);
 
       const oldBookmarkLabels = bookmarkLabels.map(
-        (bl: BookmarkLabel) => bl.labelId
+        (bl: Label) => bl.id
       );
 
       const labels = await this.labelRepository.findByIds(newLabelIds, userId);
@@ -112,9 +112,9 @@ class UpdateLambdaHandler extends BaseHandler<UpdateLambdaInput> {
     }
 
     const bookmarkLabels =
-      await this.bookmarkRepository.findBookmarkLabelRecords(request.path.id);
-    bookmarkLabels.forEach((bookmarkLabel) =>
-      bookmark.addLabel(new Label(bookmarkLabel.labelId, userId, bookmarkLabel.labelTitle))
+      await this.bookmarkRepository.findLabels(request.path.id);
+    bookmarkLabels.forEach((label) =>
+      bookmark.addLabel(new Label(label.id, userId, label.title))
     );
 
     return {

@@ -1,6 +1,6 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { LabelRepository } from "../../repositories/label.repository";
 import Bookmark from '../../../bookmarks/models/bookmark.model';
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { SingleLambdaInput } from "./single-lambda.input";

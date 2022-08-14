@@ -1,7 +1,7 @@
 import { v4 as uuid_v4 } from "uuid";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { LabelRepository } from "../../repositories/label.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { CreateLambdaInput } from "./create-lambda.input";
 import Label from "../../models/label.model";
@@ -14,7 +14,9 @@ class CreateLambdaHandler extends BaseHandler<CreateLambdaInput> {
   }
 
   async run(request: CreateLambdaInput, userId: string): Promise<Response> {
-    const label = new Label(uuid_v4(), userId, request.body.label);
+    
+    const id = `${new Date().getTime()}-${uuid_v4()}`;
+    const label = new Label(id, userId, request.body.label);
     
     const save = await this.labelRepository.save(label);
 

@@ -1,5 +1,5 @@
-import { Model } from "./model";
-import { ModelTypesEnum } from "../enums/model-types.enum";
+import { Model } from "../../../shared/models/model";
+import { ModelTypesEnum } from "../../../shared/enums/model-types.enum";
 
 export default class User implements Model {
   static ENTITY_TYPE = ModelTypesEnum.USER;

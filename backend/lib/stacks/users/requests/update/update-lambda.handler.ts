@@ -1,8 +1,8 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import User from "../../../../shared/models/user.model";
-import { UserRepository } from "../../../../shared/repositories/user.repository";
+import User from "../../models/user.model";
+import { UserRepository } from "../../repositories/user.repository";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { UserAlreadyExistsException } from "../../../../shared/exceptions/user-already-exists-exception";
 import { UpdateLambdaInput } from "./update-lambda.input";
@@ -76,7 +76,7 @@ export const handler = new UpdateLambdaHandler(
   new CognitoIdentityServiceProvider(),
   new UserRepository(
     process.env.dbStore ?? "",
-    process.env.userIndexByEmail ?? ""
+    process.env.reversedDbStore ?? ""
   ),
   process.env.cognitoUserPoolId ?? ""
 ).create();

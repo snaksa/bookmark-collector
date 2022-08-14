@@ -3,7 +3,7 @@ import {
   RequestEventType,
   RequestResponse,
 } from "../../../../shared/base-handler";
-import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
+import { BookmarkRepository } from "../../repositories/bookmark.repository";
 import fetch from "node-fetch";
 import cheerio from "cheerio";
 import { URL } from "url";

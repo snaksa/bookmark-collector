@@ -1,7 +1,6 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import Bookmark from "../../models/bookmark.model";
-import { BookmarkRepository } from "../../../../shared/repositories/bookmark.repository";
+import { BookmarkRepository } from "../../repositories/bookmark.repository";
 import { DeleteLambdaInput } from "./delete-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";
 
@@ -12,20 +11,7 @@ class DeleteLambdaHandler extends BaseHandler<DeleteLambdaInput> {
   }
 
   async run(request: DeleteLambdaInput): Promise<Response> {
-    const bookmarks = await this.bookmarkRepository.findBookmarkRecords(
-      request.path.id
-    );
-
-    const deleteBookmarkRecords: Promise<Bookmark>[] = [];
-    bookmarks.forEach((bookmark) =>
-      // TODO: check if the bookmark belongs to the current user
-
-      deleteBookmarkRecords.push(
-        this.bookmarkRepository.deleteByKeys(bookmark.pk, bookmark.sk)
-      )
-    );
-
-    await Promise.all(deleteBookmarkRecords);
+    await this.bookmarkRepository.deleteById(request.path.id);
 
     return {
       statusCode: ApiGatewayResponseCodes.NO_CONTENT,

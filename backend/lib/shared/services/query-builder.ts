@@ -1,7 +1,5 @@
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { DynamoDbHelper, LoggerHelper as Logger } from "../helpers";
 import { Model } from "../models/model";
-import PaginatedResult from "../models/pagination.model";
 
 export class QueryBuilder<T extends Model> {
   db: DynamoDbHelper;
@@ -29,9 +27,6 @@ export class QueryBuilder<T extends Model> {
 
   // paginated cursor value
   cursor: Record<string, string>;
-
-  // page limit value
-  limit: number;
 
   // sort direction
   sort = true; // ASC = true, DESC = false
@@ -98,11 +93,6 @@ export class QueryBuilder<T extends Model> {
 
   setCursor(cursor: Record<string, string>): QueryBuilder<T> {
     this.cursor = cursor;
-    return this;
-  }
-
-  setLimit(limit: number): QueryBuilder<T> {
-    this.limit = limit;
     return this;
   }
 
@@ -196,34 +186,16 @@ export class QueryBuilder<T extends Model> {
         : undefined,
     };
 
-    if (this.limit) {
-      console.log("set limit: ", this.limit);
-      params["Limit"] = this.limit;
-    }
-
     console.log("set sort ASC: ", this.sort);
     params["ScanIndexForward"] = this.sort;
-
-    if (this.cursor) {
-      console.log("cursor: ", this.conditions);
-      params["ExclusiveStartKey"] = this.cursor;
-    }
 
     const result: T[] = [];
     let dbResult;
     do {
       dbResult = await this.db.getAll(params);
-      if (this.limit && result.length + dbResult.Items.length > this.limit) {
-        result.push(...dbResult.Items.slice(0, this.limit - result.length));
-      } else {
         result.push(...dbResult.Items);
-      }
       params["ExclusiveStartKey"] = dbResult.LastEvaluatedKey;
-    } while (
-      this.limit &&
-      result.length < this.limit &&
-      dbResult.LastEvaluatedKey
-    );
+    } while (dbResult.LastEvaluatedKey);
 
     return result;
   }

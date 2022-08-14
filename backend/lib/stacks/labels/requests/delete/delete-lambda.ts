@@ -5,6 +5,7 @@ import * as path from "path";
 
 interface DeleteLambdaProps {
   dbStore: ITable;
+  reversedDbStore: string;
 }
 
 export class DeleteLambda extends NodejsFunction {
@@ -13,6 +14,7 @@ export class DeleteLambda extends NodejsFunction {
       entry: path.resolve(__dirname, "./delete-lambda.handler.ts"),
       environment: {
         dbStore: props.dbStore.tableName,
+        reversedDbStore: props.reversedDbStore,
       },
     });
 

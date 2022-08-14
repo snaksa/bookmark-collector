@@ -6,7 +6,7 @@ import { Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 interface RegisterLambdaProps {
   dbStore: ITable;
-  userIndexByEmail: string;
+  reversedDbStore: string;
   cognitoClientId: string;
 }
 
@@ -16,7 +16,7 @@ export class RegisterLambda extends NodejsFunction {
       entry: path.resolve(__dirname, "./register-lambda.handler.ts"),
       environment: {
         dbStore: props.dbStore.tableName,
-        userIndexByEmail: props.userIndexByEmail,
+        reversedDbStore: props.reversedDbStore,
         cognitoClientId: props.cognitoClientId,
       },
     });

@@ -9,7 +9,7 @@ export default class Bookmark implements Model {
   pk: string;
   sk: string;
   
-  labels: Label[];
+  labels: Label[] = [];
 
   constructor(
     public id: string,

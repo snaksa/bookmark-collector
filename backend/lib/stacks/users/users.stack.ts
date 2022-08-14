@@ -47,8 +47,8 @@ export class UsersStack extends BaseStack {
         new LambdaIntegration(
           new RegisterLambda(this, buildConfig.envSpecific("register-lambda"), {
             dbStore: this.dbStore,
-            userIndexByEmail: buildConfig.envSpecific(
-              AwsResources.DB_STORE_TABLE_GSI1
+            reversedDbStore: buildConfig.envSpecific(
+              AwsResources.DB_STORE_TABLE_REVERSED
             ),
             cognitoClientId: this.cognitoClientId,
           })

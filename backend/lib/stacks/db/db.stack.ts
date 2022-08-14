@@ -56,40 +56,40 @@ export class DbStack extends BaseStack {
       store = this.dbStore;
     }
 
-    const streamLambda = new StreamLambda(
-      this,
-      buildConfig.envSpecific("DbStoreStream"),
-      {
-        dbStore: store,
-        reversedDbStore: buildConfig.envSpecific(
-          AwsResources.DB_STORE_TABLE_REVERSED
-        ),
-      }
-    );
+    // const streamLambda = new StreamLambda(
+    //   this,
+    //   buildConfig.envSpecific("DbStoreStream"),
+    //   {
+    //     dbStore: store,
+    //     reversedDbStore: buildConfig.envSpecific(
+    //       AwsResources.DB_STORE_TABLE_REVERSED
+    //     ),
+    //   }
+    // );
 
-    const policy = new PolicyStatement();
-    policy.addActions(
-      "dynamodb:DescribeStream",
-      "dynamodb:GetRecords",
-      "dynamodb:GetShardIterator",
-      "dynamodb:ListStreams"
-    );
-    policy.addResources(
-      buildConfig.dbTableStreamArn ?? store.tableStreamArn ?? ""
-    );
-    streamLambda.addToRolePolicy(policy);
+    // const policy = new PolicyStatement();
+    // policy.addActions(
+    //   "dynamodb:DescribeStream",
+    //   "dynamodb:GetRecords",
+    //   "dynamodb:GetShardIterator",
+    //   "dynamodb:ListStreams"
+    // );
+    // policy.addResources(
+    //   buildConfig.dbTableStreamArn ?? store.tableStreamArn ?? ""
+    // );
+    // streamLambda.addToRolePolicy(policy);
 
-    new EventSourceMapping(
-      this,
-      buildConfig.envSpecific("DbStoreStreamEventSourceMapping"),
-      {
-        target: streamLambda,
-        startingPosition: StartingPosition.TRIM_HORIZON,
-        batchSize: 5,
-        bisectBatchOnError: true,
-        retryAttempts: 10,
-        eventSourceArn: buildConfig.dbTableStreamArn ?? store.tableStreamArn,
-      }
-    );
+    // new EventSourceMapping(
+    //   this,
+    //   buildConfig.envSpecific("DbStoreStreamEventSourceMapping"),
+    //   {
+    //     target: streamLambda,
+    //     startingPosition: StartingPosition.TRIM_HORIZON,
+    //     batchSize: 5,
+    //     bisectBatchOnError: true,
+    //     retryAttempts: 10,
+    //     eventSourceArn: buildConfig.dbTableStreamArn ?? store.tableStreamArn,
+    //   }
+    // );
   }
 }

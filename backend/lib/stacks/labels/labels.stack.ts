@@ -8,6 +8,7 @@ import { BaseStack } from "../base.stack";
 import { ApiGatewayRequestMethods } from "../../shared/enums/api-gateway-request-methods";
 import { SingleLambda } from "./requests/single/single-lambda";
 import { BuildConfig } from "../../shared/services/environment.service";
+import { AwsResources } from "../../shared/enums/aws-resources";
 
 export class LabelsStack extends BaseStack {
   constructor(
@@ -64,6 +65,9 @@ export class LabelsStack extends BaseStack {
       new LambdaIntegration(
         new DeleteLambda(this, buildConfig.envSpecific("delete-lambda"), {
           dbStore: this.dbStore,
+          reversedDbStore: buildConfig.envSpecific(
+            AwsResources.DB_STORE_TABLE_REVERSED
+          ),
         })
       ),
       this.authorization

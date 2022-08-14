@@ -8,7 +8,7 @@ export default class Label implements Model {
   entityType: ModelTypesEnum = Label.ENTITY_TYPE;
   pk: string;
   sk: string;
-  bookmarks: Bookmark[];
+  bookmarks: Bookmark[] = [];
 
   constructor(
     public id: string, 

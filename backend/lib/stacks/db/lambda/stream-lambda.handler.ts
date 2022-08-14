@@ -9,8 +9,8 @@ import { Model } from "../../../shared/models/base.model";
 import BookmarkLabel from "../../../shared/models/bookmark-label.model";
 import Bookmark from "../../../shared/models/bookmark.model";
 import Label from "../../../shared/models/label.model";
-import { BookmarkRepository } from "../../../shared/repositories/bookmark.repository";
-import { LabelRepository } from "../../../shared/repositories/label.repository";
+import { BookmarkRepository } from "../../bookmarks/repositories/bookmark.repository";
+import { LabelRepository } from "../../labels/repositories/label.repository";
 import { AttributeMap } from "aws-sdk/clients/dynamodb";
 
 interface StreamEvent {

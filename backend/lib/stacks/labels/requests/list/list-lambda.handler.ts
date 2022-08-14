@@ -1,7 +1,7 @@
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
 import Label from '../../models/label.model';
-import { LabelRepository } from "../../../../shared/repositories/label.repository";
+import { LabelRepository } from "../../repositories/label.repository";
 import IsLogged from "../../../../shared/decorators/is-logged";
 
 @IsLogged

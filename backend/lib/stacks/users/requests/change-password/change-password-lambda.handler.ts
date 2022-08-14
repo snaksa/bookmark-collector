@@ -1,7 +1,7 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import { UserRepository } from "../../../../shared/repositories/user.repository";
+import { UserRepository } from "../../repositories/user.repository";
 import { NotFoundException } from "../../../../shared/exceptions/not-found-exception";
 import { ChangePasswordLambdaInput } from "./change-password-lambda.input";
 import IsLogged from "../../../../shared/decorators/is-logged";

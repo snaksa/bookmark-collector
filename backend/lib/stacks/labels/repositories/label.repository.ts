@@ -1,35 +1,34 @@
-import { v4 as uuid_v4 } from "uuid";
-import BookmarkLabel from "../../stacks/bookmarks/models/bookmark-label.model";
-import Label from "../../stacks/labels/models/label.model";
-import { QueryBuilder } from "../services/query-builder";
+import BookmarkLabel from "../../bookmarks/models/bookmark-label.model";
+import Label from "../models/label.model";
+import { QueryBuilder } from "../../../shared/services/query-builder";
 
 export class LabelRepository {
-  constructor(private dbStore: string) {}
+  constructor(private dbStore: string, private reversedDbStore: string = "") { }
 
   async save(label: Label): Promise<boolean> {
     return new QueryBuilder<Label>().table(this.dbStore).create(label);
   }
 
-  async deleteById(labelId: string, userId: string): Promise<Label> {
+  async deleteById(labelId: string): Promise<Label> {
     return new QueryBuilder<Label>()
       .table(this.dbStore)
+      .index(this.reversedDbStore)
       .where({
-        pk: `USER#${userId}`,
         sk: `LABEL#${labelId}`,
       })
       .delete();
   }
 
   async findOne(labelId: string, userId: string): Promise<Label | null> {
-    const label = await new QueryBuilder<Label>()
+    const labels = await new QueryBuilder<Label>()
       .table(this.dbStore)
       .where({
         pk: `USER#${userId}`,
         sk: `LABEL#${labelId}`,
       })
-      .one();
+      .all();
 
-    return label ? Label.fromDynamoDb(label) : null;
+    return labels.length ? Label.fromDynamoDb(labels[0]) : null;
   }
 
   async findAll(userId: string): Promise<Label[]> {
@@ -44,13 +43,20 @@ export class LabelRepository {
     return labels.map((label: Label) => Label.fromDynamoDb(label));
   }
 
-  async findBookmarks(labelId: string): Promise<BookmarkLabel[]> {
-    const records = await new QueryBuilder<BookmarkLabel>()
+  async findBookmarks(labelId: string, onlyFavorites = false): Promise<BookmarkLabel[]> {
+    const query = new QueryBuilder<BookmarkLabel>()
       .table(this.dbStore)
       .where({
         pk: `LABEL#${labelId}`,
-      })
-      .all();
+      });
+
+    if (onlyFavorites) {
+      query.filter({
+        isFavorite: true,
+      });
+    }
+
+    const records = await query.all();
 
     return records.map((bookmarkLabel: BookmarkLabel) =>
       BookmarkLabel.fromDynamoDb(bookmarkLabel)

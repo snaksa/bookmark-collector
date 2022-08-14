@@ -1,8 +1,8 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
-import User from "../../../../shared/models/user.model";
+import User from "../../models/user.model";
 import { ApiGatewayResponseCodes } from "../../../../shared/enums/api-gateway-response-codes";
 import BaseHandler, { Response } from "../../../../shared/base-handler";
-import { UserRepository } from "../../../../shared/repositories/user.repository";
+import { UserRepository } from "../../repositories/user.repository";
 import { GenericException } from "../../../../shared/exceptions/generic-exception";
 import { RegisterLambdaInput } from "./register-lambda.input";
 
@@ -70,7 +70,7 @@ export const handler = new RegisterLambdaHandler(
   new CognitoIdentityServiceProvider(),
   new UserRepository(
     process.env.dbStore ?? "",
-    process.env.userIndexByEmail ?? ""
+    process.env.reversedDbStore ?? ""
   ),
   process.env.cognitoClientId ?? ""
 ).create();
